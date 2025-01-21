@@ -6,8 +6,8 @@
       ansible.builtin.import_role:
         name: arista.avd.eos_config_deploy_cvp
       vars:
-        container_root: 'FABRIC'
-        configlets_prefix: 'AVD'
+        container_root: 'DC2_FABRIC'
+        configlets_prefix: 'L5_AVD'
         # apply_mode: strict # Don't use this unless AVD is the only source of configlets
         state: present
         execute_tasks: false # Set to true if you want the change to be made without a change control approval

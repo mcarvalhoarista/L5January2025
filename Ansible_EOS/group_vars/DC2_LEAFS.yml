@@ -1,0 +1,11 @@
+global_vlans:
+  - id: 60
+    name: DMZ
+  - id: 70
+    name: Internal
+  - id: 80
+    name: Sales
+  - id: 90
+    name: App1
+  - id: 100
+    name: App2

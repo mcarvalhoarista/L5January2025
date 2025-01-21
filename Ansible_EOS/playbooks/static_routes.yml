@@ -1,0 +1,27 @@
+---
+- name: Add Static Route to device(s)
+  hosts: DC1-CL1
+  tasks:
+    - name: Add Static Route 1st Entry
+      arista.eos.eos_static_routes:
+        config:
+          - address_families:
+              - afi: ipv4
+                routes:
+                  - dest: 10.2.2.0/24
+                    next_hops:
+                      - interface: Ethernet1
+                        forward_router_address: 3.3.3.3
+        state: merged
+    - name: Add Static Route 2nd Entry
+      arista.eos.eos_static_routes:
+        config:
+          - vrf: OVERLAY
+            address_families:
+              - afi: ipv4
+                routes:
+                  - dest: 10.2.2.0/24
+                    next_hops:
+                      - forward_router_address: 2.2.2.2
+                        interface: Ethernet2
+        state: merged

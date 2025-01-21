@@ -1,5 +1,5 @@
 - name: Run Fabric states validation
-  hosts: FABRIC
+  hosts: DC1_FABRIC
   tasks:
     - name: Deploy configuration to device
       ansible.builtin.import_role:

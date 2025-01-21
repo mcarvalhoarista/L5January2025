@@ -1,8 +1,8 @@
 all:
   vars:
-    ansible_user: arista
+    ansible_user: cvpadmin
     ansible_network_os: eos
-    ansible_password: aristajiju
+    ansible_password: arista123
     ansible_connection: httpapi
     ansible_httpapi_use_ssl: True
     ansible_httpapi_validate_certs: False
@@ -16,15 +16,39 @@ all:
 #     ansible_connection: network_cli
 #     ansible_network_os: eos
   children:
-    spines:
-      hosts:
-        spine1:
-        spine2:
-        spine3:
-        spine4:
-    leafs:
-      hosts:
-        leaf1:
-        leaf2:
-        leaf3:
-        leaf4:     
+    DC1_FABRIC:
+      children:
+        DC1_SPINES:
+          hosts:
+            DC1-SP1:
+            DC1-SP2:
+        DC1_LEAFS:
+          hosts:
+            DC1-CL1:
+            DC1-CL2:
+            DC1-CL3:
+            DC1-CL4:
+            DC1-BL1:
+            DC1-BL2:
+        DC1_HOSTS:
+          hosts:
+            DC1-SW1:
+            DC1-SW2:
+    DC2_FABRIC:
+      children:
+        DC2_SPINES:
+          hosts:
+            DC2-SP1:
+            DC2-SP2:
+        DC2_LEAFS:
+          hosts:
+            DC2-CL1:
+            DC2-CL2:
+            DC2-CL3:
+            DC2-CL4:
+            DC2-BL1:
+            DC2-BL2:
+        DC2_HOSTS:
+          hosts:
+            DC2-SW1:
+            DC2-SW2:

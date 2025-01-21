@@ -9,6 +9,7 @@
     - name: Apply configlets to devices
       arista.cvp.cv_device_v3:
         devices: "{{ CVP_DEVICES_DEFAULT }}"
+        state: present
         apply_mode: strict
       register: CVP_CHANGE
     - name: Run tasks from previous task

@@ -1,0 +1,4261 @@
+#----------------------------------------------
+### Show Running-Config for Device:DC1-SP1 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC1-SP1 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC1-SP1
+dns domain atd.lab
+!
+spanning-tree mode none
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC1-CL1_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.0/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC1-CL2_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.4/31
+!
+interface Ethernet3
+   description P2P_LINK_TO_DC1-CL3_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.8/31
+!
+interface Ethernet4
+   description P2P_LINK_TO_DC1-CL4_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.12/31
+!
+interface Ethernet5
+   description P2P_LINK_TO_DC1-BL1_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.16/31
+!
+interface Ethernet6
+   description P2P_LINK_TO_DC1-BL2_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.20/31
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   shutdown
+   no switchport
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.1.1/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.131/24
+!
+mac address-table aging-time 600
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.1.0/24 eq 32
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65100
+   router-id 10.250.1.1
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor 10.250.1.3 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.3 remote-as 65101
+   neighbor 10.250.1.3 description DC1-CL1
+   neighbor 10.250.1.4 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.4 remote-as 65101
+   neighbor 10.250.1.4 description DC1-CL2
+   neighbor 10.250.1.5 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.5 remote-as 65102
+   neighbor 10.250.1.5 description DC1-CL3
+   neighbor 10.250.1.6 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.6 remote-as 65102
+   neighbor 10.250.1.6 description DC1-CL4
+   neighbor 10.250.1.7 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.7 remote-as 65103
+   neighbor 10.250.1.7 description DC1-BL1
+   neighbor 10.250.1.8 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.8 remote-as 65103
+   neighbor 10.250.1.8 description DC1-BL2
+   neighbor 172.16.1.1 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.1 remote-as 65101
+   neighbor 172.16.1.1 description DC1-CL1_Ethernet1
+   neighbor 172.16.1.5 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.5 remote-as 65101
+   neighbor 172.16.1.5 description DC1-CL2_Ethernet1
+   neighbor 172.16.1.9 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.9 remote-as 65102
+   neighbor 172.16.1.9 description DC1-CL3_Ethernet1
+   neighbor 172.16.1.13 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.13 remote-as 65102
+   neighbor 172.16.1.13 description DC1-CL4_Ethernet1
+   neighbor 172.16.1.17 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.17 remote-as 65103
+   neighbor 172.16.1.17 description DC1-BL1_Ethernet1
+   neighbor 172.16.1.21 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.21 remote-as 65103
+   neighbor 172.16.1.21 description DC1-BL2_Ethernet1
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC1-SP2 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC1-SP2 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC1-SP2
+dns domain atd.lab
+!
+spanning-tree mode none
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC1-CL1_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.2/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC1-CL2_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.6/31
+!
+interface Ethernet3
+   description P2P_LINK_TO_DC1-CL3_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.10/31
+!
+interface Ethernet4
+   description P2P_LINK_TO_DC1-CL4_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.14/31
+!
+interface Ethernet5
+   description P2P_LINK_TO_DC1-BL1_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.18/31
+!
+interface Ethernet6
+   description P2P_LINK_TO_DC1-BL2_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.22/31
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   shutdown
+   no switchport
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.1.2/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.132/24
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.1.0/24 eq 32
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65100
+   router-id 10.250.1.2
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor 10.250.1.3 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.3 remote-as 65101
+   neighbor 10.250.1.3 description DC1-CL1
+   neighbor 10.250.1.4 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.4 remote-as 65101
+   neighbor 10.250.1.4 description DC1-CL2
+   neighbor 10.250.1.5 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.5 remote-as 65102
+   neighbor 10.250.1.5 description DC1-CL3
+   neighbor 10.250.1.6 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.6 remote-as 65102
+   neighbor 10.250.1.6 description DC1-CL4
+   neighbor 10.250.1.7 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.7 remote-as 65103
+   neighbor 10.250.1.7 description DC1-BL1
+   neighbor 10.250.1.8 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.8 remote-as 65103
+   neighbor 10.250.1.8 description DC1-BL2
+   neighbor 172.16.1.3 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.3 remote-as 65101
+   neighbor 172.16.1.3 description DC1-CL1_Ethernet2
+   neighbor 172.16.1.7 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.7 remote-as 65101
+   neighbor 172.16.1.7 description DC1-CL2_Ethernet2
+   neighbor 172.16.1.11 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.11 remote-as 65102
+   neighbor 172.16.1.11 description DC1-CL3_Ethernet2
+   neighbor 172.16.1.15 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.15 remote-as 65102
+   neighbor 172.16.1.15 description DC1-CL4_Ethernet2
+   neighbor 172.16.1.19 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.19 remote-as 65103
+   neighbor 172.16.1.19 description DC1-BL1_Ethernet2
+   neighbor 172.16.1.23 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.23 remote-as 65103
+   neighbor 172.16.1.23 description DC1-BL2_Ethernet2
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC1-BL1 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC1-BL1 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC1-BL1
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC1-BL2_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC1-SP1_Ethernet5
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.17/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC1-SP2_Ethernet5
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.19/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   description P2P_LINK_TO_DC2-BL1_Ethernet4
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.255.0/31
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC1-BL2_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.1.7/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.1.7/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.133/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.1.8/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.1.8/31
+!
+interface Vxlan1
+   description DC1-BL1_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.1.0/24 eq 32
+   seq 20 permit 10.255.1.0/24 eq 32
+!
+mlag configuration
+   domain-id DC1_BL
+   local-interface Vlan4094
+   peer-address 10.251.1.9
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65103
+   router-id 10.250.1.7
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-CORE peer group
+   neighbor EVPN-OVERLAY-CORE update-source Loopback0
+   neighbor EVPN-OVERLAY-CORE bfd
+   neighbor EVPN-OVERLAY-CORE ebgp-multihop 15
+   neighbor EVPN-OVERLAY-CORE send-community
+   neighbor EVPN-OVERLAY-CORE maximum-routes 0
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65103
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-BL2
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.1.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.1 remote-as 65100
+   neighbor 10.250.1.1 description DC1-SP1
+   neighbor 10.250.1.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.2 remote-as 65100
+   neighbor 10.250.1.2 description DC1-SP2
+   neighbor 10.250.2.7 peer group EVPN-OVERLAY-CORE
+   neighbor 10.250.2.7 remote-as 65203
+   neighbor 10.250.2.7 description DC2-BL1
+   neighbor 10.252.1.9 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.1.9 description DC1-BL2
+   neighbor 172.16.1.16 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.16 remote-as 65100
+   neighbor 172.16.1.16 description DC1-SP1_Ethernet5
+   neighbor 172.16.1.18 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.18 remote-as 65100
+   neighbor 172.16.1.18 description DC1-SP2_Ethernet5
+   neighbor 172.16.255.1 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.255.1 remote-as 65203
+   neighbor 172.16.255.1 description DC2-BL1
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-CORE activate
+      neighbor EVPN-OVERLAY-CORE domain remote
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix inter-domain
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-CORE activate
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC1-BL2 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC1-BL2 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC1-BL2
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC1-BL1_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC1-SP1_Ethernet6
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.21/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC1-SP2_Ethernet6
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.23/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   description P2P_LINK_TO_DC2-BL2_Ethernet4
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.255.2/31
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC1-BL1_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.1.8/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.1.7/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.134/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.1.9/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.1.9/31
+!
+interface Vxlan1
+   description DC1-BL2_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.1.0/24 eq 32
+   seq 20 permit 10.255.1.0/24 eq 32
+!
+mlag configuration
+   domain-id DC1_BL
+   local-interface Vlan4094
+   peer-address 10.251.1.8
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65103
+   router-id 10.250.1.8
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-CORE peer group
+   neighbor EVPN-OVERLAY-CORE update-source Loopback0
+   neighbor EVPN-OVERLAY-CORE bfd
+   neighbor EVPN-OVERLAY-CORE ebgp-multihop 15
+   neighbor EVPN-OVERLAY-CORE send-community
+   neighbor EVPN-OVERLAY-CORE maximum-routes 0
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65103
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-BL1
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.1.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.1 remote-as 65100
+   neighbor 10.250.1.1 description DC1-SP1
+   neighbor 10.250.1.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.2 remote-as 65100
+   neighbor 10.250.1.2 description DC1-SP2
+   neighbor 10.250.2.8 peer group EVPN-OVERLAY-CORE
+   neighbor 10.250.2.8 remote-as 65203
+   neighbor 10.250.2.8 description DC2-BL2
+   neighbor 10.252.1.8 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.1.8 description DC1-BL1
+   neighbor 172.16.1.20 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.20 remote-as 65100
+   neighbor 172.16.1.20 description DC1-SP1_Ethernet6
+   neighbor 172.16.1.22 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.22 remote-as 65100
+   neighbor 172.16.1.22 description DC1-SP2_Ethernet6
+   neighbor 172.16.255.3 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.255.3 remote-as 65203
+   neighbor 172.16.255.3 description DC2-BL2
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-CORE activate
+      neighbor EVPN-OVERLAY-CORE domain remote
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix inter-domain
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-CORE activate
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC1-CL1 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC1-CL1 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC1-CL1
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC1-CL2_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC1-SP1_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.1/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC1-SP2_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.3/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC1-CL2_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.1.3/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.1.3/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.135/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.1.0/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.1.0/31
+!
+interface Vxlan1
+   description DC1-CL1_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.1.0/24 eq 32
+   seq 20 permit 10.255.1.0/24 eq 32
+!
+mlag configuration
+   domain-id DC1_RACK1
+   local-interface Vlan4094
+   peer-address 10.251.1.1
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65101
+   router-id 10.250.1.3
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65101
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-CL2
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.1.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.1 remote-as 65100
+   neighbor 10.250.1.1 description DC1-SP1
+   neighbor 10.250.1.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.2 remote-as 65100
+   neighbor 10.250.1.2 description DC1-SP2
+   neighbor 10.252.1.1 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.1.1 description DC1-CL2
+   neighbor 172.16.1.0 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.0 remote-as 65100
+   neighbor 172.16.1.0 description DC1-SP1_Ethernet1
+   neighbor 172.16.1.2 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.2 remote-as 65100
+   neighbor 172.16.1.2 description DC1-SP2_Ethernet1
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC1-CL2 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC1-CL2 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC1-CL2
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC1-CL1_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC1-SP1_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.5/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC1-SP2_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.7/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC1-CL1_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.1.4/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.1.3/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.136/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.1.1/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.1.1/31
+!
+interface Vxlan1
+   description DC1-CL2_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.1.0/24 eq 32
+   seq 20 permit 10.255.1.0/24 eq 32
+!
+mlag configuration
+   domain-id DC1_RACK1
+   local-interface Vlan4094
+   peer-address 10.251.1.0
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65101
+   router-id 10.250.1.4
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65101
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-CL1
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.1.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.1 remote-as 65100
+   neighbor 10.250.1.1 description DC1-SP1
+   neighbor 10.250.1.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.2 remote-as 65100
+   neighbor 10.250.1.2 description DC1-SP2
+   neighbor 10.252.1.0 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.1.0 description DC1-CL1
+   neighbor 172.16.1.4 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.4 remote-as 65100
+   neighbor 172.16.1.4 description DC1-SP1_Ethernet2
+   neighbor 172.16.1.6 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.6 remote-as 65100
+   neighbor 172.16.1.6 description DC1-SP2_Ethernet2
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC1-CL3 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC1-CL3 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC1-CL3
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC1-CL4_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC1-SP1_Ethernet3
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.9/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC1-SP2_Ethernet3
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.11/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC1-CL4_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.1.5/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.1.5/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.137/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.1.4/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.1.4/31
+!
+interface Vxlan1
+   description DC1-CL3_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.1.0/24 eq 32
+   seq 20 permit 10.255.1.0/24 eq 32
+!
+mlag configuration
+   domain-id DC1_RACK2
+   local-interface Vlan4094
+   peer-address 10.251.1.5
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65102
+   router-id 10.250.1.5
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65102
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-CL4
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.1.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.1 remote-as 65100
+   neighbor 10.250.1.1 description DC1-SP1
+   neighbor 10.250.1.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.2 remote-as 65100
+   neighbor 10.250.1.2 description DC1-SP2
+   neighbor 10.252.1.5 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.1.5 description DC1-CL4
+   neighbor 172.16.1.8 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.8 remote-as 65100
+   neighbor 172.16.1.8 description DC1-SP1_Ethernet3
+   neighbor 172.16.1.10 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.10 remote-as 65100
+   neighbor 172.16.1.10 description DC1-SP2_Ethernet3
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC1-CL4 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC1-CL4 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC1-CL4
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC1-CL3_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC1-SP1_Ethernet4
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.13/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC1-SP2_Ethernet4
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.1.15/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC1-CL3_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.1.6/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.1.5/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.138/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.1.5/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.1.5/31
+!
+interface Vxlan1
+   description DC1-CL4_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.1.0/24 eq 32
+   seq 20 permit 10.255.1.0/24 eq 32
+!
+mlag configuration
+   domain-id DC1_RACK2
+   local-interface Vlan4094
+   peer-address 10.251.1.4
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65102
+   router-id 10.250.1.6
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65102
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-CL3
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.1.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.1 remote-as 65100
+   neighbor 10.250.1.1 description DC1-SP1
+   neighbor 10.250.1.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.2 remote-as 65100
+   neighbor 10.250.1.2 description DC1-SP2
+   neighbor 10.252.1.4 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.1.4 description DC1-CL3
+   neighbor 172.16.1.12 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.12 remote-as 65100
+   neighbor 172.16.1.12 description DC1-SP1_Ethernet4
+   neighbor 172.16.1.14 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.14 remote-as 65100
+   neighbor 172.16.1.14 description DC1-SP2_Ethernet4
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC2-SP1 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC2-SP1 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC2-SP1
+dns domain atd.lab
+!
+spanning-tree mode none
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC2-CL1_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.0/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC2-CL2_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.4/31
+!
+interface Ethernet3
+   description P2P_LINK_TO_DC2-CL3_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.8/31
+!
+interface Ethernet4
+   description P2P_LINK_TO_DC2-CL4_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.12/31
+!
+interface Ethernet5
+   description P2P_LINK_TO_DC2-BL1_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.16/31
+!
+interface Ethernet6
+   description P2P_LINK_TO_DC2-BL2_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.20/31
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   shutdown
+   no switchport
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.2.1/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.139/24
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.2.0/24 eq 32
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65200
+   router-id 10.250.2.1
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor 10.250.2.3 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.3 remote-as 65201
+   neighbor 10.250.2.3 description DC2-CL1
+   neighbor 10.250.2.4 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.4 remote-as 65201
+   neighbor 10.250.2.4 description DC2-CL2
+   neighbor 10.250.2.5 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.5 remote-as 65202
+   neighbor 10.250.2.5 description DC2-CL3
+   neighbor 10.250.2.6 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.6 remote-as 65202
+   neighbor 10.250.2.6 description DC2-CL4
+   neighbor 10.250.2.7 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.7 remote-as 65203
+   neighbor 10.250.2.7 description DC2-BL1
+   neighbor 10.250.2.8 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.8 remote-as 65203
+   neighbor 10.250.2.8 description DC2-BL2
+   neighbor 172.16.2.1 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.1 remote-as 65201
+   neighbor 172.16.2.1 description DC2-CL1_Ethernet1
+   neighbor 172.16.2.5 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.5 remote-as 65201
+   neighbor 172.16.2.5 description DC2-CL2_Ethernet1
+   neighbor 172.16.2.9 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.9 remote-as 65202
+   neighbor 172.16.2.9 description DC2-CL3_Ethernet1
+   neighbor 172.16.2.13 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.13 remote-as 65202
+   neighbor 172.16.2.13 description DC2-CL4_Ethernet1
+   neighbor 172.16.2.17 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.17 remote-as 65203
+   neighbor 172.16.2.17 description DC2-BL1_Ethernet1
+   neighbor 172.16.2.21 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.21 remote-as 65203
+   neighbor 172.16.2.21 description DC2-BL2_Ethernet1
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC2-SP2 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC2-SP2 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC2-SP2
+dns domain atd.lab
+!
+spanning-tree mode none
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC2-CL1_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.2/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC2-CL2_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.6/31
+!
+interface Ethernet3
+   description P2P_LINK_TO_DC2-CL3_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.10/31
+!
+interface Ethernet4
+   description P2P_LINK_TO_DC2-CL4_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.14/31
+!
+interface Ethernet5
+   description P2P_LINK_TO_DC2-BL1_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.18/31
+!
+interface Ethernet6
+   description P2P_LINK_TO_DC2-BL2_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.22/31
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   shutdown
+   no switchport
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.2.2/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.140/24
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.2.0/24 eq 32
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65200
+   router-id 10.250.2.2
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor 10.250.2.3 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.3 remote-as 65201
+   neighbor 10.250.2.3 description DC2-CL1
+   neighbor 10.250.2.4 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.4 remote-as 65201
+   neighbor 10.250.2.4 description DC2-CL2
+   neighbor 10.250.2.5 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.5 remote-as 65202
+   neighbor 10.250.2.5 description DC2-CL3
+   neighbor 10.250.2.6 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.6 remote-as 65202
+   neighbor 10.250.2.6 description DC2-CL4
+   neighbor 10.250.2.7 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.7 remote-as 65203
+   neighbor 10.250.2.7 description DC2-BL1
+   neighbor 10.250.2.8 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.8 remote-as 65203
+   neighbor 10.250.2.8 description DC2-BL2
+   neighbor 172.16.2.3 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.3 remote-as 65201
+   neighbor 172.16.2.3 description DC2-CL1_Ethernet2
+   neighbor 172.16.2.7 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.7 remote-as 65201
+   neighbor 172.16.2.7 description DC2-CL2_Ethernet2
+   neighbor 172.16.2.11 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.11 remote-as 65202
+   neighbor 172.16.2.11 description DC2-CL3_Ethernet2
+   neighbor 172.16.2.15 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.15 remote-as 65202
+   neighbor 172.16.2.15 description DC2-CL4_Ethernet2
+   neighbor 172.16.2.19 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.19 remote-as 65203
+   neighbor 172.16.2.19 description DC2-BL1_Ethernet2
+   neighbor 172.16.2.23 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.23 remote-as 65203
+   neighbor 172.16.2.23 description DC2-BL2_Ethernet2
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC2-BL1 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC2-BL1 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC2-BL1
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC2-BL2_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC2-SP1_Ethernet5
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.17/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC2-SP2_Ethernet5
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.19/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   description P2P_LINK_TO_DC1-BL1_Ethernet4
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.255.1/31
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC2-BL2_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.2.7/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.2.7/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.141/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.2.8/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.2.8/31
+!
+interface Vxlan1
+   description DC2-BL1_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.2.0/24 eq 32
+   seq 20 permit 10.255.2.0/24 eq 32
+!
+mlag configuration
+   domain-id DC2_BL
+   local-interface Vlan4094
+   peer-address 10.251.2.9
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65203
+   router-id 10.250.2.7
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-CORE peer group
+   neighbor EVPN-OVERLAY-CORE update-source Loopback0
+   neighbor EVPN-OVERLAY-CORE bfd
+   neighbor EVPN-OVERLAY-CORE ebgp-multihop 15
+   neighbor EVPN-OVERLAY-CORE send-community
+   neighbor EVPN-OVERLAY-CORE maximum-routes 0
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65203
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC2-BL2
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.1.7 peer group EVPN-OVERLAY-CORE
+   neighbor 10.250.1.7 remote-as 65103
+   neighbor 10.250.1.7 description DC1-BL1
+   neighbor 10.250.2.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.1 remote-as 65200
+   neighbor 10.250.2.1 description DC2-SP1
+   neighbor 10.250.2.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.2 remote-as 65200
+   neighbor 10.250.2.2 description DC2-SP2
+   neighbor 10.252.2.9 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.2.9 description DC2-BL2
+   neighbor 172.16.2.16 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.16 remote-as 65200
+   neighbor 172.16.2.16 description DC2-SP1_Ethernet5
+   neighbor 172.16.2.18 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.18 remote-as 65200
+   neighbor 172.16.2.18 description DC2-SP2_Ethernet5
+   neighbor 172.16.255.0 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.255.0 remote-as 65103
+   neighbor 172.16.255.0 description DC1-BL1
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-CORE activate
+      neighbor EVPN-OVERLAY-CORE domain remote
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix inter-domain
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-CORE activate
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC2-BL2 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC2-BL2 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC2-BL2
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC2-BL1_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC2-SP1_Ethernet6
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.21/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC2-SP2_Ethernet6
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.23/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   description P2P_LINK_TO_DC1-BL2_Ethernet4
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.255.3/31
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC2-BL1_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.2.8/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.2.7/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.142/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.2.9/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.2.9/31
+!
+interface Vxlan1
+   description DC2-BL2_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.2.0/24 eq 32
+   seq 20 permit 10.255.2.0/24 eq 32
+!
+mlag configuration
+   domain-id DC2_BL
+   local-interface Vlan4094
+   peer-address 10.251.2.8
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65203
+   router-id 10.250.2.8
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-CORE peer group
+   neighbor EVPN-OVERLAY-CORE update-source Loopback0
+   neighbor EVPN-OVERLAY-CORE bfd
+   neighbor EVPN-OVERLAY-CORE ebgp-multihop 15
+   neighbor EVPN-OVERLAY-CORE send-community
+   neighbor EVPN-OVERLAY-CORE maximum-routes 0
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65203
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC2-BL1
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.1.8 peer group EVPN-OVERLAY-CORE
+   neighbor 10.250.1.8 remote-as 65103
+   neighbor 10.250.1.8 description DC1-BL2
+   neighbor 10.250.2.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.1 remote-as 65200
+   neighbor 10.250.2.1 description DC2-SP1
+   neighbor 10.250.2.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.2 remote-as 65200
+   neighbor 10.250.2.2 description DC2-SP2
+   neighbor 10.252.2.8 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.2.8 description DC2-BL1
+   neighbor 172.16.2.20 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.20 remote-as 65200
+   neighbor 172.16.2.20 description DC2-SP1_Ethernet6
+   neighbor 172.16.2.22 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.22 remote-as 65200
+   neighbor 172.16.2.22 description DC2-SP2_Ethernet6
+   neighbor 172.16.255.2 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.255.2 remote-as 65103
+   neighbor 172.16.255.2 description DC1-BL2
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-CORE activate
+      neighbor EVPN-OVERLAY-CORE domain remote
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix inter-domain
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-CORE activate
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC2-CL1 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC2-CL1 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC2-CL1
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC2-CL2_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC2-SP1_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.1/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC2-SP2_Ethernet1
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.3/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC2-CL2_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.2.3/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.2.3/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.143/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.2.0/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.2.0/31
+!
+interface Vxlan1
+   description DC2-CL1_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.2.0/24 eq 32
+   seq 20 permit 10.255.2.0/24 eq 32
+!
+mlag configuration
+   domain-id DC2_RACK1
+   local-interface Vlan4094
+   peer-address 10.251.2.1
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65201
+   router-id 10.250.2.3
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65201
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC2-CL2
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.2.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.1 remote-as 65200
+   neighbor 10.250.2.1 description DC2-SP1
+   neighbor 10.250.2.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.2 remote-as 65200
+   neighbor 10.250.2.2 description DC2-SP2
+   neighbor 10.252.2.1 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.2.1 description DC2-CL2
+   neighbor 172.16.2.0 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.0 remote-as 65200
+   neighbor 172.16.2.0 description DC2-SP1_Ethernet1
+   neighbor 172.16.2.2 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.2 remote-as 65200
+   neighbor 172.16.2.2 description DC2-SP2_Ethernet1
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC2-CL2 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC2-CL2 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC2-CL2
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC2-CL1_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC2-SP1_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.5/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC2-SP2_Ethernet2
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.7/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC2-CL1_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.2.4/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.2.3/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.144/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.2.1/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.2.1/31
+!
+interface Vxlan1
+   description DC2-CL2_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.2.0/24 eq 32
+   seq 20 permit 10.255.2.0/24 eq 32
+!
+mlag configuration
+   domain-id DC2_RACK1
+   local-interface Vlan4094
+   peer-address 10.251.2.0
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65201
+   router-id 10.250.2.4
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65201
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC2-CL1
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.2.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.1 remote-as 65200
+   neighbor 10.250.2.1 description DC2-SP1
+   neighbor 10.250.2.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.2 remote-as 65200
+   neighbor 10.250.2.2 description DC2-SP2
+   neighbor 10.252.2.0 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.2.0 description DC2-CL1
+   neighbor 172.16.2.4 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.4 remote-as 65200
+   neighbor 172.16.2.4 description DC2-SP1_Ethernet2
+   neighbor 172.16.2.6 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.6 remote-as 65200
+   neighbor 172.16.2.6 description DC2-SP2_Ethernet2
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC2-CL3 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC2-CL3 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC2-CL3
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC2-CL4_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC2-SP1_Ethernet3
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.9/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC2-SP2_Ethernet3
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.11/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC2-CL4_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.2.5/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.2.5/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.145/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.2.4/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.2.4/31
+!
+interface Vxlan1
+   description DC2-CL3_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.2.0/24 eq 32
+   seq 20 permit 10.255.2.0/24 eq 32
+!
+mlag configuration
+   domain-id DC2_RACK2
+   local-interface Vlan4094
+   peer-address 10.251.2.5
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65202
+   router-id 10.250.2.5
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65202
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC2-CL4
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.2.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.1 remote-as 65200
+   neighbor 10.250.2.1 description DC2-SP1
+   neighbor 10.250.2.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.2 remote-as 65200
+   neighbor 10.250.2.2 description DC2-SP2
+   neighbor 10.252.2.5 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.2.5 description DC2-CL4
+   neighbor 172.16.2.8 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.8 remote-as 65200
+   neighbor 172.16.2.8 description DC2-SP1_Ethernet3
+   neighbor 172.16.2.10 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.10 remote-as 65200
+   neighbor 172.16.2.10 description DC2-SP2_Ethernet3
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC2-CL4 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC2-CL4 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+logging vrf MGMT host 10.200.0.108
+logging vrf MGMT host 10.200.1.108
+logging vrf MGMT source-interface Management1
+!
+hostname DC2-CL4
+dns domain atd.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 4093
+   name LEAF_PEER_L3
+   trunk group LEAF_PEER_L3
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel8
+   description MLAG_PEER_DC2-CL3_Po8
+   switchport mode trunk
+   switchport trunk group LEAF_PEER_L3
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet1
+   description P2P_LINK_TO_DC2-SP1_Ethernet4
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.13/31
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC2-SP2_Ethernet4
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.2.15/31
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description MLAG_PEER_DC2-CL3_Ethernet8
+   no shutdown
+   no switchport
+   channel-group 8 mode active
+!
+interface Loopback0
+   description EVPN_Overlay_Peering
+   ip address 10.250.2.6/32
+!
+interface Loopback1
+   description VTEP_VXLAN_Tunnel_Source
+   ip address 10.255.2.5/32
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.146/24
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   mtu 1500
+   ip address 10.252.2.5/31
+!
+interface Vlan4094
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.251.2.5/31
+!
+interface Vxlan1
+   description DC2-CL4_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+!
+ip virtual-router mac-address 00:1c:73:00:00:99
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 10.250.2.0/24 eq 32
+   seq 20 permit 10.255.2.0/24 eq 32
+!
+mlag configuration
+   domain-id DC2_RACK2
+   local-interface Vlan4094
+   peer-address 10.251.2.4
+   peer-link Port-Channel8
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+ntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65202
+   router-id 10.250.2.6
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS password 7 Q4fqtbqcZ7oQuKfuWtNGRQ==
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS password 7 7x4B4rnJhZB438m9+BrBfQ==
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65202
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description DC2-CL3
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 4b21pAdCvWeAqpcKDFMdWw==
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.250.2.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.1 remote-as 65200
+   neighbor 10.250.2.1 description DC2-SP1
+   neighbor 10.250.2.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.2.2 remote-as 65200
+   neighbor 10.250.2.2 description DC2-SP2
+   neighbor 10.252.2.4 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.252.2.4 description DC2-CL3
+   neighbor 172.16.2.12 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.12 remote-as 65200
+   neighbor 172.16.2.12 description DC2-SP1_Ethernet4
+   neighbor 172.16.2.14 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.2.14 remote-as 65200
+   neighbor 172.16.2.14 description DC2-SP2_Ethernet4
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+!
+ip tacacs vrf MGMT source-interface Management1
+!
+management ssh
+   idle-timeout 5
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC1-SW1 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC1-SW1 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+hostname DC1-SW1
+dns domain arista.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   shutdown
+   no switchport
+!
+interface Ethernet2
+   shutdown
+   no switchport
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   shutdown
+   no switchport
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.151/24
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+management ssh
+   idle-timeout 10
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC1-SW2 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC1-SW2 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+hostname DC1-SW2
+dns domain arista.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   shutdown
+   no switchport
+!
+interface Ethernet2
+   shutdown
+   no switchport
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   shutdown
+   no switchport
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.152/24
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+management ssh
+   idle-timeout 10
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC2-SW1 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC2-SW1 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+hostname DC2-SW1
+dns domain arista.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   shutdown
+   no switchport
+!
+interface Ethernet2
+   shutdown
+   no switchport
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   shutdown
+   no switchport
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.153/24
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+management ssh
+   idle-timeout 10
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+
+#----------------------------------------------
+### Show Running-Config for Device:DC2-SW2 ###
+#----------------------------------------------
+! Command: show running-config
+! device: DC2-SW2 (vEOS-lab, EOS-4.32.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+username marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+switchport default mode routed
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+interface defaults
+   ethernet
+      shutdown
+!
+service routing protocols model multi-agent
+!
+hostname DC2-SW2
+dns domain arista.lab
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4093-4094
+spanning-tree mst 0 priority 4096
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vrf instance MGMT
+!
+banner login
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                                        !!
+!! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+!! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+!!                                                                        !!
+!! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+!!                                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+!
+management api http-commands
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   shutdown
+   no switchport
+!
+interface Ethernet2
+   shutdown
+   no switchport
+!
+interface Ethernet3
+   shutdown
+   no switchport
+!
+interface Ethernet4
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   shutdown
+   no switchport
+!
+interface Management1
+   description Management_Interface
+   vrf MGMT
+   ip address 10.88.169.154/24
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip route vrf MGMT 0.0.0.0/0 10.88.169.129
+!
+management ssh
+   idle-timeout 10
+   !
+   vrf MGMT
+      no shutdown
+!
+end

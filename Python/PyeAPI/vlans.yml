@@ -13,7 +13,7 @@ vlans:
   - id: 60
     name: Pepito
 switches:
-  - leaf1
-  - leaf2
-  - leaf3
-  - leaf4
+  - DC1-CL1
+  - DC1-CL2
+  # - DC1-CL3
+  # - DC1-CL4

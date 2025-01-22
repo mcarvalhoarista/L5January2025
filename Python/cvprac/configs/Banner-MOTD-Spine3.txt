@@ -1,3 +1,0 @@
-banner motd
-No Planned Maintenance
-EOF

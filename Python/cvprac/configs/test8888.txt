@@ -1,0 +1,8 @@
+hostname DC1-BL1
+!
+vrf instance MGMT
+!
+interface Management1
+   description Management_Interface
+   no shutdown
+   vrf MGMT

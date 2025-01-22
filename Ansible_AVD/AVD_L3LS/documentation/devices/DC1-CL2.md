@@ -340,12 +340,25 @@ vlan internal order ascending range 1006 1199
 
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
+| 10 | DMZ | - |
+| 20 | DMZ | - |
+| 3009 | MLAG_iBGP_VRF_A | LEAF_PEER_L3 |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
 
 ### VLANs Device Configuration
 
 ```eos
+!
+vlan 10
+   name DMZ
+!
+vlan 20
+   name DMZ
+!
+vlan 3009
+   name MLAG_iBGP_VRF_A
+   trunk group LEAF_PEER_L3
 !
 vlan 4093
    name LEAF_PEER_L3
@@ -494,6 +507,9 @@ interface Loopback1
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
+| Vlan10 | DMZ | VRF_A | - | False |
+| Vlan20 | DMZ | VRF_A | - | False |
+| Vlan3009 | MLAG_PEER_L3_iBGP: vrf VRF_A | VRF_A | 1500 | False |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 1500 | False |
 | Vlan4094 | MLAG_PEER | default | 1500 | False |
 
@@ -501,12 +517,34 @@ interface Loopback1
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
+| Vlan10 |  VRF_A  |  -  |  10.1.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan20 |  VRF_A  |  -  |  10.1.20.1/24  |  -  |  -  |  -  |  -  |
+| Vlan3009 |  VRF_A  |  10.252.1.1/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  10.252.1.1/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.251.1.1/31  |  -  |  -  |  -  |  -  |  -  |
 
 #### VLAN Interfaces Device Configuration
 
 ```eos
+!
+interface Vlan10
+   description DMZ
+   no shutdown
+   vrf VRF_A
+   ip address virtual 10.1.10.1/24
+!
+interface Vlan20
+   description DMZ
+   no shutdown
+   vrf VRF_A
+   ip address virtual 10.1.20.1/24
+!
+interface Vlan3009
+   description MLAG_PEER_L3_iBGP: vrf VRF_A
+   no shutdown
+   mtu 1500
+   vrf VRF_A
+   ip address 10.252.1.1/31
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
@@ -532,6 +570,19 @@ interface Vlan4094
 | UDP port | 4789 |
 | EVPN MLAG Shared Router MAC | mlag-system-id |
 
+##### VLAN to VNI, Flood List and Multicast Group Mappings
+
+| VLAN | VNI | Flood List | Multicast Group |
+| ---- | --- | ---------- | --------------- |
+| 10 | 10010 | - | - |
+| 20 | 10020 | - | - |
+
+##### VRF to VNI and Multicast Group Mappings
+
+| VRF | VNI | Multicast Group |
+| ---- | --- | --------------- |
+| VRF_A | 10 | - |
+
 #### VXLAN Interface Device Configuration
 
 ```eos
@@ -541,6 +592,9 @@ interface Vxlan1
    vxlan source-interface Loopback1
    vxlan virtual-router encapsulation mac-address mlag-system-id
    vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 20 vni 10020
+   vxlan vrf VRF_A vni 10
 ```
 
 ## Routing
@@ -575,6 +629,7 @@ ip virtual-router mac-address 00:1c:73:00:00:99
 | --- | --------------- |
 | default | True |
 | MGMT | False |
+| VRF_A | True |
 
 #### IP Routing Device Configuration
 
@@ -582,6 +637,7 @@ ip virtual-router mac-address 00:1c:73:00:00:99
 !
 ip routing
 no ip routing vrf MGMT
+ip routing vrf VRF_A
 ```
 
 ### IPv6 Routing
@@ -592,6 +648,7 @@ no ip routing vrf MGMT
 | --- | --------------- |
 | default | False |
 | MGMT | false |
+| VRF_A | false |
 
 ### Static Routes
 
@@ -663,6 +720,7 @@ ASN Notation: asplain
 | 10.252.1.0 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
 | 172.16.1.4 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 172.16.1.6 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 10.252.1.0 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | VRF_A | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -671,6 +729,19 @@ ASN Notation: asplain
 | Peer Group | Activate | Encapsulation |
 | ---------- | -------- | ------------- |
 | EVPN-OVERLAY-PEERS | True | default |
+
+#### Router BGP VLANs
+
+| VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
+| ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
+| 10 | 10.250.1.4:10010 | 10010:10010 | - | - | learned |
+| 20 | 10.250.1.4:10020 | 10020:10020 | - | - | learned |
+
+#### Router BGP VRFs
+
+| VRF | Route-Distinguisher | Redistribute |
+| --- | ------------------- | ------------ |
+| VRF_A | 10.250.1.4:10 | connected |
 
 #### Router BGP Device Configuration
 
@@ -715,6 +786,16 @@ router bgp 65101
    neighbor 172.16.1.6 description DC1-SP2_Ethernet2
    redistribute connected route-map RM-CONN-2-BGP
    !
+   vlan 10
+      rd 10.250.1.4:10010
+      route-target both 10010:10010
+      redistribute learned
+   !
+   vlan 20
+      rd 10.250.1.4:10020
+      route-target both 10020:10020
+      redistribute learned
+   !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
    !
@@ -722,6 +803,14 @@ router bgp 65101
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
+   !
+   vrf VRF_A
+      rd 10.250.1.4:10
+      route-target import evpn 10:10
+      route-target export evpn 10:10
+      router-id 10.250.1.4
+      neighbor 10.252.1.0 peer group MLAG-IPv4-UNDERLAY-PEER
+      redistribute connected
 ```
 
 ## BFD
@@ -814,10 +903,13 @@ route-map RM-MLAG-PEER-IN permit 10
 | VRF Name | IP Routing |
 | -------- | ---------- |
 | MGMT | disabled |
+| VRF_A | enabled |
 
 ### VRF Instances Device Configuration
 
 ```eos
 !
 vrf instance MGMT
+!
+vrf instance VRF_A
 ```

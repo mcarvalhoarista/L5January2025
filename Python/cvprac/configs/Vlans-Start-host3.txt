@@ -1,2 +1,0 @@
-interface vlan 20
-ip address 10.20.20.10/24

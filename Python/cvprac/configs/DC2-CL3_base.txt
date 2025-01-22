@@ -1,0 +1,9 @@
+hostname DC2-CL3
+!
+vrf instance MGMT
+!
+interface Management1
+   description Management_Interface
+   no shutdown
+   vrf MGMT
+   ip address 10.88.169.145/24

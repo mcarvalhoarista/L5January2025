@@ -1,6 +1,6 @@
 ---
 - name: Build fabric configuration
-  hosts: DC2_FABRIC
+  hosts: DC1_FABRIC
   tasks:
     - name: Generate AVD Structured Configurations and Fabric Documentation
       ansible.builtin.import_role:

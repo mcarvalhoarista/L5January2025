@@ -32,6 +32,7 @@ all:
           hosts:
             DC1-SP1:
             DC1-SP2:
+            # DC1-SP3:
         DC1_LEAFS:
           vars: 
             type: l3leaf

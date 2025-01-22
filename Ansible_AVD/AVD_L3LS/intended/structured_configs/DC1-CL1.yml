@@ -72,6 +72,41 @@ router_bgp:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
       activate: true
+  vrfs:
+  - name: VRF_A
+    router_id: 10.250.1.3
+    rd: 10.250.1.3:10
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+    redistribute_routes:
+    - source_protocol: connected
+    neighbors:
+    - ip_address: 10.252.1.1
+      peer_group: MLAG-IPv4-UNDERLAY-PEER
+  vlans:
+  - id: 10
+    tenant: TENANT_C1
+    rd: 10.250.1.3:10010
+    route_targets:
+      both:
+      - 10010:10010
+    redistribute_routes:
+    - learned
+  - id: 20
+    tenant: TENANT_C1
+    rd: 10.250.1.3:10020
+    route_targets:
+      both:
+      - 10020:10020
+    redistribute_routes:
+    - learned
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -115,6 +150,9 @@ local_users:
 vrfs:
 - name: MGMT
   ip_routing: false
+- name: VRF_A
+  tenant: TENANT_C1
+  ip_routing: true
 management_interfaces:
 - name: Management1
   description: Management_Interface
@@ -138,6 +176,17 @@ vlans:
   name: MLAG_PEER
   trunk_groups:
   - MLAG
+- id: 10
+  name: DMZ
+  tenant: TENANT_C1
+- id: 20
+  name: DMZ
+  tenant: TENANT_C1
+- id: 3009
+  name: MLAG_iBGP_VRF_A
+  trunk_groups:
+  - LEAF_PEER_L3
+  tenant: TENANT_C1
 vlan_interfaces:
 - name: Vlan4093
   description: MLAG_PEER_L3_PEERING
@@ -150,6 +199,26 @@ vlan_interfaces:
   no_autostate: true
   mtu: 1500
   ip_address: 10.251.1.0/31
+- name: Vlan10
+  tenant: TENANT_C1
+  description: DMZ
+  shutdown: false
+  ip_address_virtual: 10.1.10.1/24
+  vrf: VRF_A
+- name: Vlan20
+  tenant: TENANT_C1
+  description: DMZ
+  shutdown: false
+  ip_address_virtual: 10.1.20.1/24
+  vrf: VRF_A
+- name: Vlan3009
+  tenant: TENANT_C1
+  type: underlay_peering
+  shutdown: false
+  description: 'MLAG_PEER_L3_iBGP: vrf VRF_A'
+  vrf: VRF_A
+  mtu: 1500
+  ip_address: 10.252.1.0/31
 port_channel_interfaces:
 - name: Port-Channel8
   description: MLAG_PEER_DC1-CL2_Po8
@@ -159,6 +228,10 @@ port_channel_interfaces:
   trunk_groups:
   - LEAF_PEER_L3
   - MLAG
+- name: Port-Channel3
+  description: DC1-SW1_PortChannel_DC1-SW1
+  type: switched
+  shutdown: false
 ethernet_interfaces:
 - name: Ethernet8
   peer: DC1-CL2
@@ -188,6 +261,27 @@ ethernet_interfaces:
   mtu: 1500
   type: routed
   ip_address: 172.16.1.3/31
+- name: Port-Channel100.10
+  peer_type: l3_interface
+  ip_address: 10.1.5.1/24
+  shutdown: false
+  type: l3dot1q
+  encapsulation_dot1q_vlan: 10
+  vrf: VRF_A
+- name: Port-Channel100
+  type: routed
+  peer_type: l3_interface
+  shutdown: false
+- name: Ethernet3
+  peer: DC1-SW1
+  peer_interface: Ethernet1
+  peer_type: server
+  description: DC1-SW1_Ethernet1
+  shutdown: false
+  type: port-channel-member
+  channel_group:
+    id: 3
+    mode: active
 mlag_configuration:
   domain_id: DC1_RACK1
   local_interface: Vlan4094
@@ -240,6 +334,14 @@ vxlan_interface:
       udp_port: 4789
       source_interface: Loopback1
       virtual_router_encapsulation_mac_address: mlag-system-id
+      vlans:
+      - id: 10
+        vni: 10010
+      - id: 20
+        vni: 10020
+      vrfs:
+      - name: VRF_A
+        vni: 10
 metadata:
   platform: cEOS
 interface_defaults:

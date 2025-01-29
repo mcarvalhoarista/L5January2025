@@ -1,0 +1,2 @@
+router isis EVPN_UNDERLAY
+   advertise interface-address passive-only

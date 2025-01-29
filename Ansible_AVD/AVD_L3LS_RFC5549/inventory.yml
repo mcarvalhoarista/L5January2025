@@ -1,0 +1,93 @@
+---
+all:
+  children:
+    CVP_cluster:
+      vars:
+          ansible_user: cvpadmin
+          ansible_password: arista123
+          ansible_connection: httpapi
+          ansible_httpapi_use_ssl: True
+          ansible_httpapi_validate_certs: False
+          ansible_network_os: eos
+          ansible_httpapi_port: 443
+      hosts: 
+        cvp1:
+          ansible_httpapi_host: 10.88.160.63
+          ansible_host: 10.88.160.63
+    DC1_FABRIC:
+      vars:
+        ansible_user: cvpadmin
+        ansible_ssh_pass: arista123
+        ansible_connection: httpapi
+        ansible_httpapi_use_ssl: True
+        ansible_httpapi_validate_certs: False
+        ansible_network_os: eos
+        ansible_httpapi_port: 443
+        ansible_become: yes
+        ansible_become_method: enable
+      children:
+        DC1_SPINES:
+          vars:
+            type: spine
+          hosts:
+            DC1-SP1:
+            DC1-SP2:
+            # DC1-SP3:
+        DC1_LEAFS:
+          vars: 
+            type: l3leaf
+          hosts:
+            DC1-CL1:
+            DC1-CL2:
+            DC1-CL3:
+            DC1-CL4:
+            DC1-BL1:
+            DC1-BL2:
+        # DC1_HOSTS:
+        #   hosts:
+        #     DC1-SW1:
+        #     DC1-SW2:
+    DC1_EVPN_SERVICES:
+      children:
+        DC1_LEAFS:
+    DC1_ENDPOINT_CONNECT:
+      children:
+        DC1_LEAFS:
+    DC2_FABRIC:
+      vars:
+        ansible_user: cvpadmin
+        ansible_ssh_pass: arista123
+        ansible_connection: httpapi
+        ansible_httpapi_use_ssl: True
+        ansible_httpapi_validate_certs: False
+        ansible_network_os: eos
+        ansible_httpapi_port: 443
+        ansible_become: yes
+        ansible_become_method: enable
+      children:
+        DC2_SPINES:
+          vars:
+            type: spine
+          hosts:
+            DC2-SP1:
+            DC2-SP2:
+        DC2_LEAFS:
+          vars: 
+            type: l3leaf
+          hosts:
+            DC2-CL1:
+            DC2-CL2:
+            DC2-CL3:
+            DC2-CL4:
+            DC2-BL1:
+            DC2-BL2:
+        # DC2_HOSTS:
+        #   hosts:
+        #     DC2-SW1:
+        #     DC2-SW2:
+    DC2_EVPN_SERVICES:
+      children:
+        DC2_LEAFS:
+    DC2_ENDPOINT_CONNECT:
+      children:
+        DC2_LEAFS:

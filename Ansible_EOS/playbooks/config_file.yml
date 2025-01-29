@@ -1,6 +1,6 @@
 ---
 - name: Configuration from file on Devices
-  hosts: DC1-CL1
+  hosts: DC1_FABRIC
   gather_facts: false
 
   tasks:

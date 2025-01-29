@@ -65,18 +65,18 @@
 
 | Node | Node Interface | Node IP Address | Peer Node | Peer Interface | Peer IP Address |
 | ---- | -------------- | --------------- | --------- | -------------- | --------------- |
-| DC1-BL1 | Ethernet1 | 172.16.1.17/31 | DC1-SP1 | Ethernet5 | 172.16.1.16/31 |
-| DC1-BL1 | Ethernet2 | 172.16.1.19/31 | DC1-SP2 | Ethernet5 | 172.16.1.18/31 |
-| DC1-BL2 | Ethernet1 | 172.16.1.21/31 | DC1-SP1 | Ethernet6 | 172.16.1.20/31 |
-| DC1-BL2 | Ethernet2 | 172.16.1.23/31 | DC1-SP2 | Ethernet6 | 172.16.1.22/31 |
+| DC1-BL1 | Ethernet1 | 172.16.1.65/31 | DC1-SP1 | Ethernet5 | 172.16.1.64/31 |
+| DC1-BL1 | Ethernet2 | 172.16.1.67/31 | DC1-SP2 | Ethernet5 | 172.16.1.66/31 |
+| DC1-BL2 | Ethernet1 | 172.16.1.81/31 | DC1-SP1 | Ethernet6 | 172.16.1.80/31 |
+| DC1-BL2 | Ethernet2 | 172.16.1.83/31 | DC1-SP2 | Ethernet6 | 172.16.1.82/31 |
 | DC1-CL1 | Ethernet1 | 172.16.1.1/31 | DC1-SP1 | Ethernet1 | 172.16.1.0/31 |
 | DC1-CL1 | Ethernet2 | 172.16.1.3/31 | DC1-SP2 | Ethernet1 | 172.16.1.2/31 |
-| DC1-CL2 | Ethernet1 | 172.16.1.5/31 | DC1-SP1 | Ethernet2 | 172.16.1.4/31 |
-| DC1-CL2 | Ethernet2 | 172.16.1.7/31 | DC1-SP2 | Ethernet2 | 172.16.1.6/31 |
-| DC1-CL3 | Ethernet1 | 172.16.1.9/31 | DC1-SP1 | Ethernet3 | 172.16.1.8/31 |
-| DC1-CL3 | Ethernet2 | 172.16.1.11/31 | DC1-SP2 | Ethernet3 | 172.16.1.10/31 |
-| DC1-CL4 | Ethernet1 | 172.16.1.13/31 | DC1-SP1 | Ethernet4 | 172.16.1.12/31 |
-| DC1-CL4 | Ethernet2 | 172.16.1.15/31 | DC1-SP2 | Ethernet4 | 172.16.1.14/31 |
+| DC1-CL2 | Ethernet1 | 172.16.1.17/31 | DC1-SP1 | Ethernet2 | 172.16.1.16/31 |
+| DC1-CL2 | Ethernet2 | 172.16.1.19/31 | DC1-SP2 | Ethernet2 | 172.16.1.18/31 |
+| DC1-CL3 | Ethernet1 | 172.16.1.33/31 | DC1-SP1 | Ethernet3 | 172.16.1.32/31 |
+| DC1-CL3 | Ethernet2 | 172.16.1.35/31 | DC1-SP2 | Ethernet3 | 172.16.1.34/31 |
+| DC1-CL4 | Ethernet1 | 172.16.1.49/31 | DC1-SP1 | Ethernet4 | 172.16.1.48/31 |
+| DC1-CL4 | Ethernet2 | 172.16.1.51/31 | DC1-SP2 | Ethernet4 | 172.16.1.50/31 |
 
 ### Loopback Interfaces (BGP EVPN Peering)
 
@@ -88,14 +88,14 @@
 
 | POD | Node | Loopback0 |
 | --- | ---- | --------- |
-| DC1_FABRIC | DC1-BL1 | 10.250.1.7/32 |
-| DC1_FABRIC | DC1-BL2 | 10.250.1.8/32 |
+| DC1_FABRIC | DC1-BL1 | 10.250.1.19/32 |
+| DC1_FABRIC | DC1-BL2 | 10.250.1.23/32 |
 | DC1_FABRIC | DC1-CL1 | 10.250.1.3/32 |
-| DC1_FABRIC | DC1-CL2 | 10.250.1.4/32 |
-| DC1_FABRIC | DC1-CL3 | 10.250.1.5/32 |
-| DC1_FABRIC | DC1-CL4 | 10.250.1.6/32 |
-| DC1_FABRIC | DC1-SP1 | 10.250.1.1/32 |
-| DC1_FABRIC | DC1-SP2 | 10.250.1.2/32 |
+| DC1_FABRIC | DC1-CL2 | 10.250.1.7/32 |
+| DC1_FABRIC | DC1-CL3 | 10.250.1.11/32 |
+| DC1_FABRIC | DC1-CL4 | 10.250.1.15/32 |
+| DC1_FABRIC | DC1-SP1 | 10.250.1.25/32 |
+| DC1_FABRIC | DC1-SP2 | 10.250.1.29/32 |
 
 ### VTEP Loopback VXLAN Tunnel Source Interfaces (VTEPs Only)
 
@@ -107,9 +107,9 @@
 
 | POD | Node | Loopback1 |
 | --- | ---- | --------- |
-| DC1_FABRIC | DC1-BL1 | 10.255.1.7/32 |
-| DC1_FABRIC | DC1-BL2 | 10.255.1.7/32 |
+| DC1_FABRIC | DC1-BL1 | 10.255.1.19/32 |
+| DC1_FABRIC | DC1-BL2 | 10.255.1.19/32 |
 | DC1_FABRIC | DC1-CL1 | 10.255.1.3/32 |
 | DC1_FABRIC | DC1-CL2 | 10.255.1.3/32 |
-| DC1_FABRIC | DC1-CL3 | 10.255.1.5/32 |
-| DC1_FABRIC | DC1-CL4 | 10.255.1.5/32 |
+| DC1_FABRIC | DC1-CL3 | 10.255.1.11/32 |
+| DC1_FABRIC | DC1-CL4 | 10.255.1.11/32 |

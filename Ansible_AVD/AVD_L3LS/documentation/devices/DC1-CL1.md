@@ -410,7 +410,6 @@ interface defaults
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet3 | DC1-SW1_Ethernet1 | *access | *- | *- | *- | 3 |
 | Ethernet8 | MLAG_PEER_DC1-CL2_Ethernet8 | *trunk | *- | *- | *['LEAF_PEER_L3', 'MLAG'] | 8 |
 
 *Inherited from Port-Channel Interface
@@ -447,11 +446,6 @@ interface Ethernet2
    no switchport
    ip address 172.16.1.3/31
 !
-interface Ethernet3
-   description DC1-SW1_Ethernet1
-   no shutdown
-   channel-group 3 mode active
-!
 interface Ethernet8
    description MLAG_PEER_DC1-CL2_Ethernet8
    no shutdown
@@ -476,17 +470,11 @@ interface Port-Channel100.10
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel3 | DC1-SW1_PortChannel_DC1-SW1 | switched | access | - | - | - | - | - | - | - |
 | Port-Channel8 | MLAG_PEER_DC1-CL2_Po8 | switched | trunk | - | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
-!
-interface Port-Channel3
-   description DC1-SW1_PortChannel_DC1-SW1
-   no shutdown
-   switchport
 !
 interface Port-Channel8
    description MLAG_PEER_DC1-CL2_Po8
@@ -744,8 +732,8 @@ ASN Notation: asplain
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive | TTL Max Hops |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- | ------------ |
-| 10.250.1.1 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
-| 10.250.1.2 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
+| 10.250.1.25 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
+| 10.250.1.29 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 | 10.252.1.1 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
 | 172.16.1.0 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 172.16.1.2 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
@@ -799,12 +787,12 @@ router bgp 65101
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
    neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
-   neighbor 10.250.1.1 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.250.1.1 remote-as 65100
-   neighbor 10.250.1.1 description DC1-SP1
-   neighbor 10.250.1.2 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.250.1.2 remote-as 65100
-   neighbor 10.250.1.2 description DC1-SP2
+   neighbor 10.250.1.25 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.25 remote-as 65100
+   neighbor 10.250.1.25 description DC1-SP1
+   neighbor 10.250.1.29 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.29 remote-as 65100
+   neighbor 10.250.1.29 description DC1-SP2
    neighbor 10.252.1.1 peer group MLAG-IPv4-UNDERLAY-PEER
    neighbor 10.252.1.1 description DC1-CL2
    neighbor 172.16.1.0 peer group IPv4-UNDERLAY-PEERS

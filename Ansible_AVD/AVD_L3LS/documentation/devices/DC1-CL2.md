@@ -418,8 +418,8 @@ interface defaults
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-SP1_Ethernet2 | routed | - | 172.16.1.5/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-SP2_Ethernet2 | routed | - | 172.16.1.7/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_LINK_TO_DC1-SP1_Ethernet2 | routed | - | 172.16.1.17/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_LINK_TO_DC1-SP2_Ethernet2 | routed | - | 172.16.1.19/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -430,14 +430,14 @@ interface Ethernet1
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.1.5/31
+   ip address 172.16.1.17/31
 !
 interface Ethernet2
    description P2P_LINK_TO_DC1-SP2_Ethernet2
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.1.7/31
+   ip address 172.16.1.19/31
 !
 interface Ethernet8
    description MLAG_PEER_DC1-CL1_Ethernet8
@@ -476,7 +476,7 @@ interface Port-Channel8
 
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
-| Loopback0 | EVPN_Overlay_Peering | default | 10.250.1.4/32 |
+| Loopback0 | EVPN_Overlay_Peering | default | 10.250.1.7/32 |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 10.255.1.3/32 |
 
 ##### IPv6
@@ -493,7 +493,7 @@ interface Port-Channel8
 interface Loopback0
    description EVPN_Overlay_Peering
    no shutdown
-   ip address 10.250.1.4/32
+   ip address 10.250.1.7/32
 !
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
@@ -673,7 +673,7 @@ ASN Notation: asplain
 
 | BGP AS | Router ID |
 | ------ | --------- |
-| 65101 | 10.250.1.4 |
+| 65101 | 10.250.1.7 |
 
 | BGP Tuning |
 | ---------- |
@@ -715,11 +715,11 @@ ASN Notation: asplain
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive | TTL Max Hops |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- | ------------ |
-| 10.250.1.1 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
-| 10.250.1.2 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
+| 10.250.1.25 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
+| 10.250.1.29 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 | 10.252.1.0 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
-| 172.16.1.4 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 172.16.1.6 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.1.16 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.1.18 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 10.252.1.0 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | VRF_A | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
@@ -734,21 +734,21 @@ ASN Notation: asplain
 
 | VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
 | ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
-| 10 | 10.250.1.4:10010 | 10010:10010 | - | - | learned |
-| 20 | 10.250.1.4:10020 | 10020:10020 | - | - | learned |
+| 10 | 10.250.1.7:10010 | 10010:10010 | - | - | learned |
+| 20 | 10.250.1.7:10020 | 10020:10020 | - | - | learned |
 
 #### Router BGP VRFs
 
 | VRF | Route-Distinguisher | Redistribute |
 | --- | ------------------- | ------------ |
-| VRF_A | 10.250.1.4:10 | connected |
+| VRF_A | 10.250.1.7:10 | connected |
 
 #### Router BGP Device Configuration
 
 ```eos
 !
 router bgp 65101
-   router-id 10.250.1.4
+   router-id 10.250.1.7
    maximum-paths 4 ecmp 4
    no bgp default ipv4-unicast
    neighbor EVPN-OVERLAY-PEERS peer group
@@ -770,29 +770,29 @@ router bgp 65101
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
    neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
-   neighbor 10.250.1.1 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.250.1.1 remote-as 65100
-   neighbor 10.250.1.1 description DC1-SP1
-   neighbor 10.250.1.2 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.250.1.2 remote-as 65100
-   neighbor 10.250.1.2 description DC1-SP2
+   neighbor 10.250.1.25 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.25 remote-as 65100
+   neighbor 10.250.1.25 description DC1-SP1
+   neighbor 10.250.1.29 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.250.1.29 remote-as 65100
+   neighbor 10.250.1.29 description DC1-SP2
    neighbor 10.252.1.0 peer group MLAG-IPv4-UNDERLAY-PEER
    neighbor 10.252.1.0 description DC1-CL1
-   neighbor 172.16.1.4 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.16.1.4 remote-as 65100
-   neighbor 172.16.1.4 description DC1-SP1_Ethernet2
-   neighbor 172.16.1.6 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.16.1.6 remote-as 65100
-   neighbor 172.16.1.6 description DC1-SP2_Ethernet2
+   neighbor 172.16.1.16 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.16 remote-as 65100
+   neighbor 172.16.1.16 description DC1-SP1_Ethernet2
+   neighbor 172.16.1.18 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.18 remote-as 65100
+   neighbor 172.16.1.18 description DC1-SP2_Ethernet2
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan 10
-      rd 10.250.1.4:10010
+      rd 10.250.1.7:10010
       route-target both 10010:10010
       redistribute learned
    !
    vlan 20
-      rd 10.250.1.4:10020
+      rd 10.250.1.7:10020
       route-target both 10020:10020
       redistribute learned
    !
@@ -805,10 +805,10 @@ router bgp 65101
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
    !
    vrf VRF_A
-      rd 10.250.1.4:10
+      rd 10.250.1.7:10
       route-target import evpn 10:10
       route-target export evpn 10:10
-      router-id 10.250.1.4
+      router-id 10.250.1.7
       neighbor 10.252.1.0 peer group MLAG-IPv4-UNDERLAY-PEER
       redistribute connected
 ```

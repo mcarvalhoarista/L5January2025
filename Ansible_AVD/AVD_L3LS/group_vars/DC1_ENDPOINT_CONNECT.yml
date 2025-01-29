@@ -1,13 +1,13 @@
 ---
 servers:
-  - name: DC1-SW1
-    adapters:
-      - endpoint_ports: [ Ethernet1 ]
-        switch_ports: [ Ethernet3 ]
-        switches: [ DC1-CL1 ]
-        port_channel:
-          description: PortChannel_DC1-SW1
-          mode: active
+  #- name: DC1-SW1
+  #  adapters:
+  #    - endpoint_ports: [ Ethernet1 ]
+  #      switch_ports: [ Ethernet3 ]
+  #      switches: [ DC1-CL1 ]
+  #      port_channel:
+  #        description: PortChannel_DC1-SW1
+  #        mode: active
 
   
   # - name: host3

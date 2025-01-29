@@ -1,0 +1,83 @@
+---
+port_profiles:
+
+  - profile: TRUNK_10G_Compute_DC1
+    mode: trunk
+    # speed: 10g
+    spanning_tree_portfast: edge
+    vlans: 10,20,30,40
+
+servers:
+  - name: DC1-SW1
+    rack: DC1_RACK1
+    adapters:
+      - endpoint_ports: [Ethernet1, Ethernet2]
+        switch_ports: [Ethernet3, Ethernet3]
+        switches: [DC1-CL1, DC1-CL2]
+        profile: TRUNK_10G_Compute_DC1
+        port_channel:
+          description: PortChannel100
+          mode: active
+        ethernet_segment:
+          short_esi: auto
+
+  - name: DC1-R1
+    rack: DC1_RACK1
+    adapters:
+      - endpoint_ports: [Ethernet0/1, Ethernet0/2]
+        switch_ports: [Ethernet4, Ethernet4]
+        switches: [DC1-CL1, DC1-CL2]
+        profile: TRUNK_10G_Compute_DC1
+        port_channel:
+          description: PortChannel100
+          mode: active
+        ethernet_segment:
+          short_esi: auto
+
+  - name: DC1-SW2
+    rack: DC1_RACK2
+    adapters:
+      - endpoint_ports: [Ethernet1, Ethernet2]
+        switch_ports: [Ethernet3, Ethernet3]
+        switches: [DC1-CL3, DC1-CL4]
+        profile: TRUNK_10G_Compute_DC1
+        port_channel:
+          description: PortChannel100
+          mode: active
+        ethernet_segment:
+          short_esi: auto
+
+  - name: DC1-R2
+    rack: DC1_RACK2
+    adapters:
+      - endpoint_ports: [Ethernet0/1, Ethernet0/2]
+        switch_ports: [Ethernet4, Ethernet4]
+        switches: [DC1-CL3, DC1-CL4]
+        profile: TRUNK_10G_Compute_DC1
+        port_channel:
+          description: PortChannel100
+          mode: active
+        ethernet_segment:
+          short_esi: auto
+
+  #- name: DC1-SW1
+  #  adapters:
+  #    - endpoint_ports: [ Ethernet1 ]
+  #      switch_ports: [ Ethernet3 ]
+  #      switches: [ DC1-CL1 ]
+  #      port_channel:
+  #        description: PortChannel_DC1-SW1
+  #        mode: active
+
+  
+  # - name: host3
+  #   adapters:
+  #     - endpoint_ports: [ Ethernet1, Ethernet2 ]
+  #       switch_ports: [ Ethernet7, Ethernet7 ]
+  #       switches: [ leaf3, leaf4 ]
+  #       vlans: 20
+  #       mode: access
+  #       spanning_tree_portfast: edge
+  #       port_channel:
+  #         description: PortChannel host3
+  #         mode: active

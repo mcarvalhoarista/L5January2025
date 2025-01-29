@@ -1,0 +1,61 @@
+---
+port_profiles:
+
+  - profile: TRUNK_10G_Compute_DC2
+    mode: trunk
+    # speed: 10g
+    spanning_tree_portfast: edge
+    vlans: 10,20,30,40
+
+servers:
+  - name: DC2-SW1
+    rack: DC2_RACK1
+    adapters:
+      - endpoint_ports: [Ethernet1, Ethernet2]
+        switch_ports: [Ethernet3, Ethernet3]
+        switches: [DC2-CL1, DC2-CL2]
+        profile: TRUNK_10G_Compute_DC2
+        port_channel:
+          description: PortChannel100
+          mode: active
+        ethernet_segment:
+          short_esi: auto
+
+  - name: DC2-R1
+    rack: DC2_RACK1
+    adapters:
+      - endpoint_ports: [Ethernet0/1, Ethernet0/2]
+        switch_ports: [Ethernet4, Ethernet4]
+        switches: [DC2-CL1, DC2-CL2]
+        profile: TRUNK_10G_Compute_DC2
+        port_channel:
+          description: PortChannel100
+          mode: active
+        ethernet_segment:
+          short_esi: auto
+
+  - name: DC2-SW2
+    rack: DC2_RACK2
+    adapters:
+      - endpoint_ports: [Ethernet1, Ethernet2]
+        switch_ports: [Ethernet3, Ethernet3]
+        switches: [DC2-CL3, DC2-CL4]
+        profile: TRUNK_10G_Compute_DC2
+        port_channel:
+          description: PortChannel100
+          mode: active
+        ethernet_segment:
+          short_esi: auto
+
+  - name: DC2-R2
+    rack: DC2_RACK2
+    adapters:
+      - endpoint_ports: [Ethernet0/1, Ethernet0/2]
+        switch_ports: [Ethernet4, Ethernet4]
+        switches: [DC2-CL3, DC2-CL4]
+        profile: TRUNK_10G_Compute_DC2
+        port_channel:
+          description: PortChannel100
+          mode: active
+        ethernet_segment:
+          short_esi: auto

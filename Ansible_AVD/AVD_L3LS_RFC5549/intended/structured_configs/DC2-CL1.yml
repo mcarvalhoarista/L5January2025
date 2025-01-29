@@ -1,0 +1,358 @@
+hostname: DC2-CL1
+is_deployed: true
+router_bgp:
+  as: '65201.0'
+  router_id: 10.250.2.3
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    password: 7x4B4rnJhZB438m9+BrBfQ==
+    maximum_routes: 12000
+    send_community: all
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    password: Q4fqtbqcZ7oQuKfuWtNGRQ==
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 3
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+      next_hop:
+        address_family_ipv6:
+          enabled: true
+          originate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  redistribute_routes:
+  - source_protocol: connected
+    route_map: RM-CONN-2-BGP
+  neighbor_interfaces:
+  - name: Ethernet1
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65200.0'
+    peer: DC2-SP1
+    description: DC2-SP1_Ethernet1
+  - name: Ethernet2
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65200.0'
+    peer: DC2-SP2
+    description: DC2-SP2_Ethernet1
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_rtc:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  neighbors:
+  - ip_address: 10.250.2.1
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: DC2-SP1
+    description: DC2-SP1
+    remote_as: '65200.0'
+  - ip_address: 10.250.2.2
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: DC2-SP2
+    description: DC2-SP2
+    remote_as: '65200.0'
+  vrfs:
+  - name: VRF_A
+    router_id: 10.250.2.3
+    rd: 10.250.2.3:10
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+    redistribute_routes:
+    - source_protocol: connected
+  vlans:
+  - id: 10
+    tenant: TENANT_C1
+    rd: 10.250.2.3:10010
+    route_targets:
+      both:
+      - 10010:10010
+    redistribute_routes:
+    - learned
+  - id: 20
+    tenant: TENANT_C1
+    rd: 10.250.2.3:10020
+    route_targets:
+      both:
+      - 10020:10020
+    redistribute_routes:
+    - learned
+  as_notation: asdot
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 10.88.169.129
+service_routing_protocols_model: multi-agent
+ipv6_unicast_routing: true
+ip_routing_ipv6_interfaces: true
+daemon_terminattr:
+  cvaddrs:
+  - 10.88.160.63:9910
+  cvauth:
+    method: token
+    token_file: /tmp/token
+  cvvrf: MGMT
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 3500
+    ending: 4000
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 4096
+local_users:
+- name: arista
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+- name: marcelo
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+clock:
+  timezone: US/Central
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: VRF_A
+  tenant: TENANT_C1
+  ip_routing: true
+management_interfaces:
+- name: Management1
+  description: Management_Interface
+  shutdown: false
+  vrf: MGMT
+  ip_address: 10.88.169.143/24
+  gateway: 10.88.169.129
+  type: oob
+mac_address_table:
+  aging_time: 1800
+management_api_http:
+  enable_vrfs:
+  - name: MGMT
+    access_group: CVP-ACL
+  enable_https: true
+  enable_http: false
+ethernet_interfaces:
+- name: Ethernet1
+  peer: DC2-SP1
+  peer_interface: Ethernet1
+  peer_type: spine
+  description: P2P_LINK_TO_DC2-SP1_Ethernet1
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ipv6_enable: true
+- name: Ethernet2
+  peer: DC2-SP2
+  peer_interface: Ethernet1
+  peer_type: spine
+  description: P2P_LINK_TO_DC2-SP2_Ethernet1
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ipv6_enable: true
+- name: Ethernet3
+  peer: DC2-SW1
+  peer_interface: Ethernet1
+  peer_type: server
+  port_profile: TRUNK_10G_Compute_DC2
+  description: DC2-SW1_Ethernet1
+  shutdown: false
+  type: port-channel-member
+  channel_group:
+    id: 3
+    mode: active
+- name: Ethernet4
+  peer: DC2-R1
+  peer_interface: Ethernet0/1
+  peer_type: server
+  port_profile: TRUNK_10G_Compute_DC2
+  description: DC2-R1_Ethernet0/1
+  shutdown: false
+  type: port-channel-member
+  channel_group:
+    id: 4
+    mode: active
+loopback_interfaces:
+- name: Loopback0
+  description: EVPN_Overlay_Peering
+  shutdown: false
+  ip_address: 10.250.2.3/32
+- name: Loopback1
+  description: VTEP_VXLAN_Tunnel_Source
+  shutdown: false
+  ip_address: 10.255.2.3/32
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.250.2.0/24 eq 32
+  - sequence: 20
+    action: permit 10.255.2.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+vlans:
+- id: 10
+  name: DMZ
+  tenant: TENANT_C1
+- id: 20
+  name: DMZ
+  tenant: TENANT_C1
+- id: 1
+  name: unused
+  state: suspend
+ip_igmp_snooping:
+  globally_enabled: true
+ip_virtual_router_mac_address: 00:1c:73:00:00:99
+vlan_interfaces:
+- name: Vlan10
+  tenant: TENANT_C1
+  description: DMZ
+  shutdown: false
+  ip_address_virtual: 10.1.10.1/24
+  vrf: VRF_A
+- name: Vlan20
+  tenant: TENANT_C1
+  description: DMZ
+  shutdown: false
+  ip_address_virtual: 10.1.20.1/24
+  vrf: VRF_A
+vxlan_interface:
+  Vxlan1:
+    description: DC2-CL1_VTEP
+    vxlan:
+      udp_port: 4789
+      source_interface: Loopback1
+      vlans:
+      - id: 10
+        vni: 10010
+      - id: 20
+        vni: 10020
+      vrfs:
+      - name: VRF_A
+        vni: 10
+port_channel_interfaces:
+- name: Port-Channel3
+  description: DC2-SW1_PortChannel100
+  type: switched
+  shutdown: false
+  mode: trunk
+  vlans: 10,20,30,40
+  spanning_tree_portfast: edge
+  evpn_ethernet_segment:
+    identifier: 0000:0000:5644:cb7d:daaa
+    route_target: 56:44:cb:7d:da:aa
+  lacp_id: 5644.cb7d.daaa
+- name: Port-Channel4
+  description: DC2-R1_PortChannel100
+  type: switched
+  shutdown: false
+  mode: trunk
+  vlans: 10,20,30,40
+  spanning_tree_portfast: edge
+  evpn_ethernet_segment:
+    identifier: 0000:0000:1cee:1025:ee05
+    route_target: 1c:ee:10:25:ee:05
+  lacp_id: 1cee.1025.ee05
+metadata:
+  platform: cEOS
+interface_defaults:
+  mtu: 1500
+  ethernet:
+    shutdown: true
+switchport_default:
+  mode: routed
+banners:
+  login: '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !!                                                                        !!
+
+    !! IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!
+
+    !! WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!
+
+    !!                                                                        !!
+
+    !! UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!
+
+    !!                                                                        !!
+
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+    EOF
+
+    '
+management_ssh:
+  idle_timeout: 5
+  enable: true
+  vrfs:
+  - name: MGMT
+    enable: true
+aaa_authentication:
+  login:
+    default: local
+    console: local
+  policies:
+    on_failure_log: true
+    on_success_log: true
+aaa_authorization:
+  exec:
+    default: local
+  config_commands: true
+  serial_console: true
+  commands:
+    all_default: local
+ip_tacacs_source_interfaces:
+- name: Management1
+  vrf: MGMT
+standard_access_lists:
+- name: SNMP-ACL
+  sequence_numbers:
+  - sequence: 10
+    action: permit 0.0.0.0/0
+- name: CVP-ACL
+  sequence_numbers:
+  - sequence: 10
+    action: permit 0.0.0.0/0

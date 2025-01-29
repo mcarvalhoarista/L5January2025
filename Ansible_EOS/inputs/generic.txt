@@ -1,6 +1,3 @@
-no alias shv show version
-no alias shr show running-config
-
-no vrf instance PEPITO
-
-no router bgp 65103
+router isis EVPN_UNDERLAY
+   address-family ipv4 unicast
+      advertise interface-address passive-only

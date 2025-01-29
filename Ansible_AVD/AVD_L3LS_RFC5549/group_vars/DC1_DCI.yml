@@ -1,0 +1,20 @@
+---
+l3_edge:
+  # p2p_links_ip_pools:
+  #   - name: "dci_links"
+  #     ipv4_pool: "192.168.3.0/24"
+  p2p_links:
+    - id: 1
+      # speed: 100g
+      # ip_pool: dci_links
+      nodes: [DC1-BL1, DC2-BL1]
+      interfaces: [Ethernet4, Ethernet4]
+      as: ["65103.0", "65203.0"]
+      include_in_underlay_protocol: true
+    - id: 2
+      # speed: 100g
+      # ip_pool: dci_links
+      nodes: [DC1-BL2, DC2-BL2]
+      interfaces: [Ethernet4, Ethernet4]
+      as: ["65103.0", "65203.0"]
+      include_in_underlay_protocol: true

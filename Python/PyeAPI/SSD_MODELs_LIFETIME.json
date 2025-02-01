@@ -1,0 +1,12 @@
+{
+    "ps-rtp1-leaf5": {
+        "MODEL": "DCS-7280SRAM-48C6-F",
+        "SSD_LIFETIME": "79",
+        "SSD_MODEL": "StorFly VSFBM4CC030G-150"
+    },
+    "ps-rtp1-leaf6": {
+        "MODEL": "DCS-7280SRAM-48C6-F",
+        "SSD_LIFETIME": "80",
+        "SSD_MODEL": "StorFly VSFBM4CC030G-150"
+    }
+}

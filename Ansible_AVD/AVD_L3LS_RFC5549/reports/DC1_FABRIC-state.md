@@ -1,0 +1,343 @@
+# Validate State Report
+
+**Table of Contents:**
+
+- [Validate State Report](validate-state-report)
+  - [Test Results Summary](#test-results-summary)
+  - [Failed Test Results Summary](#failed-test-results-summary)
+  - [All Test Results](#all-test-results)
+
+## Test Results Summary
+
+### Summary Totals
+
+| Total Tests | Total Tests Passed | Total Tests Failed |
+| ----------- | ------------------ | ------------------ |
+| 280 | 267 | 13 |
+
+### Summary Totals Devices Under Tests
+
+| DUT | Total Tests | Tests Passed | Tests Failed | Categories Failed |
+| --- | ----------- | ------------ | ------------ | ----------------- |
+| DC1-BL1 |  39 | 38 | 1 | NTP |
+| DC1-BL2 |  39 | 37 | 2 | NTP, BGP |
+| DC1-CL1 |  40 | 38 | 2 | NTP, Interface State |
+| DC1-CL2 |  40 | 38 | 2 | NTP, Interface State |
+| DC1-CL3 |  40 | 38 | 2 | NTP, Interface State |
+| DC1-CL4 |  40 | 38 | 2 | NTP, Interface State |
+| DC1-SP1 |  21 | 20 | 1 | NTP |
+| DC1-SP2 |  21 | 20 | 1 | NTP |
+
+### Summary Totals Per Category
+
+| Test Category | Total Tests | Tests Passed | Tests Failed |
+| ------------- | ----------- | ------------ | ------------ |
+| NTP |  8 | 0 | 8 |
+| Interface State |  80 | 76 | 4 |
+| LLDP Topology |  26 | 26 | 0 |
+| BGP |  34 | 33 | 1 |
+| Routing Table |  84 | 84 | 0 |
+| Loopback0 Reachability |  48 | 48 | 0 |
+
+## Failed Test Results Summary
+
+| Test ID | Node | Test Category | Test Description | Test | Test Result | Failure Reason |
+| ------- | ---- | ------------- | ---------------- | ---- | ----------- | -------------- |
+| 1 | DC1-BL1 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 2 | DC1-BL2 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 3 | DC1-CL1 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 4 | DC1-CL2 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 5 | DC1-CL3 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 6 | DC1-CL4 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 7 | DC1-SP1 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 8 | DC1-SP2 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 44 | DC1-CL1 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel4 - DC1-R1_PortChannel100 | FAIL | Interface shutdown: False - interface status: down - line protocol status: lowerLayerDown |
+| 46 | DC1-CL2 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel4 - DC1-R1_PortChannel100 | FAIL | Interface shutdown: False - interface status: down - line protocol status: lowerLayerDown |
+| 48 | DC1-CL3 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel4 - DC1-R2_PortChannel100 | FAIL | Interface shutdown: False - interface status: down - line protocol status: lowerLayerDown |
+| 50 | DC1-CL4 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel4 - DC1-R2_PortChannel100 | FAIL | Interface shutdown: False - interface status: down - line protocol status: lowerLayerDown |
+| 128 | DC1-BL2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.2.8 | FAIL | Session state: Active |
+
+## All Test Results
+
+| Test ID | Node | Test Category | Test Description | Test | Test Result | Failure Reason |
+| ------- | ---- | ------------- | ---------------- | ---- | ----------- | -------------- |
+| 1 | DC1-BL1 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 2 | DC1-BL2 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 3 | DC1-CL1 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 4 | DC1-CL2 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 5 | DC1-CL3 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 6 | DC1-CL4 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 7 | DC1-SP1 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 8 | DC1-SP2 | NTP | Synchronised with NTP server | NTP | FAIL | Not synchronised to NTP server |
+| 9 | DC1-BL1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet1 - P2P_LINK_TO_DC1-SP1_Ethernet5 | PASS | - |
+| 10 | DC1-BL1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet2 - P2P_LINK_TO_DC1-SP2_Ethernet5 | PASS | - |
+| 11 | DC1-BL1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet4 - P2P_LINK_TO_DC2-BL1_Ethernet4 | PASS | - |
+| 12 | DC1-BL2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet1 - P2P_LINK_TO_DC1-SP1_Ethernet6 | PASS | - |
+| 13 | DC1-BL2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet2 - P2P_LINK_TO_DC1-SP2_Ethernet6 | PASS | - |
+| 14 | DC1-BL2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet4 - P2P_LINK_TO_DC2-BL2_Ethernet4 | PASS | - |
+| 15 | DC1-CL1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet1 - P2P_LINK_TO_DC1-SP1_Ethernet1 | PASS | - |
+| 16 | DC1-CL1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet2 - P2P_LINK_TO_DC1-SP2_Ethernet1 | PASS | - |
+| 17 | DC1-CL1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet3 - DC1-SW1_Ethernet1 | PASS | - |
+| 18 | DC1-CL1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet4 - DC1-R1_Ethernet0/1 | PASS | - |
+| 19 | DC1-CL2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet1 - P2P_LINK_TO_DC1-SP1_Ethernet2 | PASS | - |
+| 20 | DC1-CL2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet2 - P2P_LINK_TO_DC1-SP2_Ethernet2 | PASS | - |
+| 21 | DC1-CL2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet3 - DC1-SW1_Ethernet2 | PASS | - |
+| 22 | DC1-CL2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet4 - DC1-R1_Ethernet0/2 | PASS | - |
+| 23 | DC1-CL3 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet1 - P2P_LINK_TO_DC1-SP1_Ethernet3 | PASS | - |
+| 24 | DC1-CL3 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet2 - P2P_LINK_TO_DC1-SP2_Ethernet3 | PASS | - |
+| 25 | DC1-CL3 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet3 - DC1-SW2_Ethernet1 | PASS | - |
+| 26 | DC1-CL3 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet4 - DC1-R2_Ethernet0/1 | PASS | - |
+| 27 | DC1-CL4 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet1 - P2P_LINK_TO_DC1-SP1_Ethernet4 | PASS | - |
+| 28 | DC1-CL4 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet2 - P2P_LINK_TO_DC1-SP2_Ethernet4 | PASS | - |
+| 29 | DC1-CL4 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet3 - DC1-SW2_Ethernet2 | PASS | - |
+| 30 | DC1-CL4 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet4 - DC1-R2_Ethernet0/2 | PASS | - |
+| 31 | DC1-SP1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet1 - P2P_LINK_TO_DC1-CL1_Ethernet1 | PASS | - |
+| 32 | DC1-SP1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet2 - P2P_LINK_TO_DC1-CL2_Ethernet1 | PASS | - |
+| 33 | DC1-SP1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet3 - P2P_LINK_TO_DC1-CL3_Ethernet1 | PASS | - |
+| 34 | DC1-SP1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet4 - P2P_LINK_TO_DC1-CL4_Ethernet1 | PASS | - |
+| 35 | DC1-SP1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet5 - P2P_LINK_TO_DC1-BL1_Ethernet1 | PASS | - |
+| 36 | DC1-SP1 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet6 - P2P_LINK_TO_DC1-BL2_Ethernet1 | PASS | - |
+| 37 | DC1-SP2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet1 - P2P_LINK_TO_DC1-CL1_Ethernet2 | PASS | - |
+| 38 | DC1-SP2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet2 - P2P_LINK_TO_DC1-CL2_Ethernet2 | PASS | - |
+| 39 | DC1-SP2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet3 - P2P_LINK_TO_DC1-CL3_Ethernet2 | PASS | - |
+| 40 | DC1-SP2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet4 - P2P_LINK_TO_DC1-CL4_Ethernet2 | PASS | - |
+| 41 | DC1-SP2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet5 - P2P_LINK_TO_DC1-BL1_Ethernet2 | PASS | - |
+| 42 | DC1-SP2 | Interface State | Ethernet Interface & Line Protocol == "up" | Ethernet6 - P2P_LINK_TO_DC1-BL2_Ethernet2 | PASS | - |
+| 43 | DC1-CL1 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel3 - DC1-SW1_PortChannel100 | PASS | - |
+| 44 | DC1-CL1 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel4 - DC1-R1_PortChannel100 | FAIL | Interface shutdown: False - interface status: down - line protocol status: lowerLayerDown |
+| 45 | DC1-CL2 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel3 - DC1-SW1_PortChannel100 | PASS | - |
+| 46 | DC1-CL2 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel4 - DC1-R1_PortChannel100 | FAIL | Interface shutdown: False - interface status: down - line protocol status: lowerLayerDown |
+| 47 | DC1-CL3 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel3 - DC1-SW2_PortChannel100 | PASS | - |
+| 48 | DC1-CL3 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel4 - DC1-R2_PortChannel100 | FAIL | Interface shutdown: False - interface status: down - line protocol status: lowerLayerDown |
+| 49 | DC1-CL4 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel3 - DC1-SW2_PortChannel100 | PASS | - |
+| 50 | DC1-CL4 | Interface State | Port-Channel Interface & Line Protocol == "up" | Port-Channel4 - DC1-R2_PortChannel100 | FAIL | Interface shutdown: False - interface status: down - line protocol status: lowerLayerDown |
+| 51 | DC1-BL1 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan10 - DMZ | PASS | - |
+| 52 | DC1-BL1 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan20 - DMZ | PASS | - |
+| 53 | DC1-BL2 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan10 - DMZ | PASS | - |
+| 54 | DC1-BL2 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan20 - DMZ | PASS | - |
+| 55 | DC1-CL1 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan10 - DMZ | PASS | - |
+| 56 | DC1-CL1 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan20 - DMZ | PASS | - |
+| 57 | DC1-CL2 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan10 - DMZ | PASS | - |
+| 58 | DC1-CL2 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan20 - DMZ | PASS | - |
+| 59 | DC1-CL3 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan10 - DMZ | PASS | - |
+| 60 | DC1-CL3 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan20 - DMZ | PASS | - |
+| 61 | DC1-CL4 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan10 - DMZ | PASS | - |
+| 62 | DC1-CL4 | Interface State | Vlan Interface & Line Protocol == "up" | Vlan20 - DMZ | PASS | - |
+| 63 | DC1-BL1 | Interface State | Vxlan Interface Status & Line Protocol == "up" | Vxlan1 | PASS | - |
+| 64 | DC1-BL2 | Interface State | Vxlan Interface Status & Line Protocol == "up" | Vxlan1 | PASS | - |
+| 65 | DC1-CL1 | Interface State | Vxlan Interface Status & Line Protocol == "up" | Vxlan1 | PASS | - |
+| 66 | DC1-CL2 | Interface State | Vxlan Interface Status & Line Protocol == "up" | Vxlan1 | PASS | - |
+| 67 | DC1-CL3 | Interface State | Vxlan Interface Status & Line Protocol == "up" | Vxlan1 | PASS | - |
+| 68 | DC1-CL4 | Interface State | Vxlan Interface Status & Line Protocol == "up" | Vxlan1 | PASS | - |
+| 69 | DC1-BL1 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback0 - EVPN_Overlay_Peering | PASS | - |
+| 70 | DC1-BL1 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback1 - VTEP_VXLAN_Tunnel_Source | PASS | - |
+| 71 | DC1-BL1 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback666 - VRF_A_VTEP_DIAGNOSTICS | PASS | - |
+| 72 | DC1-BL2 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback0 - EVPN_Overlay_Peering | PASS | - |
+| 73 | DC1-BL2 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback1 - VTEP_VXLAN_Tunnel_Source | PASS | - |
+| 74 | DC1-BL2 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback666 - VRF_A_VTEP_DIAGNOSTICS | PASS | - |
+| 75 | DC1-CL1 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback0 - EVPN_Overlay_Peering | PASS | - |
+| 76 | DC1-CL1 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback1 - VTEP_VXLAN_Tunnel_Source | PASS | - |
+| 77 | DC1-CL1 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback666 - VRF_A_VTEP_DIAGNOSTICS | PASS | - |
+| 78 | DC1-CL2 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback0 - EVPN_Overlay_Peering | PASS | - |
+| 79 | DC1-CL2 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback1 - VTEP_VXLAN_Tunnel_Source | PASS | - |
+| 80 | DC1-CL2 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback666 - VRF_A_VTEP_DIAGNOSTICS | PASS | - |
+| 81 | DC1-CL3 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback0 - EVPN_Overlay_Peering | PASS | - |
+| 82 | DC1-CL3 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback1 - VTEP_VXLAN_Tunnel_Source | PASS | - |
+| 83 | DC1-CL3 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback666 - VRF_A_VTEP_DIAGNOSTICS | PASS | - |
+| 84 | DC1-CL4 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback0 - EVPN_Overlay_Peering | PASS | - |
+| 85 | DC1-CL4 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback1 - VTEP_VXLAN_Tunnel_Source | PASS | - |
+| 86 | DC1-CL4 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback666 - VRF_A_VTEP_DIAGNOSTICS | PASS | - |
+| 87 | DC1-SP1 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback0 - EVPN_Overlay_Peering | PASS | - |
+| 88 | DC1-SP2 | Interface State | Loopback Interface Status & Line Protocol == "up" | Loopback0 - EVPN_Overlay_Peering | PASS | - |
+| 89 | DC1-BL1 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet1 - remote: DC1-SP1_Ethernet5 | PASS | - |
+| 90 | DC1-BL1 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet2 - remote: DC1-SP2_Ethernet5 | PASS | - |
+| 91 | DC1-BL1 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet4 - remote: DC2-BL1_Ethernet4 | PASS | - |
+| 92 | DC1-BL2 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet1 - remote: DC1-SP1_Ethernet6 | PASS | - |
+| 93 | DC1-BL2 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet2 - remote: DC1-SP2_Ethernet6 | PASS | - |
+| 94 | DC1-BL2 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet4 - remote: DC2-BL2_Ethernet4 | PASS | - |
+| 95 | DC1-CL1 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet1 - remote: DC1-SP1_Ethernet1 | PASS | - |
+| 96 | DC1-CL1 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet2 - remote: DC1-SP2_Ethernet1 | PASS | - |
+| 97 | DC1-CL2 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet1 - remote: DC1-SP1_Ethernet2 | PASS | - |
+| 98 | DC1-CL2 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet2 - remote: DC1-SP2_Ethernet2 | PASS | - |
+| 99 | DC1-CL3 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet1 - remote: DC1-SP1_Ethernet3 | PASS | - |
+| 100 | DC1-CL3 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet2 - remote: DC1-SP2_Ethernet3 | PASS | - |
+| 101 | DC1-CL4 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet1 - remote: DC1-SP1_Ethernet4 | PASS | - |
+| 102 | DC1-CL4 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet2 - remote: DC1-SP2_Ethernet4 | PASS | - |
+| 103 | DC1-SP1 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet1 - remote: DC1-CL1_Ethernet1 | PASS | - |
+| 104 | DC1-SP1 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet2 - remote: DC1-CL2_Ethernet1 | PASS | - |
+| 105 | DC1-SP1 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet3 - remote: DC1-CL3_Ethernet1 | PASS | - |
+| 106 | DC1-SP1 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet4 - remote: DC1-CL4_Ethernet1 | PASS | - |
+| 107 | DC1-SP1 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet5 - remote: DC1-BL1_Ethernet1 | PASS | - |
+| 108 | DC1-SP1 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet6 - remote: DC1-BL2_Ethernet1 | PASS | - |
+| 109 | DC1-SP2 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet1 - remote: DC1-CL1_Ethernet2 | PASS | - |
+| 110 | DC1-SP2 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet2 - remote: DC1-CL2_Ethernet2 | PASS | - |
+| 111 | DC1-SP2 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet3 - remote: DC1-CL3_Ethernet2 | PASS | - |
+| 112 | DC1-SP2 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet4 - remote: DC1-CL4_Ethernet2 | PASS | - |
+| 113 | DC1-SP2 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet5 - remote: DC1-BL1_Ethernet2 | PASS | - |
+| 114 | DC1-SP2 | LLDP Topology | LLDP topology - validate peer and interface | local: Ethernet6 - remote: DC1-BL2_Ethernet2 | PASS | - |
+| 115 | DC1-BL1 | BGP | ArBGP is configured and operating | ArBGP | PASS | - |
+| 116 | DC1-BL2 | BGP | ArBGP is configured and operating | ArBGP | PASS | - |
+| 117 | DC1-CL1 | BGP | ArBGP is configured and operating | ArBGP | PASS | - |
+| 118 | DC1-CL2 | BGP | ArBGP is configured and operating | ArBGP | PASS | - |
+| 119 | DC1-CL3 | BGP | ArBGP is configured and operating | ArBGP | PASS | - |
+| 120 | DC1-CL4 | BGP | ArBGP is configured and operating | ArBGP | PASS | - |
+| 121 | DC1-SP1 | BGP | ArBGP is configured and operating | ArBGP | PASS | - |
+| 122 | DC1-SP2 | BGP | ArBGP is configured and operating | ArBGP | PASS | - |
+| 123 | DC1-BL1 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.1 | PASS | - |
+| 124 | DC1-BL1 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.2 | PASS | - |
+| 125 | DC1-BL1 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.2.7 | PASS | - |
+| 126 | DC1-BL2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.1 | PASS | - |
+| 127 | DC1-BL2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.2 | PASS | - |
+| 128 | DC1-BL2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.2.8 | FAIL | Session state: Active |
+| 129 | DC1-CL1 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.1 | PASS | - |
+| 130 | DC1-CL1 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.2 | PASS | - |
+| 131 | DC1-CL2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.1 | PASS | - |
+| 132 | DC1-CL2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.2 | PASS | - |
+| 133 | DC1-CL3 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.1 | PASS | - |
+| 134 | DC1-CL3 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.2 | PASS | - |
+| 135 | DC1-CL4 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.1 | PASS | - |
+| 136 | DC1-CL4 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.2 | PASS | - |
+| 137 | DC1-SP1 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.7 | PASS | - |
+| 138 | DC1-SP1 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.8 | PASS | - |
+| 139 | DC1-SP1 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.3 | PASS | - |
+| 140 | DC1-SP1 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.4 | PASS | - |
+| 141 | DC1-SP1 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.5 | PASS | - |
+| 142 | DC1-SP1 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.6 | PASS | - |
+| 143 | DC1-SP2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.7 | PASS | - |
+| 144 | DC1-SP2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.8 | PASS | - |
+| 145 | DC1-SP2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.3 | PASS | - |
+| 146 | DC1-SP2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.4 | PASS | - |
+| 147 | DC1-SP2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.5 | PASS | - |
+| 148 | DC1-SP2 | BGP | bgp evpn peer state established (evpn) | bgp_neighbor: 10.250.1.6 | PASS | - |
+| 149 | DC1-BL1 | Routing Table | Remote VTEP address | 10.255.1.7 | PASS | - |
+| 150 | DC1-BL1 | Routing Table | Remote VTEP address | 10.255.1.8 | PASS | - |
+| 151 | DC1-BL1 | Routing Table | Remote VTEP address | 10.255.1.3 | PASS | - |
+| 152 | DC1-BL1 | Routing Table | Remote VTEP address | 10.255.1.4 | PASS | - |
+| 153 | DC1-BL1 | Routing Table | Remote VTEP address | 10.255.1.5 | PASS | - |
+| 154 | DC1-BL1 | Routing Table | Remote VTEP address | 10.255.1.6 | PASS | - |
+| 155 | DC1-BL2 | Routing Table | Remote VTEP address | 10.255.1.7 | PASS | - |
+| 156 | DC1-BL2 | Routing Table | Remote VTEP address | 10.255.1.8 | PASS | - |
+| 157 | DC1-BL2 | Routing Table | Remote VTEP address | 10.255.1.3 | PASS | - |
+| 158 | DC1-BL2 | Routing Table | Remote VTEP address | 10.255.1.4 | PASS | - |
+| 159 | DC1-BL2 | Routing Table | Remote VTEP address | 10.255.1.5 | PASS | - |
+| 160 | DC1-BL2 | Routing Table | Remote VTEP address | 10.255.1.6 | PASS | - |
+| 161 | DC1-CL1 | Routing Table | Remote VTEP address | 10.255.1.7 | PASS | - |
+| 162 | DC1-CL1 | Routing Table | Remote VTEP address | 10.255.1.8 | PASS | - |
+| 163 | DC1-CL1 | Routing Table | Remote VTEP address | 10.255.1.3 | PASS | - |
+| 164 | DC1-CL1 | Routing Table | Remote VTEP address | 10.255.1.4 | PASS | - |
+| 165 | DC1-CL1 | Routing Table | Remote VTEP address | 10.255.1.5 | PASS | - |
+| 166 | DC1-CL1 | Routing Table | Remote VTEP address | 10.255.1.6 | PASS | - |
+| 167 | DC1-CL2 | Routing Table | Remote VTEP address | 10.255.1.7 | PASS | - |
+| 168 | DC1-CL2 | Routing Table | Remote VTEP address | 10.255.1.8 | PASS | - |
+| 169 | DC1-CL2 | Routing Table | Remote VTEP address | 10.255.1.3 | PASS | - |
+| 170 | DC1-CL2 | Routing Table | Remote VTEP address | 10.255.1.4 | PASS | - |
+| 171 | DC1-CL2 | Routing Table | Remote VTEP address | 10.255.1.5 | PASS | - |
+| 172 | DC1-CL2 | Routing Table | Remote VTEP address | 10.255.1.6 | PASS | - |
+| 173 | DC1-CL3 | Routing Table | Remote VTEP address | 10.255.1.7 | PASS | - |
+| 174 | DC1-CL3 | Routing Table | Remote VTEP address | 10.255.1.8 | PASS | - |
+| 175 | DC1-CL3 | Routing Table | Remote VTEP address | 10.255.1.3 | PASS | - |
+| 176 | DC1-CL3 | Routing Table | Remote VTEP address | 10.255.1.4 | PASS | - |
+| 177 | DC1-CL3 | Routing Table | Remote VTEP address | 10.255.1.5 | PASS | - |
+| 178 | DC1-CL3 | Routing Table | Remote VTEP address | 10.255.1.6 | PASS | - |
+| 179 | DC1-CL4 | Routing Table | Remote VTEP address | 10.255.1.7 | PASS | - |
+| 180 | DC1-CL4 | Routing Table | Remote VTEP address | 10.255.1.8 | PASS | - |
+| 181 | DC1-CL4 | Routing Table | Remote VTEP address | 10.255.1.3 | PASS | - |
+| 182 | DC1-CL4 | Routing Table | Remote VTEP address | 10.255.1.4 | PASS | - |
+| 183 | DC1-CL4 | Routing Table | Remote VTEP address | 10.255.1.5 | PASS | - |
+| 184 | DC1-CL4 | Routing Table | Remote VTEP address | 10.255.1.6 | PASS | - |
+| 185 | DC1-BL1 | Routing Table | Remote Lo0 address | 10.250.1.7 | PASS | - |
+| 186 | DC1-BL1 | Routing Table | Remote Lo0 address | 10.250.1.8 | PASS | - |
+| 187 | DC1-BL1 | Routing Table | Remote Lo0 address | 10.250.1.3 | PASS | - |
+| 188 | DC1-BL1 | Routing Table | Remote Lo0 address | 10.250.1.4 | PASS | - |
+| 189 | DC1-BL1 | Routing Table | Remote Lo0 address | 10.250.1.5 | PASS | - |
+| 190 | DC1-BL1 | Routing Table | Remote Lo0 address | 10.250.1.6 | PASS | - |
+| 191 | DC1-BL1 | Routing Table | Remote Lo0 address | 10.250.1.1 | PASS | - |
+| 192 | DC1-BL1 | Routing Table | Remote Lo0 address | 10.250.1.2 | PASS | - |
+| 193 | DC1-BL2 | Routing Table | Remote Lo0 address | 10.250.1.7 | PASS | - |
+| 194 | DC1-BL2 | Routing Table | Remote Lo0 address | 10.250.1.8 | PASS | - |
+| 195 | DC1-BL2 | Routing Table | Remote Lo0 address | 10.250.1.3 | PASS | - |
+| 196 | DC1-BL2 | Routing Table | Remote Lo0 address | 10.250.1.4 | PASS | - |
+| 197 | DC1-BL2 | Routing Table | Remote Lo0 address | 10.250.1.5 | PASS | - |
+| 198 | DC1-BL2 | Routing Table | Remote Lo0 address | 10.250.1.6 | PASS | - |
+| 199 | DC1-BL2 | Routing Table | Remote Lo0 address | 10.250.1.1 | PASS | - |
+| 200 | DC1-BL2 | Routing Table | Remote Lo0 address | 10.250.1.2 | PASS | - |
+| 201 | DC1-CL1 | Routing Table | Remote Lo0 address | 10.250.1.7 | PASS | - |
+| 202 | DC1-CL1 | Routing Table | Remote Lo0 address | 10.250.1.8 | PASS | - |
+| 203 | DC1-CL1 | Routing Table | Remote Lo0 address | 10.250.1.3 | PASS | - |
+| 204 | DC1-CL1 | Routing Table | Remote Lo0 address | 10.250.1.4 | PASS | - |
+| 205 | DC1-CL1 | Routing Table | Remote Lo0 address | 10.250.1.5 | PASS | - |
+| 206 | DC1-CL1 | Routing Table | Remote Lo0 address | 10.250.1.6 | PASS | - |
+| 207 | DC1-CL1 | Routing Table | Remote Lo0 address | 10.250.1.1 | PASS | - |
+| 208 | DC1-CL1 | Routing Table | Remote Lo0 address | 10.250.1.2 | PASS | - |
+| 209 | DC1-CL2 | Routing Table | Remote Lo0 address | 10.250.1.7 | PASS | - |
+| 210 | DC1-CL2 | Routing Table | Remote Lo0 address | 10.250.1.8 | PASS | - |
+| 211 | DC1-CL2 | Routing Table | Remote Lo0 address | 10.250.1.3 | PASS | - |
+| 212 | DC1-CL2 | Routing Table | Remote Lo0 address | 10.250.1.4 | PASS | - |
+| 213 | DC1-CL2 | Routing Table | Remote Lo0 address | 10.250.1.5 | PASS | - |
+| 214 | DC1-CL2 | Routing Table | Remote Lo0 address | 10.250.1.6 | PASS | - |
+| 215 | DC1-CL2 | Routing Table | Remote Lo0 address | 10.250.1.1 | PASS | - |
+| 216 | DC1-CL2 | Routing Table | Remote Lo0 address | 10.250.1.2 | PASS | - |
+| 217 | DC1-CL3 | Routing Table | Remote Lo0 address | 10.250.1.7 | PASS | - |
+| 218 | DC1-CL3 | Routing Table | Remote Lo0 address | 10.250.1.8 | PASS | - |
+| 219 | DC1-CL3 | Routing Table | Remote Lo0 address | 10.250.1.3 | PASS | - |
+| 220 | DC1-CL3 | Routing Table | Remote Lo0 address | 10.250.1.4 | PASS | - |
+| 221 | DC1-CL3 | Routing Table | Remote Lo0 address | 10.250.1.5 | PASS | - |
+| 222 | DC1-CL3 | Routing Table | Remote Lo0 address | 10.250.1.6 | PASS | - |
+| 223 | DC1-CL3 | Routing Table | Remote Lo0 address | 10.250.1.1 | PASS | - |
+| 224 | DC1-CL3 | Routing Table | Remote Lo0 address | 10.250.1.2 | PASS | - |
+| 225 | DC1-CL4 | Routing Table | Remote Lo0 address | 10.250.1.7 | PASS | - |
+| 226 | DC1-CL4 | Routing Table | Remote Lo0 address | 10.250.1.8 | PASS | - |
+| 227 | DC1-CL4 | Routing Table | Remote Lo0 address | 10.250.1.3 | PASS | - |
+| 228 | DC1-CL4 | Routing Table | Remote Lo0 address | 10.250.1.4 | PASS | - |
+| 229 | DC1-CL4 | Routing Table | Remote Lo0 address | 10.250.1.5 | PASS | - |
+| 230 | DC1-CL4 | Routing Table | Remote Lo0 address | 10.250.1.6 | PASS | - |
+| 231 | DC1-CL4 | Routing Table | Remote Lo0 address | 10.250.1.1 | PASS | - |
+| 232 | DC1-CL4 | Routing Table | Remote Lo0 address | 10.250.1.2 | PASS | - |
+| 233 | DC1-BL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL1 - 10.250.1.7 Destination: 10.250.1.7 | PASS | - |
+| 234 | DC1-BL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL1 - 10.250.1.7 Destination: 10.250.1.8 | PASS | - |
+| 235 | DC1-BL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL1 - 10.250.1.7 Destination: 10.250.1.3 | PASS | - |
+| 236 | DC1-BL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL1 - 10.250.1.7 Destination: 10.250.1.4 | PASS | - |
+| 237 | DC1-BL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL1 - 10.250.1.7 Destination: 10.250.1.5 | PASS | - |
+| 238 | DC1-BL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL1 - 10.250.1.7 Destination: 10.250.1.6 | PASS | - |
+| 239 | DC1-BL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL1 - 10.250.1.7 Destination: 10.250.1.1 | PASS | - |
+| 240 | DC1-BL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL1 - 10.250.1.7 Destination: 10.250.1.2 | PASS | - |
+| 241 | DC1-BL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL2 - 10.250.1.8 Destination: 10.250.1.7 | PASS | - |
+| 242 | DC1-BL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL2 - 10.250.1.8 Destination: 10.250.1.8 | PASS | - |
+| 243 | DC1-BL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL2 - 10.250.1.8 Destination: 10.250.1.3 | PASS | - |
+| 244 | DC1-BL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL2 - 10.250.1.8 Destination: 10.250.1.4 | PASS | - |
+| 245 | DC1-BL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL2 - 10.250.1.8 Destination: 10.250.1.5 | PASS | - |
+| 246 | DC1-BL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL2 - 10.250.1.8 Destination: 10.250.1.6 | PASS | - |
+| 247 | DC1-BL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL2 - 10.250.1.8 Destination: 10.250.1.1 | PASS | - |
+| 248 | DC1-BL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-BL2 - 10.250.1.8 Destination: 10.250.1.2 | PASS | - |
+| 249 | DC1-CL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL1 - 10.250.1.3 Destination: 10.250.1.7 | PASS | - |
+| 250 | DC1-CL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL1 - 10.250.1.3 Destination: 10.250.1.8 | PASS | - |
+| 251 | DC1-CL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL1 - 10.250.1.3 Destination: 10.250.1.3 | PASS | - |
+| 252 | DC1-CL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL1 - 10.250.1.3 Destination: 10.250.1.4 | PASS | - |
+| 253 | DC1-CL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL1 - 10.250.1.3 Destination: 10.250.1.5 | PASS | - |
+| 254 | DC1-CL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL1 - 10.250.1.3 Destination: 10.250.1.6 | PASS | - |
+| 255 | DC1-CL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL1 - 10.250.1.3 Destination: 10.250.1.1 | PASS | - |
+| 256 | DC1-CL1 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL1 - 10.250.1.3 Destination: 10.250.1.2 | PASS | - |
+| 257 | DC1-CL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL2 - 10.250.1.4 Destination: 10.250.1.7 | PASS | - |
+| 258 | DC1-CL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL2 - 10.250.1.4 Destination: 10.250.1.8 | PASS | - |
+| 259 | DC1-CL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL2 - 10.250.1.4 Destination: 10.250.1.3 | PASS | - |
+| 260 | DC1-CL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL2 - 10.250.1.4 Destination: 10.250.1.4 | PASS | - |
+| 261 | DC1-CL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL2 - 10.250.1.4 Destination: 10.250.1.5 | PASS | - |
+| 262 | DC1-CL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL2 - 10.250.1.4 Destination: 10.250.1.6 | PASS | - |
+| 263 | DC1-CL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL2 - 10.250.1.4 Destination: 10.250.1.1 | PASS | - |
+| 264 | DC1-CL2 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL2 - 10.250.1.4 Destination: 10.250.1.2 | PASS | - |
+| 265 | DC1-CL3 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL3 - 10.250.1.5 Destination: 10.250.1.7 | PASS | - |
+| 266 | DC1-CL3 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL3 - 10.250.1.5 Destination: 10.250.1.8 | PASS | - |
+| 267 | DC1-CL3 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL3 - 10.250.1.5 Destination: 10.250.1.3 | PASS | - |
+| 268 | DC1-CL3 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL3 - 10.250.1.5 Destination: 10.250.1.4 | PASS | - |
+| 269 | DC1-CL3 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL3 - 10.250.1.5 Destination: 10.250.1.5 | PASS | - |
+| 270 | DC1-CL3 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL3 - 10.250.1.5 Destination: 10.250.1.6 | PASS | - |
+| 271 | DC1-CL3 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL3 - 10.250.1.5 Destination: 10.250.1.1 | PASS | - |
+| 272 | DC1-CL3 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL3 - 10.250.1.5 Destination: 10.250.1.2 | PASS | - |
+| 273 | DC1-CL4 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL4 - 10.250.1.6 Destination: 10.250.1.7 | PASS | - |
+| 274 | DC1-CL4 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL4 - 10.250.1.6 Destination: 10.250.1.8 | PASS | - |
+| 275 | DC1-CL4 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL4 - 10.250.1.6 Destination: 10.250.1.3 | PASS | - |
+| 276 | DC1-CL4 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL4 - 10.250.1.6 Destination: 10.250.1.4 | PASS | - |
+| 277 | DC1-CL4 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL4 - 10.250.1.6 Destination: 10.250.1.5 | PASS | - |
+| 278 | DC1-CL4 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL4 - 10.250.1.6 Destination: 10.250.1.6 | PASS | - |
+| 279 | DC1-CL4 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL4 - 10.250.1.6 Destination: 10.250.1.1 | PASS | - |
+| 280 | DC1-CL4 | Loopback0 Reachability | Loopback0 Reachability | Source: DC1-CL4 - 10.250.1.6 Destination: 10.250.1.2 | PASS | - |

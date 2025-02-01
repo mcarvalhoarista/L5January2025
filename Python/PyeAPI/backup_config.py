@@ -1,4 +1,5 @@
 #!/Users/mcarvalho/VENV/bin/python3
+# change file permision "chmod +x " 
 
 import pyeapi
 import os

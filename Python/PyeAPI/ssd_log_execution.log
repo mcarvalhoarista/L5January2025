@@ -1,0 +1,26 @@
+INFO:root:Switch ps-rtp1-leaf5 with model DCS-7280SRAM-48C6-F have the following SSD:
+INFO:root:SSD_MODEL = StorFly VSFBM4CC030G-150
+INFO:root:SSD_LIFETIME = 79
+INFO:root:Switch ps-rtp1-leaf6 with model DCS-7280SRAM-48C6-F have the following SSD:
+INFO:root:SSD_MODEL = StorFly VSFBM4CC030G-150
+INFO:root:SSD_LIFETIME = 80
+INFO:root:Switch ps-rtp1-leaf2 with model DCS-7050SX3-48YC12-F do NOT support the SSD command
+INFO:root:Switch ps-rtp1-leaf1 with model DCS-7050SX3-48YC12-F do NOT support the SSD command
+INFO:root:Switch ps-rtp1-host1 with model CCS-720XP-24Y6-F do NOT support the SSD command
+INFO:root:Switch ps-rtp1-host2 with model CCS-720XP-24Y6-F do NOT support the SSD command
+ERROR:pyeapi.eapilib:[Errno 51] Network is unreachable
+OSError: [Errno 51] Network is unreachable
+INFO:root:Switch 10.88.160.172 do NOT have eAPI enabled or wrong credentials
+ERROR:pyeapi.eapilib:[Errno 61] Connection refused
+ConnectionRefusedError: [Errno 61] Connection refused
+INFO:root:Switch 10.88.160.178 do NOT have eAPI enabled or wrong credentials
+INFO:root:Switch ps-rtp2-host2 with model DCS-7050CX3-32S-F do NOT support the SSD command
+ERROR:pyeapi.eapilib:[Errno 61] Connection refused
+ConnectionRefusedError: [Errno 61] Connection refused
+INFO:root:Switch 10.88.160.70 do NOT have eAPI enabled or wrong credentials
+INFO:root:Switch 10.88.160.78 do NOT have eAPI enabled or wrong credentials
+INFO:root:Switch PS-RTP2-SPINE1 with model DCS-7280QR-C36-F do NOT support the SSD command
+INFO:root:
+Total of switches in the list = 12
+INFO:root:Total of switches with SSD info= 2
+INFO:root:Total of switches without SSD info= 10

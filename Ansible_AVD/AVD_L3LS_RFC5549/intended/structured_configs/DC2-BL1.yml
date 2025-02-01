@@ -240,6 +240,11 @@ loopback_interfaces:
   description: VTEP_VXLAN_Tunnel_Source
   shutdown: false
   ip_address: 10.255.2.7/32
+- name: Loopback666
+  description: VRF_A_VTEP_DIAGNOSTICS
+  shutdown: false
+  vrf: VRF_A
+  ip_address: 169.254.255.7/32
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -299,6 +304,9 @@ vxlan_interface:
       vrfs:
       - name: VRF_A
         vni: 10
+virtual_source_nat_vrfs:
+- name: VRF_A
+  ip_address: 169.254.255.7
 metadata:
   platform: cEOS
 interface_defaults:

@@ -25,24 +25,26 @@ cvp_configlets:
     \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Loopback0\n
     \  description EVPN_Overlay_Peering\n   no shutdown\n   ip address 10.250.1.7/32\n!\ninterface
     Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address
-    10.255.1.7/32\n!\ninterface Management1\n   description Management_Interface\n
-    \  no shutdown\n   vrf MGMT\n   ip address 10.88.169.133/24\n!\ninterface Vlan10\n
-    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface
-    Vlan20\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.20.1/24\n!\ninterface Vxlan1\n   description DC1-BL1_VTEP\n   vxlan source-interface
-    Loopback1\n   vxlan udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20
-    vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip
-    virtual-router mac-address 00:1c:73:00:00:99\n!\nip access-list standard CVP-ACL\n
-    \  10 permit 0.0.0.0/0\n!\nip access-list standard SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip
-    routing ipv6 interfaces\nno ip routing vrf MGMT\nip routing vrf VRF_A\n!\nipv6
-    unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit
-    10.250.1.0/24 eq 32\n   seq 20 permit 10.255.1.0/24 eq 32\n!\nip route vrf MGMT
-    0.0.0.0/0 10.88.169.129\n!\nroute-map RM-CONN-2-BGP permit 10\n   match ip address
-    prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter bfd\n   multihop interval 300
-    min-rx 300 multiplier 3\n!\nrouter bgp 65103.0\n   bgp asn notation asdot\n   router-id
-    10.250.1.7\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE update-source Loopback0\n
-    \  neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE ebgp-multihop
+    10.255.1.7/32\n!\ninterface Loopback666\n   description VRF_A_VTEP_DIAGNOSTICS\n
+    \  no shutdown\n   vrf VRF_A\n   ip address 169.254.255.7/32\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.133/24\n!\ninterface Vlan10\n   description DMZ\n   no shutdown\n   vrf
+    VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC1-BL1_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.7\n!\nip
+    access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
+    SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
+    vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
+    \  seq 10 permit 10.250.1.0/24 eq 32\n   seq 20 permit 10.255.1.0/24 eq 32\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nroute-map RM-CONN-2-BGP permit 10\n
+    \  match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter bfd\n   multihop
+    interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65103.0\n   bgp asn notation
+    asdot\n   router-id 10.250.1.7\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n
+    \  neighbor EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE update-source
+    Loopback0\n   neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE ebgp-multihop
     15\n   neighbor EVPN-OVERLAY-CORE send-community\n   neighbor EVPN-OVERLAY-CORE
     maximum-routes 0\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
@@ -110,24 +112,26 @@ cvp_configlets:
     \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Loopback0\n
     \  description EVPN_Overlay_Peering\n   no shutdown\n   ip address 10.250.1.8/32\n!\ninterface
     Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address
-    10.255.1.8/32\n!\ninterface Management1\n   description Management_Interface\n
-    \  no shutdown\n   vrf MGMT\n   ip address 10.88.169.134/24\n!\ninterface Vlan10\n
-    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface
-    Vlan20\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.20.1/24\n!\ninterface Vxlan1\n   description DC1-BL2_VTEP\n   vxlan source-interface
-    Loopback1\n   vxlan udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20
-    vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip
-    virtual-router mac-address 00:1c:73:00:00:99\n!\nip access-list standard CVP-ACL\n
-    \  10 permit 0.0.0.0/0\n!\nip access-list standard SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip
-    routing ipv6 interfaces\nno ip routing vrf MGMT\nip routing vrf VRF_A\n!\nipv6
-    unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit
-    10.250.1.0/24 eq 32\n   seq 20 permit 10.255.1.0/24 eq 32\n!\nip route vrf MGMT
-    0.0.0.0/0 10.88.169.129\n!\nroute-map RM-CONN-2-BGP permit 10\n   match ip address
-    prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter bfd\n   multihop interval 300
-    min-rx 300 multiplier 3\n!\nrouter bgp 65103.1\n   bgp asn notation asdot\n   router-id
-    10.250.1.8\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE update-source Loopback0\n
-    \  neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE ebgp-multihop
+    10.255.1.8/32\n!\ninterface Loopback666\n   description VRF_A_VTEP_DIAGNOSTICS\n
+    \  no shutdown\n   vrf VRF_A\n   ip address 169.254.255.8/32\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.134/24\n!\ninterface Vlan10\n   description DMZ\n   no shutdown\n   vrf
+    VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC1-BL2_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.8\n!\nip
+    access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
+    SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
+    vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
+    \  seq 10 permit 10.250.1.0/24 eq 32\n   seq 20 permit 10.255.1.0/24 eq 32\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nroute-map RM-CONN-2-BGP permit 10\n
+    \  match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter bfd\n   multihop
+    interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65103.1\n   bgp asn notation
+    asdot\n   router-id 10.250.1.8\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n
+    \  neighbor EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE update-source
+    Loopback0\n   neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE ebgp-multihop
     15\n   neighbor EVPN-OVERLAY-CORE send-community\n   neighbor EVPN-OVERLAY-CORE
     maximum-routes 0\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
@@ -204,14 +208,16 @@ cvp_configlets:
     DC1-R1_Ethernet0/1\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.1.3/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
-    \  no shutdown\n   ip address 10.255.1.3/32\n!\ninterface Management1\n   description
-    Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address 10.88.169.135/24\n!\ninterface
-    Vlan10\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.10.1/24\n!\ninterface Vlan20\n   description DMZ\n   no shutdown\n   vrf
-    VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface Vxlan1\n   description
-    DC1-CL1_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port 4789\n   vxlan
-    vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac
-    address-table aging-time 1800\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    \  no shutdown\n   ip address 10.255.1.3/32\n!\ninterface Loopback666\n   description
+    VRF_A_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF_A\n   ip address 169.254.255.3/32\n!\ninterface
+    Management1\n   description Management_Interface\n   no shutdown\n   vrf MGMT\n
+    \  ip address 10.88.169.135/24\n!\ninterface Vlan10\n   description DMZ\n   no
+    shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n
+    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC1-CL1_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.3\n!\nip
     access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
     SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
     vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
@@ -287,14 +293,16 @@ cvp_configlets:
     DC1-R1_Ethernet0/2\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.1.4/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
-    \  no shutdown\n   ip address 10.255.1.4/32\n!\ninterface Management1\n   description
-    Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address 10.88.169.136/24\n!\ninterface
-    Vlan10\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.10.1/24\n!\ninterface Vlan20\n   description DMZ\n   no shutdown\n   vrf
-    VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface Vxlan1\n   description
-    DC1-CL2_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port 4789\n   vxlan
-    vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac
-    address-table aging-time 1800\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    \  no shutdown\n   ip address 10.255.1.4/32\n!\ninterface Loopback666\n   description
+    VRF_A_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF_A\n   ip address 169.254.255.4/32\n!\ninterface
+    Management1\n   description Management_Interface\n   no shutdown\n   vrf MGMT\n
+    \  ip address 10.88.169.136/24\n!\ninterface Vlan10\n   description DMZ\n   no
+    shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n
+    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC1-CL2_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.4\n!\nip
     access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
     SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
     vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
@@ -370,14 +378,16 @@ cvp_configlets:
     DC1-R2_Ethernet0/1\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.1.5/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
-    \  no shutdown\n   ip address 10.255.1.5/32\n!\ninterface Management1\n   description
-    Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address 10.88.169.137/24\n!\ninterface
-    Vlan10\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.10.1/24\n!\ninterface Vlan20\n   description DMZ\n   no shutdown\n   vrf
-    VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface Vxlan1\n   description
-    DC1-CL3_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port 4789\n   vxlan
-    vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac
-    address-table aging-time 1800\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    \  no shutdown\n   ip address 10.255.1.5/32\n!\ninterface Loopback666\n   description
+    VRF_A_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF_A\n   ip address 169.254.255.5/32\n!\ninterface
+    Management1\n   description Management_Interface\n   no shutdown\n   vrf MGMT\n
+    \  ip address 10.88.169.137/24\n!\ninterface Vlan10\n   description DMZ\n   no
+    shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n
+    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC1-CL3_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.5\n!\nip
     access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
     SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
     vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
@@ -453,14 +463,16 @@ cvp_configlets:
     DC1-R2_Ethernet0/2\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.1.6/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
-    \  no shutdown\n   ip address 10.255.1.6/32\n!\ninterface Management1\n   description
-    Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address 10.88.169.138/24\n!\ninterface
-    Vlan10\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.10.1/24\n!\ninterface Vlan20\n   description DMZ\n   no shutdown\n   vrf
-    VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface Vxlan1\n   description
-    DC1-CL4_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port 4789\n   vxlan
-    vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac
-    address-table aging-time 1800\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    \  no shutdown\n   ip address 10.255.1.6/32\n!\ninterface Loopback666\n   description
+    VRF_A_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF_A\n   ip address 169.254.255.6/32\n!\ninterface
+    Management1\n   description Management_Interface\n   no shutdown\n   vrf MGMT\n
+    \  ip address 10.88.169.138/24\n!\ninterface Vlan10\n   description DMZ\n   no
+    shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n
+    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC1-CL4_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.6\n!\nip
     access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
     SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
     vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
@@ -679,24 +691,26 @@ cvp_configlets:
     \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Loopback0\n
     \  description EVPN_Overlay_Peering\n   no shutdown\n   ip address 10.250.2.7/32\n!\ninterface
     Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address
-    10.255.2.7/32\n!\ninterface Management1\n   description Management_Interface\n
-    \  no shutdown\n   vrf MGMT\n   ip address 10.88.169.141/24\n!\ninterface Vlan10\n
-    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface
-    Vlan20\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.20.1/24\n!\ninterface Vxlan1\n   description DC2-BL1_VTEP\n   vxlan source-interface
-    Loopback1\n   vxlan udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20
-    vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip
-    virtual-router mac-address 00:1c:73:00:00:99\n!\nip access-list standard CVP-ACL\n
-    \  10 permit 0.0.0.0/0\n!\nip access-list standard SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip
-    routing ipv6 interfaces\nno ip routing vrf MGMT\nip routing vrf VRF_A\n!\nipv6
-    unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit
-    10.250.2.0/24 eq 32\n   seq 20 permit 10.255.2.0/24 eq 32\n!\nip route vrf MGMT
-    0.0.0.0/0 10.88.169.129\n!\nroute-map RM-CONN-2-BGP permit 10\n   match ip address
-    prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter bfd\n   multihop interval 300
-    min-rx 300 multiplier 3\n!\nrouter bgp 65203.0\n   bgp asn notation asdot\n   router-id
-    10.250.2.7\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE update-source Loopback0\n
-    \  neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE ebgp-multihop
+    10.255.2.7/32\n!\ninterface Loopback666\n   description VRF_A_VTEP_DIAGNOSTICS\n
+    \  no shutdown\n   vrf VRF_A\n   ip address 169.254.255.7/32\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.141/24\n!\ninterface Vlan10\n   description DMZ\n   no shutdown\n   vrf
+    VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC2-BL1_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.7\n!\nip
+    access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
+    SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
+    vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
+    \  seq 10 permit 10.250.2.0/24 eq 32\n   seq 20 permit 10.255.2.0/24 eq 32\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nroute-map RM-CONN-2-BGP permit 10\n
+    \  match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter bfd\n   multihop
+    interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65203.0\n   bgp asn notation
+    asdot\n   router-id 10.250.2.7\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n
+    \  neighbor EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE update-source
+    Loopback0\n   neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE ebgp-multihop
     15\n   neighbor EVPN-OVERLAY-CORE send-community\n   neighbor EVPN-OVERLAY-CORE
     maximum-routes 0\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
@@ -764,24 +778,26 @@ cvp_configlets:
     \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Loopback0\n
     \  description EVPN_Overlay_Peering\n   no shutdown\n   ip address 10.250.2.8/32\n!\ninterface
     Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address
-    10.255.2.8/32\n!\ninterface Management1\n   description Management_Interface\n
-    \  no shutdown\n   vrf MGMT\n   ip address 10.88.169.142/24\n!\ninterface Vlan10\n
-    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface
-    Vlan20\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.20.1/24\n!\ninterface Vxlan1\n   description DC2-BL2_VTEP\n   vxlan source-interface
-    Loopback1\n   vxlan udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20
-    vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip
-    virtual-router mac-address 00:1c:73:00:00:99\n!\nip access-list standard CVP-ACL\n
-    \  10 permit 0.0.0.0/0\n!\nip access-list standard SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip
-    routing ipv6 interfaces\nno ip routing vrf MGMT\nip routing vrf VRF_A\n!\nipv6
-    unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit
-    10.250.2.0/24 eq 32\n   seq 20 permit 10.255.2.0/24 eq 32\n!\nip route vrf MGMT
-    0.0.0.0/0 10.88.169.129\n!\nroute-map RM-CONN-2-BGP permit 10\n   match ip address
-    prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter bfd\n   multihop interval 300
-    min-rx 300 multiplier 3\n!\nrouter bgp 65203.1\n   bgp asn notation asdot\n   router-id
-    10.250.2.8\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE update-source Loopback0\n
-    \  neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE ebgp-multihop
+    10.255.2.8/32\n!\ninterface Loopback666\n   description VRF_A_VTEP_DIAGNOSTICS\n
+    \  no shutdown\n   vrf VRF_A\n   ip address 169.254.255.8/32\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.142/24\n!\ninterface Vlan10\n   description DMZ\n   no shutdown\n   vrf
+    VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC2-BL2_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.8\n!\nip
+    access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
+    SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
+    vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
+    \  seq 10 permit 10.250.2.0/24 eq 32\n   seq 20 permit 10.255.2.0/24 eq 32\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nroute-map RM-CONN-2-BGP permit 10\n
+    \  match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter bfd\n   multihop
+    interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65203.1\n   bgp asn notation
+    asdot\n   router-id 10.250.2.8\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n
+    \  neighbor EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE update-source
+    Loopback0\n   neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE ebgp-multihop
     15\n   neighbor EVPN-OVERLAY-CORE send-community\n   neighbor EVPN-OVERLAY-CORE
     maximum-routes 0\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
@@ -858,14 +874,16 @@ cvp_configlets:
     DC2-R1_Ethernet0/1\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.2.3/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
-    \  no shutdown\n   ip address 10.255.2.3/32\n!\ninterface Management1\n   description
-    Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address 10.88.169.143/24\n!\ninterface
-    Vlan10\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.10.1/24\n!\ninterface Vlan20\n   description DMZ\n   no shutdown\n   vrf
-    VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface Vxlan1\n   description
-    DC2-CL1_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port 4789\n   vxlan
-    vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac
-    address-table aging-time 1800\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    \  no shutdown\n   ip address 10.255.2.3/32\n!\ninterface Loopback666\n   description
+    VRF_A_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF_A\n   ip address 169.254.255.3/32\n!\ninterface
+    Management1\n   description Management_Interface\n   no shutdown\n   vrf MGMT\n
+    \  ip address 10.88.169.143/24\n!\ninterface Vlan10\n   description DMZ\n   no
+    shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n
+    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC2-CL1_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.3\n!\nip
     access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
     SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
     vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
@@ -941,14 +959,16 @@ cvp_configlets:
     DC2-R1_Ethernet0/2\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.2.4/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
-    \  no shutdown\n   ip address 10.255.2.4/32\n!\ninterface Management1\n   description
-    Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address 10.88.169.144/24\n!\ninterface
-    Vlan10\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.10.1/24\n!\ninterface Vlan20\n   description DMZ\n   no shutdown\n   vrf
-    VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface Vxlan1\n   description
-    DC2-CL2_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port 4789\n   vxlan
-    vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac
-    address-table aging-time 1800\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    \  no shutdown\n   ip address 10.255.2.4/32\n!\ninterface Loopback666\n   description
+    VRF_A_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF_A\n   ip address 169.254.255.4/32\n!\ninterface
+    Management1\n   description Management_Interface\n   no shutdown\n   vrf MGMT\n
+    \  ip address 10.88.169.144/24\n!\ninterface Vlan10\n   description DMZ\n   no
+    shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n
+    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC2-CL2_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.4\n!\nip
     access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
     SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
     vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
@@ -1024,14 +1044,16 @@ cvp_configlets:
     DC2-R2_Ethernet0/1\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.2.5/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
-    \  no shutdown\n   ip address 10.255.2.5/32\n!\ninterface Management1\n   description
-    Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address 10.88.169.145/24\n!\ninterface
-    Vlan10\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.10.1/24\n!\ninterface Vlan20\n   description DMZ\n   no shutdown\n   vrf
-    VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface Vxlan1\n   description
-    DC2-CL3_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port 4789\n   vxlan
-    vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac
-    address-table aging-time 1800\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    \  no shutdown\n   ip address 10.255.2.5/32\n!\ninterface Loopback666\n   description
+    VRF_A_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF_A\n   ip address 169.254.255.5/32\n!\ninterface
+    Management1\n   description Management_Interface\n   no shutdown\n   vrf MGMT\n
+    \  ip address 10.88.169.145/24\n!\ninterface Vlan10\n   description DMZ\n   no
+    shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n
+    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC2-CL3_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.5\n!\nip
     access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
     SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
     vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
@@ -1107,14 +1129,16 @@ cvp_configlets:
     DC2-R2_Ethernet0/2\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.2.6/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
-    \  no shutdown\n   ip address 10.255.2.6/32\n!\ninterface Management1\n   description
-    Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address 10.88.169.146/24\n!\ninterface
-    Vlan10\n   description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual
-    10.1.10.1/24\n!\ninterface Vlan20\n   description DMZ\n   no shutdown\n   vrf
-    VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface Vxlan1\n   description
-    DC2-CL4_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port 4789\n   vxlan
-    vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan vrf VRF_A vni 10\n!\nmac
-    address-table aging-time 1800\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    \  no shutdown\n   ip address 10.255.2.6/32\n!\ninterface Loopback666\n   description
+    VRF_A_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF_A\n   ip address 169.254.255.6/32\n!\ninterface
+    Management1\n   description Management_Interface\n   no shutdown\n   vrf MGMT\n
+    \  ip address 10.88.169.146/24\n!\ninterface Vlan10\n   description DMZ\n   no
+    shutdown\n   vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n
+    \  description DMZ\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vxlan1\n   description DC2-CL4_VTEP\n   vxlan source-interface Loopback1\n   vxlan
+    udp-port 4789\n   vxlan vlan 10 vni 10010\n   vxlan vlan 20 vni 10020\n   vxlan
+    vrf VRF_A vni 10\n!\nmac address-table aging-time 1800\n!\nip virtual-router mac-address
+    00:1c:73:00:00:99\n!\nip address virtual source-nat vrf VRF_A address 169.254.255.6\n!\nip
     access-list standard CVP-ACL\n   10 permit 0.0.0.0/0\n!\nip access-list standard
     SNMP-ACL\n   10 permit 0.0.0.0/0\n!\nip routing ipv6 interfaces\nno ip routing
     vrf MGMT\nip routing vrf VRF_A\n!\nipv6 unicast-routing\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
@@ -1308,20 +1332,20 @@ cvp_configlets:
     \  vrf MGMT\n      no shutdown\n      ip access-group CVP-ACL\n!\nmanagement ssh\n
     \  idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n      no shutdown\n!\nend\n"
 cvp_topology:
-  DC1_FABRIC:
+  DC2_FABRIC:
     devices: []
     parent_container: Tenant
-  DC1_LEAFS:
+  DC2_LEAFS:
     devices:
-    - DC1-CL1
-    - DC1-CL2
-    - DC1-CL3
-    - DC1-CL4
-    - DC1-BL1
-    - DC1-BL2
-    parent_container: DC1_FABRIC
-  DC1_SPINES:
+    - DC2-CL1
+    - DC2-CL2
+    - DC2-CL3
+    - DC2-CL4
+    - DC2-BL1
+    - DC2-BL2
+    parent_container: DC2_FABRIC
+  DC2_SPINES:
     devices:
-    - DC1-SP1
-    - DC1-SP2
-    parent_container: DC1_FABRIC
+    - DC2-SP1
+    - DC2-SP2
+    parent_container: DC2_FABRIC

@@ -55,6 +55,9 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
+- [Virtual Source NAT](#virtual-source-nat)
+  - [Virtual Source NAT Summary](#virtual-source-nat-summary)
+  - [Virtual Source NAT Configuration](#virtual-source-nat-configuration)
 
 ## Management
 
@@ -483,6 +486,7 @@ interface Ethernet4
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | EVPN_Overlay_Peering | default | 10.250.2.8/32 |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 10.255.2.8/32 |
+| Loopback666 | VRF_A_VTEP_DIAGNOSTICS | VRF_A | 169.254.255.8/32 |
 
 ##### IPv6
 
@@ -490,6 +494,7 @@ interface Ethernet4
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | EVPN_Overlay_Peering | default | - |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | - |
+| Loopback666 | VRF_A_VTEP_DIAGNOSTICS | VRF_A | - |
 
 #### Loopback Interfaces Device Configuration
 
@@ -504,6 +509,12 @@ interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
    no shutdown
    ip address 10.255.2.8/32
+!
+interface Loopback666
+   description VRF_A_VTEP_DIAGNOSTICS
+   no shutdown
+   vrf VRF_A
+   ip address 169.254.255.8/32
 ```
 
 ### VLAN Interfaces
@@ -938,4 +949,19 @@ ip access-list standard SNMP-ACL
 vrf instance MGMT
 !
 vrf instance VRF_A
+```
+
+## Virtual Source NAT
+
+### Virtual Source NAT Summary
+
+| Source NAT VRF | Source NAT IP Address |
+| -------------- | --------------------- |
+| VRF_A | 169.254.255.8 |
+
+### Virtual Source NAT Configuration
+
+```eos
+!
+ip address virtual source-nat vrf VRF_A address 169.254.255.8
 ```

@@ -1,9 +1,9 @@
 ---
 - name: Playbook for uploading configlets to CloudVision
   hosts: cvp1
-  vars: 
-    configlet_list: 
-      DYNAMIC_Configlet: "{{ lookup('file','{{ current_working_directory.stdout }}/configlets/'+inventory_hostname+'_test.cfg') }}"
+  # vars: 
+  #   configlet_list: 
+  #     DYN: "{{ lookup('file','{{ current_working_directory.stdout }}/configlets/'+inventory_hostname+'_test.cfg') }}"
   vars_files:
     - ../vars/test_CVP_model.yml
   tasks:
@@ -18,8 +18,8 @@
       register: current_working_directory
     - name: Upload configlets
       arista.cvp.cv_configlet_v3:
-        #configlets: "{{ CVP_CONFIGLETS }}"
-        configlets: "{{ configlet_list }}"
+        configlets: "{{ CVP_CONFIGLETS }}"
+        # configlets: "{{ configlet_list }}"
         state: present
       register: CVP_CHANGE
 

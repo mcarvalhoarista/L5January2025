@@ -13,3 +13,9 @@ all:
       hosts: 
         cvp1:
           ansible_host: 10.88.160.63
+    FABRIC:
+      children:
+        DC1_HOSTS:
+          hosts:
+            DC2-SW1:
+            DC2-SW2:

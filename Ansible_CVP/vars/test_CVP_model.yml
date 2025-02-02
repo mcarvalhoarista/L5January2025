@@ -1,0 +1,5 @@
+---
+
+CVP_CONFIGLETS:
+  DC2-SW1_base: "{{ lookup('file','{{ current_working_directory.stdout }}/configlets/DC2-SW1_test.cfg') }}"
+  DC2-SW2_base: "{{ lookup('file','{{ current_working_directory.stdout }}/configlets/DC2-SW2_test.cfg') }}"

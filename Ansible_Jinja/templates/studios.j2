@@ -1,0 +1,36 @@
+{% for vlan in vlans %}
+{% if vlan['vrf'] %}
+vrf instance {{ vlan['vrf'] }}
+ip routing vrf {{ vlan['vrf'] }}
+{% endif %}
+{% endfor %}
+
+{% for vlan in vlans %}
+vlan {{ vlan['vlan_id'] }}
+  name {{ vlan['vlan_name'] }}
+interface vlan{{ vlan['vlan_id'] }}
+{% if vlan['vrf'] %}
+  vrf {{ vlan['vrf'] }}
+{% endif %}
+{% if vlan['ip_address'] %}
+  ip address {{ vlan['ip_address'] }}
+{% endif %}
+  mtu {{ vlan['mtu'] or '9214' }}
+{% endfor %}
+
+interface vxlan 1
+{% for vlan in vlans %}
+  vxlan vlan {{ vlan['vlan_id'] }} vni {{ vlan['vxlan_vni'] }}
+{% endfor %}
+
+{% set flood_vteps = [] %}
+{% if 'CLEAF_AZ1' in selected_vtep_groups %}
+{% set flood_vteps = flood_vteps + vtep_groups['CLEAF_AZ1'] %}
+{% endif %}
+{% if 'CLEAF_AZ2' in selected_vtep_groups %}
+{% set flood_vteps = flood_vteps + vtep_groups['CLEAF_AZ2'] %}
+{% endif %}
+
+{% for vlan in vlans %}
+  vxlan vlan {{ vlan['vlan_id'] }} flood vtep {{ " ".join(flood_vteps) }}
+{% endfor %}

@@ -17,5 +17,9 @@ all:
       children:
         DC1_HOSTS:
           hosts:
+            DC1-SW1:
+            DC1-SW2:
+        DC2_HOSTS:
+          hosts:
             DC2-SW1:
             DC2-SW2:

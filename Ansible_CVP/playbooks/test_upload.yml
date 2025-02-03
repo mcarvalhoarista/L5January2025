@@ -1,25 +1,39 @@
 ---
 - name: Playbook for uploading configlets to CloudVision
   hosts: cvp1
-  # vars: 
-  #   configlet_list: 
-  #     DYN: "{{ lookup('file','{{ current_working_directory.stdout }}/configlets/'+inventory_hostname+'_test.cfg') }}"
+  vars: 
+    configlet_list: 
+      DYNAMIC: "test.cfg"
   vars_files:
     - ../vars/test_CVP_model.yml
   tasks:
-    - name: Print hostnames of Devices
+    - name: Debug vars to check content
       vars:
-        devices: "{{ groups['DC1_HOSTS'] }}"
+        device_list1: "{{ groups['FABRIC'] }}"
+        device_list2: "{{ groups['DC1_HOSTS'] }}"
       debug:
-        var: devices
+        var: device_list1, device_list2
+
     - name: current_working_directory
-      shell:
-        "pwd"
+      shell: "pwd"
       register: current_working_directory
-    - name: Upload configlets
-      arista.cvp.cv_configlet_v3:
-        configlets: "{{ CVP_CONFIGLETS }}"
-        # configlets: "{{ configlet_list }}"
-        state: present
-      register: CVP_CHANGE
+
+    - name: Print the directory
+      debug:
+         msg: "The directory is {{ current_working_directory['stdout'] }}"
+
+    - name: Print the devices
+      debug:
+         msg: "The devices are {{ groups['FABRIC'] }}"
+
+    - name: Print configlet_list vars
+      debug:
+         msg: "The devices are {{ configlet_list }}"
+
+    # - name: Upload configlets
+    #   arista.cvp.cv_configlet_v3:
+    #     configlets: "{{ CVP_CONFIGLETS }}"
+    #     # configlets: "{{ configlet_list }}"
+    #     state: present
+    #   register: CVP_CHANGE
 

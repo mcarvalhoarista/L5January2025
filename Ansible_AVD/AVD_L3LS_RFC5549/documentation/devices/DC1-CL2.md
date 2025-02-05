@@ -498,8 +498,14 @@ interface Ethernet4
 
 | Interface | Ethernet Segment Identifier | Multihoming Redundancy Mode | Route Target |
 | --------- | --------------------------- | --------------------------- | ------------ |
-| Port-Channel3 | 0000:0000:64b8:a480:15f4 | all-active | 64:b8:a4:80:15:f4 |
+| Port-Channel3 | 0000:0000:64b8:a480:15f4 | single-active | 64:b8:a4:80:15:f4 |
 | Port-Channel4 | 0000:0000:71a3:4b0e:a7d5 | all-active | 71:a3:4b:0e:a7:d5 |
+
+####### Designated Forwarder Election Summary
+
+| Interface | Algorithm | Preference Value | Dont Preempt | Hold time | Subsequent Hold Time | Candidate Reachability Required |
+| --------- | --------- | ---------------- | ------------ | --------- | -------------------- | ------------------------------- |
+| Port-Channel3 | preference | 0 | True | - | - | False |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -513,6 +519,8 @@ interface Port-Channel3
    switchport mode trunk
    evpn ethernet-segment
       identifier 0000:0000:64b8:a480:15f4
+      redundancy single-active
+      designated-forwarder election algorithm preference 0 dont-preempt
       route-target import 64:b8:a4:80:15:f4
    lacp system-id 64b8.a480.15f4
    spanning-tree portfast

@@ -290,7 +290,12 @@ port_channel_interfaces:
   spanning_tree_portfast: edge
   evpn_ethernet_segment:
     identifier: 0000:0000:5644:cb7d:daaa
+    redundancy: single-active
     route_target: 56:44:cb:7d:da:aa
+    designated_forwarder_election:
+      algorithm: preference
+      preference_value: 0
+      dont_preempt: true
   lacp_id: 5644.cb7d.daaa
 - name: Port-Channel4
   description: DC2-R1_PortChannel100

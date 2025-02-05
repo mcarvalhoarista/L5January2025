@@ -1,6 +1,16 @@
 ---
-- name: Build fabric configuration
+- name: Build DC1 fabric configuration
   hosts: DC1_FABRIC
+  tasks:
+    - name: Generate AVD Structured Configurations and Fabric Documentation
+      ansible.builtin.import_role:
+        name: arista.avd.eos_designs
+    - name: Generate Device Configurations and Documentation
+      ansible.builtin.import_role:
+        name: arista.avd.eos_cli_config_gen
+
+- name: Build DC2 fabric configuration
+  hosts: DC2_FABRIC
   tasks:
     - name: Generate AVD Structured Configurations and Fabric Documentation
       ansible.builtin.import_role:

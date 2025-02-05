@@ -418,8 +418,8 @@ interface defaults
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-SP1_Ethernet5 | routed | - | 172.16.1.65/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-SP2_Ethernet5 | routed | - | 172.16.1.67/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_LINK_TO_DC1-SP1_Ethernet5 | routed | - | 172.16.1.129/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_LINK_TO_DC1-SP2_Ethernet5 | routed | - | 172.16.1.131/31 | default | 1500 | False | - | - |
 | Ethernet4 | P2P_LINK_TO_DC2-BL1_Ethernet4 | routed | - | 172.16.255.0/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
@@ -431,14 +431,14 @@ interface Ethernet1
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.1.65/31
+   ip address 172.16.1.129/31
 !
 interface Ethernet2
    description P2P_LINK_TO_DC1-SP2_Ethernet5
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.1.67/31
+   ip address 172.16.1.131/31
 !
 interface Ethernet4
    description P2P_LINK_TO_DC2-BL1_Ethernet4
@@ -738,8 +738,8 @@ ASN Notation: asplain
 | 10.250.1.29 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 | 10.250.2.7 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-CORE | Inherited from peer group EVPN-OVERLAY-CORE | - | Inherited from peer group EVPN-OVERLAY-CORE | - | - | - | - |
 | 10.252.1.33 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
-| 172.16.1.64 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 172.16.1.66 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.1.128 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.1.130 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 172.16.255.1 | 65203 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 10.252.1.33 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | VRF_A | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
 
@@ -817,12 +817,12 @@ router bgp 65103
    neighbor 10.250.2.7 description DC2-BL1
    neighbor 10.252.1.33 peer group MLAG-IPv4-UNDERLAY-PEER
    neighbor 10.252.1.33 description DC1-BL2
-   neighbor 172.16.1.64 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.16.1.64 remote-as 65100
-   neighbor 172.16.1.64 description DC1-SP1_Ethernet5
-   neighbor 172.16.1.66 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.16.1.66 remote-as 65100
-   neighbor 172.16.1.66 description DC1-SP2_Ethernet5
+   neighbor 172.16.1.128 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.128 remote-as 65100
+   neighbor 172.16.1.128 description DC1-SP1_Ethernet5
+   neighbor 172.16.1.130 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.130 remote-as 65100
+   neighbor 172.16.1.130 description DC1-SP2_Ethernet5
    neighbor 172.16.255.1 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.16.255.1 remote-as 65203
    neighbor 172.16.255.1 description DC2-BL1

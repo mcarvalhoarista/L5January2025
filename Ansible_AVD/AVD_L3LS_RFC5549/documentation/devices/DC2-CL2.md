@@ -498,8 +498,14 @@ interface Ethernet4
 
 | Interface | Ethernet Segment Identifier | Multihoming Redundancy Mode | Route Target |
 | --------- | --------------------------- | --------------------------- | ------------ |
-| Port-Channel3 | 0000:0000:5644:cb7d:daaa | all-active | 56:44:cb:7d:da:aa |
+| Port-Channel3 | 0000:0000:5644:cb7d:daaa | single-active | 56:44:cb:7d:da:aa |
 | Port-Channel4 | 0000:0000:1cee:1025:ee05 | all-active | 1c:ee:10:25:ee:05 |
+
+####### Designated Forwarder Election Summary
+
+| Interface | Algorithm | Preference Value | Dont Preempt | Hold time | Subsequent Hold Time | Candidate Reachability Required |
+| --------- | --------- | ---------------- | ------------ | --------- | -------------------- | ------------------------------- |
+| Port-Channel3 | preference | 0 | True | - | - | False |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -513,6 +519,8 @@ interface Port-Channel3
    switchport mode trunk
    evpn ethernet-segment
       identifier 0000:0000:5644:cb7d:daaa
+      redundancy single-active
+      designated-forwarder election algorithm preference 0 dont-preempt
       route-target import 56:44:cb:7d:da:aa
    lacp system-id 5644.cb7d.daaa
    spanning-tree portfast

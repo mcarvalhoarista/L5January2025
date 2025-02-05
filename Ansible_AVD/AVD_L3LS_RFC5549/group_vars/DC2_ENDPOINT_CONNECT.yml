@@ -20,6 +20,10 @@ servers:
           mode: active
         ethernet_segment:
           short_esi: auto
+          redundancy: single-active
+          designated_forwarder_algorithm: "auto"
+          designated_forwarder_preferences: [100, 0]
+          dont_preempt: true
 
   - name: DC2-R1
     rack: DC2_RACK1
@@ -33,6 +37,10 @@ servers:
           mode: active
         ethernet_segment:
           short_esi: auto
+          # redundancy: single-active
+          # designated_forwarder_algorithm: "auto"
+          # designated_forwarder_preferences: [100, 0]
+          # dont_preempt: true
 
   - name: DC2-SW2
     rack: DC2_RACK2
@@ -46,6 +54,10 @@ servers:
           mode: active
         ethernet_segment:
           short_esi: auto
+          redundancy: single-active
+          designated_forwarder_algorithm: "auto"
+          designated_forwarder_preferences: [100, 0]
+          dont_preempt: true
 
   - name: DC2-R2
     rack: DC2_RACK2
@@ -59,3 +71,7 @@ servers:
           mode: active
         ethernet_segment:
           short_esi: auto
+          # redundancy: single-active
+          # designated_forwarder_algorithm: "auto"
+          # designated_forwarder_preferences: [100, 0]
+          # dont_preempt: true

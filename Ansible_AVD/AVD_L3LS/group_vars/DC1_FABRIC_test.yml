@@ -44,6 +44,7 @@ l3leaf:
     mlag_peer_ipv4_pool: 10.251.1.0/24
     mlag_peer_l3_ipv4_pool: 10.252.1.0/24
     virtual_router_mac_address: 00:1c:73:00:00:99
+    max_uplink_switches: 4
   node_groups:
     - group: DC1_RACK1
       bgp_as: 65101

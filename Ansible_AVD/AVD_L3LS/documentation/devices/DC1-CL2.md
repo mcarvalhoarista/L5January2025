@@ -418,8 +418,8 @@ interface defaults
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-SP1_Ethernet2 | routed | - | 172.16.1.17/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-SP2_Ethernet2 | routed | - | 172.16.1.19/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_LINK_TO_DC1-SP1_Ethernet2 | routed | - | 172.16.1.33/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_LINK_TO_DC1-SP2_Ethernet2 | routed | - | 172.16.1.35/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -430,14 +430,14 @@ interface Ethernet1
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.1.17/31
+   ip address 172.16.1.33/31
 !
 interface Ethernet2
    description P2P_LINK_TO_DC1-SP2_Ethernet2
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.1.19/31
+   ip address 172.16.1.35/31
 !
 interface Ethernet8
    description MLAG_PEER_DC1-CL1_Ethernet8
@@ -718,8 +718,8 @@ ASN Notation: asplain
 | 10.250.1.25 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 | 10.250.1.29 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 | 10.252.1.0 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
-| 172.16.1.16 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 172.16.1.18 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.1.32 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.1.34 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 10.252.1.0 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | VRF_A | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
@@ -778,12 +778,12 @@ router bgp 65101
    neighbor 10.250.1.29 description DC1-SP2
    neighbor 10.252.1.0 peer group MLAG-IPv4-UNDERLAY-PEER
    neighbor 10.252.1.0 description DC1-CL1
-   neighbor 172.16.1.16 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.16.1.16 remote-as 65100
-   neighbor 172.16.1.16 description DC1-SP1_Ethernet2
-   neighbor 172.16.1.18 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.16.1.18 remote-as 65100
-   neighbor 172.16.1.18 description DC1-SP2_Ethernet2
+   neighbor 172.16.1.32 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.32 remote-as 65100
+   neighbor 172.16.1.32 description DC1-SP1_Ethernet2
+   neighbor 172.16.1.34 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.34 remote-as 65100
+   neighbor 172.16.1.34 description DC1-SP2_Ethernet2
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan 10

@@ -194,17 +194,18 @@ cvp_configlets:
     \  name DMZ\n!\nvlan 20\n   name DMZ\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\ninterface
     Port-Channel3\n   description DC1-SW1_PortChannel100\n   no shutdown\n   switchport\n
     \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:64b8:a480:15f4\n      route-target
-    import 64:b8:a4:80:15:f4\n   lacp system-id 64b8.a480.15f4\n   spanning-tree portfast\n!\ninterface
-    Port-Channel4\n   description DC1-R1_PortChannel100\n   no shutdown\n   switchport\n
-    \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:71a3:4b0e:a7d5\n      route-target
-    import 71:a3:4b:0e:a7:d5\n   lacp system-id 71a3.4b0e.a7d5\n   spanning-tree portfast\n!\ninterface
-    Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet1\n   no shutdown\n   mtu
-    1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n   description
-    P2P_LINK_TO_DC1-SP2_Ethernet1\n   no shutdown\n   mtu 1500\n   no switchport\n
-    \  ipv6 enable\n!\ninterface Ethernet3\n   description DC1-SW1_Ethernet1\n   no
-    shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
+    ethernet-segment\n      identifier 0000:0000:64b8:a480:15f4\n      redundancy
+    single-active\n      designated-forwarder election algorithm preference 100 dont-preempt\n
+    \     route-target import 64:b8:a4:80:15:f4\n   lacp system-id 64b8.a480.15f4\n
+    \  spanning-tree portfast\n!\ninterface Port-Channel4\n   description DC1-R1_PortChannel100\n
+    \  no shutdown\n   switchport\n   switchport trunk allowed vlan 10,20,30,40\n
+    \  switchport mode trunk\n   evpn ethernet-segment\n      identifier 0000:0000:71a3:4b0e:a7d5\n
+    \     route-target import 71:a3:4b:0e:a7:d5\n   lacp system-id 71a3.4b0e.a7d5\n
+    \  spanning-tree portfast\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n
+    \  description P2P_LINK_TO_DC1-SP2_Ethernet1\n   no shutdown\n   mtu 1500\n   no
+    switchport\n   ipv6 enable\n!\ninterface Ethernet3\n   description DC1-SW1_Ethernet1\n
+    \  no shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
     DC1-R1_Ethernet0/1\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.1.3/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
@@ -279,17 +280,18 @@ cvp_configlets:
     \  name DMZ\n!\nvlan 20\n   name DMZ\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\ninterface
     Port-Channel3\n   description DC1-SW1_PortChannel100\n   no shutdown\n   switchport\n
     \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:64b8:a480:15f4\n      route-target
-    import 64:b8:a4:80:15:f4\n   lacp system-id 64b8.a480.15f4\n   spanning-tree portfast\n!\ninterface
-    Port-Channel4\n   description DC1-R1_PortChannel100\n   no shutdown\n   switchport\n
-    \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:71a3:4b0e:a7d5\n      route-target
-    import 71:a3:4b:0e:a7:d5\n   lacp system-id 71a3.4b0e.a7d5\n   spanning-tree portfast\n!\ninterface
-    Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet2\n   no shutdown\n   mtu
-    1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n   description
-    P2P_LINK_TO_DC1-SP2_Ethernet2\n   no shutdown\n   mtu 1500\n   no switchport\n
-    \  ipv6 enable\n!\ninterface Ethernet3\n   description DC1-SW1_Ethernet2\n   no
-    shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
+    ethernet-segment\n      identifier 0000:0000:64b8:a480:15f4\n      redundancy
+    single-active\n      designated-forwarder election algorithm preference 0 dont-preempt\n
+    \     route-target import 64:b8:a4:80:15:f4\n   lacp system-id 64b8.a480.15f4\n
+    \  spanning-tree portfast\n!\ninterface Port-Channel4\n   description DC1-R1_PortChannel100\n
+    \  no shutdown\n   switchport\n   switchport trunk allowed vlan 10,20,30,40\n
+    \  switchport mode trunk\n   evpn ethernet-segment\n      identifier 0000:0000:71a3:4b0e:a7d5\n
+    \     route-target import 71:a3:4b:0e:a7:d5\n   lacp system-id 71a3.4b0e.a7d5\n
+    \  spanning-tree portfast\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n
+    \  description P2P_LINK_TO_DC1-SP2_Ethernet2\n   no shutdown\n   mtu 1500\n   no
+    switchport\n   ipv6 enable\n!\ninterface Ethernet3\n   description DC1-SW1_Ethernet2\n
+    \  no shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
     DC1-R1_Ethernet0/2\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.1.4/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
@@ -364,17 +366,18 @@ cvp_configlets:
     \  name DMZ\n!\nvlan 20\n   name DMZ\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\ninterface
     Port-Channel3\n   description DC1-SW2_PortChannel100\n   no shutdown\n   switchport\n
     \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:4c44:3972:a4de\n      route-target
-    import 4c:44:39:72:a4:de\n   lacp system-id 4c44.3972.a4de\n   spanning-tree portfast\n!\ninterface
-    Port-Channel4\n   description DC1-R2_PortChannel100\n   no shutdown\n   switchport\n
-    \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:b3c9:dc7e:eb94\n      route-target
-    import b3:c9:dc:7e:eb:94\n   lacp system-id b3c9.dc7e.eb94\n   spanning-tree portfast\n!\ninterface
-    Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet3\n   no shutdown\n   mtu
-    1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n   description
-    P2P_LINK_TO_DC1-SP2_Ethernet3\n   no shutdown\n   mtu 1500\n   no switchport\n
-    \  ipv6 enable\n!\ninterface Ethernet3\n   description DC1-SW2_Ethernet1\n   no
-    shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
+    ethernet-segment\n      identifier 0000:0000:4c44:3972:a4de\n      redundancy
+    single-active\n      designated-forwarder election algorithm preference 100 dont-preempt\n
+    \     route-target import 4c:44:39:72:a4:de\n   lacp system-id 4c44.3972.a4de\n
+    \  spanning-tree portfast\n!\ninterface Port-Channel4\n   description DC1-R2_PortChannel100\n
+    \  no shutdown\n   switchport\n   switchport trunk allowed vlan 10,20,30,40\n
+    \  switchport mode trunk\n   evpn ethernet-segment\n      identifier 0000:0000:b3c9:dc7e:eb94\n
+    \     route-target import b3:c9:dc:7e:eb:94\n   lacp system-id b3c9.dc7e.eb94\n
+    \  spanning-tree portfast\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet3\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n
+    \  description P2P_LINK_TO_DC1-SP2_Ethernet3\n   no shutdown\n   mtu 1500\n   no
+    switchport\n   ipv6 enable\n!\ninterface Ethernet3\n   description DC1-SW2_Ethernet1\n
+    \  no shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
     DC1-R2_Ethernet0/1\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.1.5/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
@@ -449,17 +452,18 @@ cvp_configlets:
     \  name DMZ\n!\nvlan 20\n   name DMZ\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\ninterface
     Port-Channel3\n   description DC1-SW2_PortChannel100\n   no shutdown\n   switchport\n
     \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:4c44:3972:a4de\n      route-target
-    import 4c:44:39:72:a4:de\n   lacp system-id 4c44.3972.a4de\n   spanning-tree portfast\n!\ninterface
-    Port-Channel4\n   description DC1-R2_PortChannel100\n   no shutdown\n   switchport\n
-    \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:b3c9:dc7e:eb94\n      route-target
-    import b3:c9:dc:7e:eb:94\n   lacp system-id b3c9.dc7e.eb94\n   spanning-tree portfast\n!\ninterface
-    Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet4\n   no shutdown\n   mtu
-    1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n   description
-    P2P_LINK_TO_DC1-SP2_Ethernet4\n   no shutdown\n   mtu 1500\n   no switchport\n
-    \  ipv6 enable\n!\ninterface Ethernet3\n   description DC1-SW2_Ethernet2\n   no
-    shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
+    ethernet-segment\n      identifier 0000:0000:4c44:3972:a4de\n      redundancy
+    single-active\n      designated-forwarder election algorithm preference 0 dont-preempt\n
+    \     route-target import 4c:44:39:72:a4:de\n   lacp system-id 4c44.3972.a4de\n
+    \  spanning-tree portfast\n!\ninterface Port-Channel4\n   description DC1-R2_PortChannel100\n
+    \  no shutdown\n   switchport\n   switchport trunk allowed vlan 10,20,30,40\n
+    \  switchport mode trunk\n   evpn ethernet-segment\n      identifier 0000:0000:b3c9:dc7e:eb94\n
+    \     route-target import b3:c9:dc:7e:eb:94\n   lacp system-id b3c9.dc7e.eb94\n
+    \  spanning-tree portfast\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet4\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n
+    \  description P2P_LINK_TO_DC1-SP2_Ethernet4\n   no shutdown\n   mtu 1500\n   no
+    switchport\n   ipv6 enable\n!\ninterface Ethernet3\n   description DC1-SW2_Ethernet2\n
+    \  no shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
     DC1-R2_Ethernet0/2\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.1.6/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
@@ -860,17 +864,18 @@ cvp_configlets:
     \  name DMZ\n!\nvlan 20\n   name DMZ\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\ninterface
     Port-Channel3\n   description DC2-SW1_PortChannel100\n   no shutdown\n   switchport\n
     \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:5644:cb7d:daaa\n      route-target
-    import 56:44:cb:7d:da:aa\n   lacp system-id 5644.cb7d.daaa\n   spanning-tree portfast\n!\ninterface
-    Port-Channel4\n   description DC2-R1_PortChannel100\n   no shutdown\n   switchport\n
-    \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:1cee:1025:ee05\n      route-target
-    import 1c:ee:10:25:ee:05\n   lacp system-id 1cee.1025.ee05\n   spanning-tree portfast\n!\ninterface
-    Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet1\n   no shutdown\n   mtu
-    1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n   description
-    P2P_LINK_TO_DC2-SP2_Ethernet1\n   no shutdown\n   mtu 1500\n   no switchport\n
-    \  ipv6 enable\n!\ninterface Ethernet3\n   description DC2-SW1_Ethernet1\n   no
-    shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
+    ethernet-segment\n      identifier 0000:0000:5644:cb7d:daaa\n      redundancy
+    single-active\n      designated-forwarder election algorithm preference 100 dont-preempt\n
+    \     route-target import 56:44:cb:7d:da:aa\n   lacp system-id 5644.cb7d.daaa\n
+    \  spanning-tree portfast\n!\ninterface Port-Channel4\n   description DC2-R1_PortChannel100\n
+    \  no shutdown\n   switchport\n   switchport trunk allowed vlan 10,20,30,40\n
+    \  switchport mode trunk\n   evpn ethernet-segment\n      identifier 0000:0000:1cee:1025:ee05\n
+    \     route-target import 1c:ee:10:25:ee:05\n   lacp system-id 1cee.1025.ee05\n
+    \  spanning-tree portfast\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n
+    \  description P2P_LINK_TO_DC2-SP2_Ethernet1\n   no shutdown\n   mtu 1500\n   no
+    switchport\n   ipv6 enable\n!\ninterface Ethernet3\n   description DC2-SW1_Ethernet1\n
+    \  no shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
     DC2-R1_Ethernet0/1\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.2.3/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
@@ -945,17 +950,18 @@ cvp_configlets:
     \  name DMZ\n!\nvlan 20\n   name DMZ\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\ninterface
     Port-Channel3\n   description DC2-SW1_PortChannel100\n   no shutdown\n   switchport\n
     \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:5644:cb7d:daaa\n      route-target
-    import 56:44:cb:7d:da:aa\n   lacp system-id 5644.cb7d.daaa\n   spanning-tree portfast\n!\ninterface
-    Port-Channel4\n   description DC2-R1_PortChannel100\n   no shutdown\n   switchport\n
-    \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:1cee:1025:ee05\n      route-target
-    import 1c:ee:10:25:ee:05\n   lacp system-id 1cee.1025.ee05\n   spanning-tree portfast\n!\ninterface
-    Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet2\n   no shutdown\n   mtu
-    1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n   description
-    P2P_LINK_TO_DC2-SP2_Ethernet2\n   no shutdown\n   mtu 1500\n   no switchport\n
-    \  ipv6 enable\n!\ninterface Ethernet3\n   description DC2-SW1_Ethernet2\n   no
-    shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
+    ethernet-segment\n      identifier 0000:0000:5644:cb7d:daaa\n      redundancy
+    single-active\n      designated-forwarder election algorithm preference 0 dont-preempt\n
+    \     route-target import 56:44:cb:7d:da:aa\n   lacp system-id 5644.cb7d.daaa\n
+    \  spanning-tree portfast\n!\ninterface Port-Channel4\n   description DC2-R1_PortChannel100\n
+    \  no shutdown\n   switchport\n   switchport trunk allowed vlan 10,20,30,40\n
+    \  switchport mode trunk\n   evpn ethernet-segment\n      identifier 0000:0000:1cee:1025:ee05\n
+    \     route-target import 1c:ee:10:25:ee:05\n   lacp system-id 1cee.1025.ee05\n
+    \  spanning-tree portfast\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n
+    \  description P2P_LINK_TO_DC2-SP2_Ethernet2\n   no shutdown\n   mtu 1500\n   no
+    switchport\n   ipv6 enable\n!\ninterface Ethernet3\n   description DC2-SW1_Ethernet2\n
+    \  no shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
     DC2-R1_Ethernet0/2\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.2.4/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
@@ -1030,17 +1036,18 @@ cvp_configlets:
     \  name DMZ\n!\nvlan 20\n   name DMZ\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\ninterface
     Port-Channel3\n   description DC2-SW2_PortChannel100\n   no shutdown\n   switchport\n
     \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:1866:7bbf:59d6\n      route-target
-    import 18:66:7b:bf:59:d6\n   lacp system-id 1866.7bbf.59d6\n   spanning-tree portfast\n!\ninterface
-    Port-Channel4\n   description DC2-R2_PortChannel100\n   no shutdown\n   switchport\n
-    \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:b1ee:4d3d:b273\n      route-target
-    import b1:ee:4d:3d:b2:73\n   lacp system-id b1ee.4d3d.b273\n   spanning-tree portfast\n!\ninterface
-    Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet3\n   no shutdown\n   mtu
-    1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n   description
-    P2P_LINK_TO_DC2-SP2_Ethernet3\n   no shutdown\n   mtu 1500\n   no switchport\n
-    \  ipv6 enable\n!\ninterface Ethernet3\n   description DC2-SW2_Ethernet1\n   no
-    shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
+    ethernet-segment\n      identifier 0000:0000:1866:7bbf:59d6\n      redundancy
+    single-active\n      designated-forwarder election algorithm preference 100 dont-preempt\n
+    \     route-target import 18:66:7b:bf:59:d6\n   lacp system-id 1866.7bbf.59d6\n
+    \  spanning-tree portfast\n!\ninterface Port-Channel4\n   description DC2-R2_PortChannel100\n
+    \  no shutdown\n   switchport\n   switchport trunk allowed vlan 10,20,30,40\n
+    \  switchport mode trunk\n   evpn ethernet-segment\n      identifier 0000:0000:b1ee:4d3d:b273\n
+    \     route-target import b1:ee:4d:3d:b2:73\n   lacp system-id b1ee.4d3d.b273\n
+    \  spanning-tree portfast\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet3\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n
+    \  description P2P_LINK_TO_DC2-SP2_Ethernet3\n   no shutdown\n   mtu 1500\n   no
+    switchport\n   ipv6 enable\n!\ninterface Ethernet3\n   description DC2-SW2_Ethernet1\n
+    \  no shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
     DC2-R2_Ethernet0/1\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.2.5/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
@@ -1115,17 +1122,18 @@ cvp_configlets:
     \  name DMZ\n!\nvlan 20\n   name DMZ\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\ninterface
     Port-Channel3\n   description DC2-SW2_PortChannel100\n   no shutdown\n   switchport\n
     \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:1866:7bbf:59d6\n      route-target
-    import 18:66:7b:bf:59:d6\n   lacp system-id 1866.7bbf.59d6\n   spanning-tree portfast\n!\ninterface
-    Port-Channel4\n   description DC2-R2_PortChannel100\n   no shutdown\n   switchport\n
-    \  switchport trunk allowed vlan 10,20,30,40\n   switchport mode trunk\n   evpn
-    ethernet-segment\n      identifier 0000:0000:b1ee:4d3d:b273\n      route-target
-    import b1:ee:4d:3d:b2:73\n   lacp system-id b1ee.4d3d.b273\n   spanning-tree portfast\n!\ninterface
-    Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet4\n   no shutdown\n   mtu
-    1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n   description
-    P2P_LINK_TO_DC2-SP2_Ethernet4\n   no shutdown\n   mtu 1500\n   no switchport\n
-    \  ipv6 enable\n!\ninterface Ethernet3\n   description DC2-SW2_Ethernet2\n   no
-    shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
+    ethernet-segment\n      identifier 0000:0000:1866:7bbf:59d6\n      redundancy
+    single-active\n      designated-forwarder election algorithm preference 0 dont-preempt\n
+    \     route-target import 18:66:7b:bf:59:d6\n   lacp system-id 1866.7bbf.59d6\n
+    \  spanning-tree portfast\n!\ninterface Port-Channel4\n   description DC2-R2_PortChannel100\n
+    \  no shutdown\n   switchport\n   switchport trunk allowed vlan 10,20,30,40\n
+    \  switchport mode trunk\n   evpn ethernet-segment\n      identifier 0000:0000:b1ee:4d3d:b273\n
+    \     route-target import b1:ee:4d:3d:b2:73\n   lacp system-id b1ee.4d3d.b273\n
+    \  spanning-tree portfast\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet4\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ipv6 enable\n!\ninterface Ethernet2\n
+    \  description P2P_LINK_TO_DC2-SP2_Ethernet4\n   no shutdown\n   mtu 1500\n   no
+    switchport\n   ipv6 enable\n!\ninterface Ethernet3\n   description DC2-SW2_Ethernet2\n
+    \  no shutdown\n   channel-group 3 mode active\n!\ninterface Ethernet4\n   description
     DC2-R2_Ethernet0/2\n   no shutdown\n   channel-group 4 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
     10.250.2.6/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n

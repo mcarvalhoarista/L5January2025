@@ -65,18 +65,18 @@
 
 | Node | Node Interface | Node IP Address | Peer Node | Peer Interface | Peer IP Address |
 | ---- | -------------- | --------------- | --------- | -------------- | --------------- |
-| DC1-BL1 | Ethernet1 | 172.16.1.65/31 | DC1-SP1 | Ethernet5 | 172.16.1.64/31 |
-| DC1-BL1 | Ethernet2 | 172.16.1.67/31 | DC1-SP2 | Ethernet5 | 172.16.1.66/31 |
-| DC1-BL2 | Ethernet1 | 172.16.1.81/31 | DC1-SP1 | Ethernet6 | 172.16.1.80/31 |
-| DC1-BL2 | Ethernet2 | 172.16.1.83/31 | DC1-SP2 | Ethernet6 | 172.16.1.82/31 |
+| DC1-BL1 | Ethernet1 | 172.16.1.129/31 | DC1-SP1 | Ethernet5 | 172.16.1.128/31 |
+| DC1-BL1 | Ethernet2 | 172.16.1.131/31 | DC1-SP2 | Ethernet5 | 172.16.1.130/31 |
+| DC1-BL2 | Ethernet1 | 172.16.1.161/31 | DC1-SP1 | Ethernet6 | 172.16.1.160/31 |
+| DC1-BL2 | Ethernet2 | 172.16.1.163/31 | DC1-SP2 | Ethernet6 | 172.16.1.162/31 |
 | DC1-CL1 | Ethernet1 | 172.16.1.1/31 | DC1-SP1 | Ethernet1 | 172.16.1.0/31 |
 | DC1-CL1 | Ethernet2 | 172.16.1.3/31 | DC1-SP2 | Ethernet1 | 172.16.1.2/31 |
-| DC1-CL2 | Ethernet1 | 172.16.1.17/31 | DC1-SP1 | Ethernet2 | 172.16.1.16/31 |
-| DC1-CL2 | Ethernet2 | 172.16.1.19/31 | DC1-SP2 | Ethernet2 | 172.16.1.18/31 |
-| DC1-CL3 | Ethernet1 | 172.16.1.33/31 | DC1-SP1 | Ethernet3 | 172.16.1.32/31 |
-| DC1-CL3 | Ethernet2 | 172.16.1.35/31 | DC1-SP2 | Ethernet3 | 172.16.1.34/31 |
-| DC1-CL4 | Ethernet1 | 172.16.1.49/31 | DC1-SP1 | Ethernet4 | 172.16.1.48/31 |
-| DC1-CL4 | Ethernet2 | 172.16.1.51/31 | DC1-SP2 | Ethernet4 | 172.16.1.50/31 |
+| DC1-CL2 | Ethernet1 | 172.16.1.33/31 | DC1-SP1 | Ethernet2 | 172.16.1.32/31 |
+| DC1-CL2 | Ethernet2 | 172.16.1.35/31 | DC1-SP2 | Ethernet2 | 172.16.1.34/31 |
+| DC1-CL3 | Ethernet1 | 172.16.1.65/31 | DC1-SP1 | Ethernet3 | 172.16.1.64/31 |
+| DC1-CL3 | Ethernet2 | 172.16.1.67/31 | DC1-SP2 | Ethernet3 | 172.16.1.66/31 |
+| DC1-CL4 | Ethernet1 | 172.16.1.97/31 | DC1-SP1 | Ethernet4 | 172.16.1.96/31 |
+| DC1-CL4 | Ethernet2 | 172.16.1.99/31 | DC1-SP2 | Ethernet4 | 172.16.1.98/31 |
 
 ### Loopback Interfaces (BGP EVPN Peering)
 

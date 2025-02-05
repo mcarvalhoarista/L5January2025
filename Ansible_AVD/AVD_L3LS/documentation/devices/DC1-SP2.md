@@ -336,11 +336,11 @@ interface defaults
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet1 | P2P_LINK_TO_DC1-CL1_Ethernet2 | routed | - | 172.16.1.2/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-CL2_Ethernet2 | routed | - | 172.16.1.18/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-CL3_Ethernet2 | routed | - | 172.16.1.34/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-CL4_Ethernet2 | routed | - | 172.16.1.50/31 | default | 1500 | False | - | - |
-| Ethernet5 | P2P_LINK_TO_DC1-BL1_Ethernet2 | routed | - | 172.16.1.66/31 | default | 1500 | False | - | - |
-| Ethernet6 | P2P_LINK_TO_DC1-BL2_Ethernet2 | routed | - | 172.16.1.82/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_LINK_TO_DC1-CL2_Ethernet2 | routed | - | 172.16.1.34/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_LINK_TO_DC1-CL3_Ethernet2 | routed | - | 172.16.1.66/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_LINK_TO_DC1-CL4_Ethernet2 | routed | - | 172.16.1.98/31 | default | 1500 | False | - | - |
+| Ethernet5 | P2P_LINK_TO_DC1-BL1_Ethernet2 | routed | - | 172.16.1.130/31 | default | 1500 | False | - | - |
+| Ethernet6 | P2P_LINK_TO_DC1-BL2_Ethernet2 | routed | - | 172.16.1.162/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -358,35 +358,35 @@ interface Ethernet2
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.1.18/31
+   ip address 172.16.1.34/31
 !
 interface Ethernet3
    description P2P_LINK_TO_DC1-CL3_Ethernet2
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.1.34/31
+   ip address 172.16.1.66/31
 !
 interface Ethernet4
    description P2P_LINK_TO_DC1-CL4_Ethernet2
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.1.50/31
+   ip address 172.16.1.98/31
 !
 interface Ethernet5
    description P2P_LINK_TO_DC1-BL1_Ethernet2
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.1.66/31
+   ip address 172.16.1.130/31
 !
 interface Ethernet6
    description P2P_LINK_TO_DC1-BL2_Ethernet2
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.1.82/31
+   ip address 172.16.1.162/31
 ```
 
 ### Loopback Interfaces
@@ -515,11 +515,11 @@ ASN Notation: asplain
 | 10.250.1.19 | 65103 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 | 10.250.1.23 | 65103 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 | 172.16.1.3 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 172.16.1.19 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 172.16.1.35 | 65102 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 172.16.1.51 | 65102 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 172.16.1.67 | 65103 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 172.16.1.83 | 65103 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.1.35 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.1.67 | 65102 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.1.99 | 65102 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.1.131 | 65103 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.1.163 | 65103 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -570,21 +570,21 @@ router bgp 65100
    neighbor 172.16.1.3 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.16.1.3 remote-as 65101
    neighbor 172.16.1.3 description DC1-CL1_Ethernet2
-   neighbor 172.16.1.19 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.16.1.19 remote-as 65101
-   neighbor 172.16.1.19 description DC1-CL2_Ethernet2
    neighbor 172.16.1.35 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.16.1.35 remote-as 65102
-   neighbor 172.16.1.35 description DC1-CL3_Ethernet2
-   neighbor 172.16.1.51 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.16.1.51 remote-as 65102
-   neighbor 172.16.1.51 description DC1-CL4_Ethernet2
+   neighbor 172.16.1.35 remote-as 65101
+   neighbor 172.16.1.35 description DC1-CL2_Ethernet2
    neighbor 172.16.1.67 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.16.1.67 remote-as 65103
-   neighbor 172.16.1.67 description DC1-BL1_Ethernet2
-   neighbor 172.16.1.83 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.16.1.83 remote-as 65103
-   neighbor 172.16.1.83 description DC1-BL2_Ethernet2
+   neighbor 172.16.1.67 remote-as 65102
+   neighbor 172.16.1.67 description DC1-CL3_Ethernet2
+   neighbor 172.16.1.99 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.99 remote-as 65102
+   neighbor 172.16.1.99 description DC1-CL4_Ethernet2
+   neighbor 172.16.1.131 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.131 remote-as 65103
+   neighbor 172.16.1.131 description DC1-BL1_Ethernet2
+   neighbor 172.16.1.163 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.1.163 remote-as 65103
+   neighbor 172.16.1.163 description DC1-BL2_Ethernet2
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn

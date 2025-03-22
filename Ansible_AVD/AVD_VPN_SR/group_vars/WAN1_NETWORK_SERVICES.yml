@@ -1,20 +1,37 @@
 ---
 tenants:
   - name: TENANT_C1
+    mac_vrf_vni_base: 10000
     vrfs:
       - name: VRF_A
-        vrf_id: 10
+        vrf_vni: 10
         address_families:
-          - vpn-ipv4
+          - evpn
+          # - vpn-ipv4
         svis:
           - id: 10
-            name: DMZ
+            name: DMZ_10
             enabled: true
             ip_address_virtual: 10.1.10.1/24
           - id: 20
-            name: DMZ
+            name: DMZ_20
             enabled: true
             ip_address_virtual: 10.1.20.1/24
+      - name: VRF_B
+        vrf_id: 20
+        address_families:
+          # - evpn
+          - vpn-ipv4
+        svis:
+          - id: 30
+            name: DMZ_30
+            enabled: true
+            ip_address_virtual: 10.1.30.1/24
+          - id: 40
+            name: DMZ_40
+            enabled: true
+            ip_address_virtual: 10.1.40.1/24
+
         # l3_interfaces:
         #   - interfaces: [Port-Channel100.10]
         #     ip_addresses: [10.1.5.1/24]

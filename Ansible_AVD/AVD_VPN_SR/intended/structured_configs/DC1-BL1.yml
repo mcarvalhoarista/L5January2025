@@ -27,7 +27,11 @@ router_bgp:
     maximum_routes: 0
     remote_as: '65100'
   address_family_evpn:
+    neighbor_default:
+      encapsulation: mpls
     peer_groups:
+    - name: MPLS-OVERLAY-PEERS
+      activate: true
     - name: RR-OVERLAY-PEERS
       activate: true
   address_family_ipv4:
@@ -36,6 +40,13 @@ router_bgp:
       activate: false
     - name: RR-OVERLAY-PEERS
       activate: false
+  address_family_rtc:
+    peer_groups:
+    - name: MPLS-OVERLAY-PEERS
+      activate: true
+      default_route_target:
+        only: true
+    - name: EVPN-OVERLAY-PEERS
   address_family_vpn_ipv4:
     peer_groups:
     - name: MPLS-OVERLAY-PEERS

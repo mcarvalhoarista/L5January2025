@@ -33,10 +33,8 @@ cvp_devices:
     configlets:
       - VPN_SR_AVD_DC2-SP2
 cvp_containers:
-  DC2_FABRIC:
-    parentContainerName: Tenant
   WAN2:
-    parentContainerName: DC2_FABRIC
+    parentContainerName: Tenant
   WAN2_P_ROUTERS:
     parentContainerName: WAN2
   WAN2_PE_ROUTERS:

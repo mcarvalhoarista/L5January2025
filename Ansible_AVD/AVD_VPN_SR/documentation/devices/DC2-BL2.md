@@ -647,7 +647,14 @@ ASN Notation: asplain
 
 | Peer Group | Activate | Encapsulation |
 | ---------- | -------- | ------------- |
+| MPLS-OVERLAY-PEERS | True | default |
 | RR-OVERLAY-PEERS | True | default |
+
+##### EVPN Neighbor Default Encapsulation
+
+| Neighbor Default Encapsulation | Next-hop-self Source Interface |
+| ------------------------------ | ------------------------------ |
+| mpls | - |
 
 #### Router BGP VPN-IPv4 Address Family
 
@@ -690,7 +697,13 @@ router bgp 65200
    neighbor 10.250.2.6 description DC2-CL4
    !
    address-family evpn
+      neighbor default encapsulation mpls
+      neighbor MPLS-OVERLAY-PEERS activate
       neighbor RR-OVERLAY-PEERS activate
+   !
+   address-family rt-membership
+      neighbor MPLS-OVERLAY-PEERS activate
+      neighbor MPLS-OVERLAY-PEERS default-route-target only
    !
    address-family ipv4
       no neighbor MPLS-OVERLAY-PEERS activate

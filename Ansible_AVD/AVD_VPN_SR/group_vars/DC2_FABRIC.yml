@@ -15,6 +15,8 @@ isis_default_is_type: "level-2"
 isis_maximum_paths: 128
 
 overlay_routing_protocol: ibgp
+evpn_overlay_bgp_rtc: true
+fabric_evpn_encapsulation: mpls
 
 custom_structured_configuration_switchport_default:
   mode: routed
@@ -48,6 +50,7 @@ pe:
     isis_system_id_prefix: "1921.6820"
     virtual_router_mac_address: 00:1c:73:00:00:99
     mpls_route_reflectors: [ DC2-BL1, DC2-BL2 ]
+    overlay_address_families: ['vpn-ipv4', 'evpn']
   node_groups:
     - group: DC2_RACK1
       bgp_as: 65200
@@ -85,6 +88,7 @@ rr:
     spanning_tree_mode: none
     loopback_ipv4_pool: 10.250.2.0/24
     isis_system_id_prefix: "1921.6820"
+    overlay_address_families: ['vpn-ipv4', 'evpn']
   node_groups:
     - group: DC2_BL
       bgp_as: 65200

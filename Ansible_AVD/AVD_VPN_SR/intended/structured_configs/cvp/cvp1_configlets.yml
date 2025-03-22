@@ -56,10 +56,13 @@ cvp_configlets:
     10.250.1.4 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.4 description DC1-CL2\n
     \  neighbor 10.250.1.5 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.5 description
     DC1-CL3\n   neighbor 10.250.1.6 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.6
-    description DC1-CL4\n   !\n   address-family evpn\n      neighbor RR-OVERLAY-PEERS
-    activate\n   !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
-    \     no neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n
-    \     neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
+    description DC1-CL4\n   !\n   address-family evpn\n      neighbor default encapsulation
+    mpls\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS
+    activate\n   !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS
+    activate\n      neighbor MPLS-OVERLAY-PEERS default-route-target only\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n      no
+    neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n      neighbor
+    MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
     isis CORE\n   net 49.0001.1921.6810.0007.00\n   is-type level-2\n   router-id
     ipv4 10.250.1.7\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
     passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
@@ -133,10 +136,13 @@ cvp_configlets:
     10.250.1.4 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.4 description DC1-CL2\n
     \  neighbor 10.250.1.5 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.5 description
     DC1-CL3\n   neighbor 10.250.1.6 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.6
-    description DC1-CL4\n   !\n   address-family evpn\n      neighbor RR-OVERLAY-PEERS
-    activate\n   !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
-    \     no neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n
-    \     neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
+    description DC1-CL4\n   !\n   address-family evpn\n      neighbor default encapsulation
+    mpls\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS
+    activate\n   !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS
+    activate\n      neighbor MPLS-OVERLAY-PEERS default-route-target only\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n      no
+    neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n      neighbor
+    MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
     isis CORE\n   net 49.0001.1921.6810.0008.00\n   is-type level-2\n   router-id
     ipv4 10.250.1.8\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
     passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
@@ -165,8 +171,10 @@ cvp_configlets:
     mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
     aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
     cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
-    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
-    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet1\n
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvlan
+    10\n   name DMZ_10\n!\nvlan 20\n   name DMZ_20\n!\nvlan 30\n   name DMZ_30\n!\nvlan
+    40\n   name DMZ_40\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\nvrf instance
+    VRF_B\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet1\n
     \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.0/31\n   mpls
     ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
     circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
@@ -185,26 +193,43 @@ cvp_configlets:
     \  no shutdown\n   ip address 10.250.1.3/32\n   isis enable CORE\n   isis passive\n
     \  mpls ldp interface\n   node-segment ipv4 index 3\n!\ninterface Management1\n
     \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
-    10.88.169.135/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
-    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
-    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id
-    10.250.1.3\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n
-    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
-    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
-    maximum-routes 0\n   neighbor 10.250.1.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
-    10.250.1.7 description DC1-BL1\n   neighbor 10.250.1.8 peer group MPLS-OVERLAY-PEERS\n
-    \  neighbor 10.250.1.8 description DC1-BL2\n   !\n   address-family evpn\n   !\n
-    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
-    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
-    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
-    isis CORE\n   net 49.0001.1921.6810.0003.00\n   is-type level-2\n   router-id
-    ipv4 10.250.1.3\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
-    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
-    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
-    disabled default\n   router-id 10.250.1.3\n   no shutdown\n   transport-address
-    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
-    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    10.88.169.135/24\n!\ninterface Vlan10\n   description DMZ_10\n   no shutdown\n
+    \  vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ_20\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vlan30\n   description DMZ_30\n   no shutdown\n   vrf VRF_B\n   ip address virtual
+    10.1.30.1/24\n!\ninterface Vlan40\n   description DMZ_40\n   no shutdown\n   vrf
+    VRF_B\n   ip address virtual 10.1.40.1/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    routing\nno ip routing vrf MGMT\nip routing vrf VRF_A\nip routing vrf VRF_B\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300
+    min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id 10.250.1.3\n   maximum-paths
+    4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor MPLS-OVERLAY-PEERS peer
+    group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    send-community\n   neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.1.7
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.7 description DC1-BL1\n   neighbor
+    10.250.1.8 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.8 description DC1-BL2\n
+    \  !\n   vlan 10\n      rd 10.250.1.3:10010\n      route-target both 10010:10010\n
+    \     redistribute learned\n   !\n   vlan 20\n      rd 10.250.1.3:10020\n      route-target
+    both 10020:10020\n      redistribute learned\n   !\n   vlan 30\n      rd 10.250.1.3:10030\n
+    \     route-target both 10030:10030\n      redistribute learned\n   !\n   vlan
+    40\n      rd 10.250.1.3:10040\n      route-target both 10040:10040\n      redistribute
+    learned\n   !\n   address-family evpn\n      neighbor default encapsulation mpls
+    next-hop-self source-interface Loopback0\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n
+    \  !\n   vrf VRF_A\n      rd 10.250.1.3:10\n      route-target import evpn 10:10\n
+    \     route-target export evpn 10:10\n      router-id 10.250.1.3\n      redistribute
+    connected\n   !\n   vrf VRF_B\n      rd 10.250.1.3:20\n      route-target import
+    vpn-ipv4 20:20\n      route-target export vpn-ipv4 20:20\n      router-id 10.250.1.3\n
+    \     redistribute connected\n!\nrouter isis CORE\n   net 49.0001.1921.6810.0003.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.1.3\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.1.3\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
     \                                                                       !!\n!!
     IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
     WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
@@ -226,8 +251,10 @@ cvp_configlets:
     mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
     aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
     cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
-    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
-    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet2\n
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvlan
+    10\n   name DMZ_10\n!\nvlan 20\n   name DMZ_20\n!\nvlan 30\n   name DMZ_30\n!\nvlan
+    40\n   name DMZ_40\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\nvrf instance
+    VRF_B\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet2\n
     \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.4/31\n   mpls
     ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
     circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
@@ -246,26 +273,43 @@ cvp_configlets:
     \  no shutdown\n   ip address 10.250.1.4/32\n   isis enable CORE\n   isis passive\n
     \  mpls ldp interface\n   node-segment ipv4 index 4\n!\ninterface Management1\n
     \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
-    10.88.169.136/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
-    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
-    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id
-    10.250.1.4\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n
-    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
-    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
-    maximum-routes 0\n   neighbor 10.250.1.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
-    10.250.1.7 description DC1-BL1\n   neighbor 10.250.1.8 peer group MPLS-OVERLAY-PEERS\n
-    \  neighbor 10.250.1.8 description DC1-BL2\n   !\n   address-family evpn\n   !\n
-    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
-    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
-    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
-    isis CORE\n   net 49.0001.1921.6810.0004.00\n   is-type level-2\n   router-id
-    ipv4 10.250.1.4\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
-    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
-    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
-    disabled default\n   router-id 10.250.1.4\n   no shutdown\n   transport-address
-    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
-    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    10.88.169.136/24\n!\ninterface Vlan10\n   description DMZ_10\n   no shutdown\n
+    \  vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ_20\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vlan30\n   description DMZ_30\n   no shutdown\n   vrf VRF_B\n   ip address virtual
+    10.1.30.1/24\n!\ninterface Vlan40\n   description DMZ_40\n   no shutdown\n   vrf
+    VRF_B\n   ip address virtual 10.1.40.1/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    routing\nno ip routing vrf MGMT\nip routing vrf VRF_A\nip routing vrf VRF_B\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300
+    min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id 10.250.1.4\n   maximum-paths
+    4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor MPLS-OVERLAY-PEERS peer
+    group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    send-community\n   neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.1.7
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.7 description DC1-BL1\n   neighbor
+    10.250.1.8 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.8 description DC1-BL2\n
+    \  !\n   vlan 10\n      rd 10.250.1.4:10010\n      route-target both 10010:10010\n
+    \     redistribute learned\n   !\n   vlan 20\n      rd 10.250.1.4:10020\n      route-target
+    both 10020:10020\n      redistribute learned\n   !\n   vlan 30\n      rd 10.250.1.4:10030\n
+    \     route-target both 10030:10030\n      redistribute learned\n   !\n   vlan
+    40\n      rd 10.250.1.4:10040\n      route-target both 10040:10040\n      redistribute
+    learned\n   !\n   address-family evpn\n      neighbor default encapsulation mpls
+    next-hop-self source-interface Loopback0\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n
+    \  !\n   vrf VRF_A\n      rd 10.250.1.4:10\n      route-target import evpn 10:10\n
+    \     route-target export evpn 10:10\n      router-id 10.250.1.4\n      redistribute
+    connected\n   !\n   vrf VRF_B\n      rd 10.250.1.4:20\n      route-target import
+    vpn-ipv4 20:20\n      route-target export vpn-ipv4 20:20\n      router-id 10.250.1.4\n
+    \     redistribute connected\n!\nrouter isis CORE\n   net 49.0001.1921.6810.0004.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.1.4\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.1.4\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
     \                                                                       !!\n!!
     IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
     WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
@@ -287,8 +331,10 @@ cvp_configlets:
     mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
     aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
     cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
-    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
-    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet3\n
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvlan
+    10\n   name DMZ_10\n!\nvlan 20\n   name DMZ_20\n!\nvlan 30\n   name DMZ_30\n!\nvlan
+    40\n   name DMZ_40\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\nvrf instance
+    VRF_B\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet3\n
     \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.10/31\n
     \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
     \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
@@ -307,26 +353,43 @@ cvp_configlets:
     \  no shutdown\n   ip address 10.250.1.5/32\n   isis enable CORE\n   isis passive\n
     \  mpls ldp interface\n   node-segment ipv4 index 5\n!\ninterface Management1\n
     \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
-    10.88.169.137/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
-    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
-    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id
-    10.250.1.5\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n
-    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
-    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
-    maximum-routes 0\n   neighbor 10.250.1.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
-    10.250.1.7 description DC1-BL1\n   neighbor 10.250.1.8 peer group MPLS-OVERLAY-PEERS\n
-    \  neighbor 10.250.1.8 description DC1-BL2\n   !\n   address-family evpn\n   !\n
-    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
-    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
-    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
-    isis CORE\n   net 49.0001.1921.6810.0005.00\n   is-type level-2\n   router-id
-    ipv4 10.250.1.5\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
-    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
-    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
-    disabled default\n   router-id 10.250.1.5\n   no shutdown\n   transport-address
-    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
-    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    10.88.169.137/24\n!\ninterface Vlan10\n   description DMZ_10\n   no shutdown\n
+    \  vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ_20\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vlan30\n   description DMZ_30\n   no shutdown\n   vrf VRF_B\n   ip address virtual
+    10.1.30.1/24\n!\ninterface Vlan40\n   description DMZ_40\n   no shutdown\n   vrf
+    VRF_B\n   ip address virtual 10.1.40.1/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    routing\nno ip routing vrf MGMT\nip routing vrf VRF_A\nip routing vrf VRF_B\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300
+    min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id 10.250.1.5\n   maximum-paths
+    4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor MPLS-OVERLAY-PEERS peer
+    group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    send-community\n   neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.1.7
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.7 description DC1-BL1\n   neighbor
+    10.250.1.8 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.8 description DC1-BL2\n
+    \  !\n   vlan 10\n      rd 10.250.1.5:10010\n      route-target both 10010:10010\n
+    \     redistribute learned\n   !\n   vlan 20\n      rd 10.250.1.5:10020\n      route-target
+    both 10020:10020\n      redistribute learned\n   !\n   vlan 30\n      rd 10.250.1.5:10030\n
+    \     route-target both 10030:10030\n      redistribute learned\n   !\n   vlan
+    40\n      rd 10.250.1.5:10040\n      route-target both 10040:10040\n      redistribute
+    learned\n   !\n   address-family evpn\n      neighbor default encapsulation mpls
+    next-hop-self source-interface Loopback0\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n
+    \  !\n   vrf VRF_A\n      rd 10.250.1.5:10\n      route-target import evpn 10:10\n
+    \     route-target export evpn 10:10\n      router-id 10.250.1.5\n      redistribute
+    connected\n   !\n   vrf VRF_B\n      rd 10.250.1.5:20\n      route-target import
+    vpn-ipv4 20:20\n      route-target export vpn-ipv4 20:20\n      router-id 10.250.1.5\n
+    \     redistribute connected\n!\nrouter isis CORE\n   net 49.0001.1921.6810.0005.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.1.5\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.1.5\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
     \                                                                       !!\n!!
     IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
     WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
@@ -348,8 +411,10 @@ cvp_configlets:
     mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
     aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
     cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
-    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
-    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet4\n
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvlan
+    10\n   name DMZ_10\n!\nvlan 20\n   name DMZ_20\n!\nvlan 30\n   name DMZ_30\n!\nvlan
+    40\n   name DMZ_40\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\nvrf instance
+    VRF_B\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet4\n
     \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.14/31\n
     \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
     \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
@@ -368,26 +433,43 @@ cvp_configlets:
     \  no shutdown\n   ip address 10.250.1.6/32\n   isis enable CORE\n   isis passive\n
     \  mpls ldp interface\n   node-segment ipv4 index 6\n!\ninterface Management1\n
     \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
-    10.88.169.138/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
-    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
-    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id
-    10.250.1.6\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n
-    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
-    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
-    maximum-routes 0\n   neighbor 10.250.1.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
-    10.250.1.7 description DC1-BL1\n   neighbor 10.250.1.8 peer group MPLS-OVERLAY-PEERS\n
-    \  neighbor 10.250.1.8 description DC1-BL2\n   !\n   address-family evpn\n   !\n
-    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
-    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
-    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
-    isis CORE\n   net 49.0001.1921.6810.0006.00\n   is-type level-2\n   router-id
-    ipv4 10.250.1.6\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
-    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
-    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
-    disabled default\n   router-id 10.250.1.6\n   no shutdown\n   transport-address
-    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
-    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    10.88.169.138/24\n!\ninterface Vlan10\n   description DMZ_10\n   no shutdown\n
+    \  vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ_20\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vlan30\n   description DMZ_30\n   no shutdown\n   vrf VRF_B\n   ip address virtual
+    10.1.30.1/24\n!\ninterface Vlan40\n   description DMZ_40\n   no shutdown\n   vrf
+    VRF_B\n   ip address virtual 10.1.40.1/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    routing\nno ip routing vrf MGMT\nip routing vrf VRF_A\nip routing vrf VRF_B\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300
+    min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id 10.250.1.6\n   maximum-paths
+    4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor MPLS-OVERLAY-PEERS peer
+    group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    send-community\n   neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.1.7
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.7 description DC1-BL1\n   neighbor
+    10.250.1.8 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.8 description DC1-BL2\n
+    \  !\n   vlan 10\n      rd 10.250.1.6:10010\n      route-target both 10010:10010\n
+    \     redistribute learned\n   !\n   vlan 20\n      rd 10.250.1.6:10020\n      route-target
+    both 10020:10020\n      redistribute learned\n   !\n   vlan 30\n      rd 10.250.1.6:10030\n
+    \     route-target both 10030:10030\n      redistribute learned\n   !\n   vlan
+    40\n      rd 10.250.1.6:10040\n      route-target both 10040:10040\n      redistribute
+    learned\n   !\n   address-family evpn\n      neighbor default encapsulation mpls
+    next-hop-self source-interface Loopback0\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n
+    \  !\n   vrf VRF_A\n      rd 10.250.1.6:10\n      route-target import evpn 10:10\n
+    \     route-target export evpn 10:10\n      router-id 10.250.1.6\n      redistribute
+    connected\n   !\n   vrf VRF_B\n      rd 10.250.1.6:20\n      route-target import
+    vpn-ipv4 20:20\n      route-target export vpn-ipv4 20:20\n      router-id 10.250.1.6\n
+    \     redistribute connected\n!\nrouter isis CORE\n   net 49.0001.1921.6810.0006.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.1.6\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.1.6\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
     \                                                                       !!\n!!
     IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
     WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
@@ -592,10 +674,13 @@ cvp_configlets:
     10.250.2.4 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.4 description DC2-CL2\n
     \  neighbor 10.250.2.5 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.5 description
     DC2-CL3\n   neighbor 10.250.2.6 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.6
-    description DC2-CL4\n   !\n   address-family evpn\n      neighbor RR-OVERLAY-PEERS
-    activate\n   !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
-    \     no neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n
-    \     neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
+    description DC2-CL4\n   !\n   address-family evpn\n      neighbor default encapsulation
+    mpls\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS
+    activate\n   !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS
+    activate\n      neighbor MPLS-OVERLAY-PEERS default-route-target only\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n      no
+    neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n      neighbor
+    MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
     isis CORE\n   net 49.0001.1921.6820.0007.00\n   is-type level-2\n   router-id
     ipv4 10.250.2.7\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
     passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
@@ -669,10 +754,13 @@ cvp_configlets:
     10.250.2.4 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.4 description DC2-CL2\n
     \  neighbor 10.250.2.5 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.5 description
     DC2-CL3\n   neighbor 10.250.2.6 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.6
-    description DC2-CL4\n   !\n   address-family evpn\n      neighbor RR-OVERLAY-PEERS
-    activate\n   !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
-    \     no neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n
-    \     neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
+    description DC2-CL4\n   !\n   address-family evpn\n      neighbor default encapsulation
+    mpls\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS
+    activate\n   !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS
+    activate\n      neighbor MPLS-OVERLAY-PEERS default-route-target only\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n      no
+    neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n      neighbor
+    MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
     isis CORE\n   net 49.0001.1921.6820.0008.00\n   is-type level-2\n   router-id
     ipv4 10.250.2.8\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
     passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
@@ -701,8 +789,10 @@ cvp_configlets:
     mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
     aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
     cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
-    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
-    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet1\n
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvlan
+    10\n   name DMZ_10\n!\nvlan 20\n   name DMZ_20\n!\nvlan 30\n   name DMZ_30\n!\nvlan
+    40\n   name DMZ_40\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\nvrf instance
+    VRF_B\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet1\n
     \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.0/31\n   mpls
     ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
     circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
@@ -721,26 +811,43 @@ cvp_configlets:
     \  no shutdown\n   ip address 10.250.2.3/32\n   isis enable CORE\n   isis passive\n
     \  mpls ldp interface\n   node-segment ipv4 index 13\n!\ninterface Management1\n
     \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
-    10.88.169.143/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
-    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
-    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id
-    10.250.2.3\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n
-    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
-    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
-    maximum-routes 0\n   neighbor 10.250.2.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
-    10.250.2.7 description DC2-BL1\n   neighbor 10.250.2.8 peer group MPLS-OVERLAY-PEERS\n
-    \  neighbor 10.250.2.8 description DC2-BL2\n   !\n   address-family evpn\n   !\n
-    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
-    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
-    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
-    isis CORE\n   net 49.0001.1921.6820.0003.00\n   is-type level-2\n   router-id
-    ipv4 10.250.2.3\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
-    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
-    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
-    disabled default\n   router-id 10.250.2.3\n   no shutdown\n   transport-address
-    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
-    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    10.88.169.143/24\n!\ninterface Vlan10\n   description DMZ_10\n   no shutdown\n
+    \  vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ_20\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vlan30\n   description DMZ_30\n   no shutdown\n   vrf VRF_B\n   ip address virtual
+    10.1.30.1/24\n!\ninterface Vlan40\n   description DMZ_40\n   no shutdown\n   vrf
+    VRF_B\n   ip address virtual 10.1.40.1/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    routing\nno ip routing vrf MGMT\nip routing vrf VRF_A\nip routing vrf VRF_B\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300
+    min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id 10.250.2.3\n   maximum-paths
+    4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor MPLS-OVERLAY-PEERS peer
+    group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    send-community\n   neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.2.7
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.7 description DC2-BL1\n   neighbor
+    10.250.2.8 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.8 description DC2-BL2\n
+    \  !\n   vlan 10\n      rd 10.250.2.3:10010\n      route-target both 10010:10010\n
+    \     redistribute learned\n   !\n   vlan 20\n      rd 10.250.2.3:10020\n      route-target
+    both 10020:10020\n      redistribute learned\n   !\n   vlan 30\n      rd 10.250.2.3:10030\n
+    \     route-target both 10030:10030\n      redistribute learned\n   !\n   vlan
+    40\n      rd 10.250.2.3:10040\n      route-target both 10040:10040\n      redistribute
+    learned\n   !\n   address-family evpn\n      neighbor default encapsulation mpls
+    next-hop-self source-interface Loopback0\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n
+    \  !\n   vrf VRF_A\n      rd 10.250.2.3:10\n      route-target import evpn 10:10\n
+    \     route-target export evpn 10:10\n      router-id 10.250.2.3\n      redistribute
+    connected\n   !\n   vrf VRF_B\n      rd 10.250.2.3:20\n      route-target import
+    vpn-ipv4 20:20\n      route-target export vpn-ipv4 20:20\n      router-id 10.250.2.3\n
+    \     redistribute connected\n!\nrouter isis CORE\n   net 49.0001.1921.6820.0003.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.2.3\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.2.3\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
     \                                                                       !!\n!!
     IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
     WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
@@ -762,8 +869,10 @@ cvp_configlets:
     mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
     aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
     cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
-    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
-    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet2\n
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvlan
+    10\n   name DMZ_10\n!\nvlan 20\n   name DMZ_20\n!\nvlan 30\n   name DMZ_30\n!\nvlan
+    40\n   name DMZ_40\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\nvrf instance
+    VRF_B\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet2\n
     \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.4/31\n   mpls
     ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
     circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
@@ -782,26 +891,43 @@ cvp_configlets:
     \  no shutdown\n   ip address 10.250.2.4/32\n   isis enable CORE\n   isis passive\n
     \  mpls ldp interface\n   node-segment ipv4 index 14\n!\ninterface Management1\n
     \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
-    10.88.169.144/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
-    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
-    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id
-    10.250.2.4\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n
-    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
-    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
-    maximum-routes 0\n   neighbor 10.250.2.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
-    10.250.2.7 description DC2-BL1\n   neighbor 10.250.2.8 peer group MPLS-OVERLAY-PEERS\n
-    \  neighbor 10.250.2.8 description DC2-BL2\n   !\n   address-family evpn\n   !\n
-    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
-    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
-    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
-    isis CORE\n   net 49.0001.1921.6820.0004.00\n   is-type level-2\n   router-id
-    ipv4 10.250.2.4\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
-    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
-    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
-    disabled default\n   router-id 10.250.2.4\n   no shutdown\n   transport-address
-    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
-    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    10.88.169.144/24\n!\ninterface Vlan10\n   description DMZ_10\n   no shutdown\n
+    \  vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ_20\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vlan30\n   description DMZ_30\n   no shutdown\n   vrf VRF_B\n   ip address virtual
+    10.1.30.1/24\n!\ninterface Vlan40\n   description DMZ_40\n   no shutdown\n   vrf
+    VRF_B\n   ip address virtual 10.1.40.1/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    routing\nno ip routing vrf MGMT\nip routing vrf VRF_A\nip routing vrf VRF_B\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300
+    min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id 10.250.2.4\n   maximum-paths
+    4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor MPLS-OVERLAY-PEERS peer
+    group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    send-community\n   neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.2.7
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.7 description DC2-BL1\n   neighbor
+    10.250.2.8 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.8 description DC2-BL2\n
+    \  !\n   vlan 10\n      rd 10.250.2.4:10010\n      route-target both 10010:10010\n
+    \     redistribute learned\n   !\n   vlan 20\n      rd 10.250.2.4:10020\n      route-target
+    both 10020:10020\n      redistribute learned\n   !\n   vlan 30\n      rd 10.250.2.4:10030\n
+    \     route-target both 10030:10030\n      redistribute learned\n   !\n   vlan
+    40\n      rd 10.250.2.4:10040\n      route-target both 10040:10040\n      redistribute
+    learned\n   !\n   address-family evpn\n      neighbor default encapsulation mpls
+    next-hop-self source-interface Loopback0\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n
+    \  !\n   vrf VRF_A\n      rd 10.250.2.4:10\n      route-target import evpn 10:10\n
+    \     route-target export evpn 10:10\n      router-id 10.250.2.4\n      redistribute
+    connected\n   !\n   vrf VRF_B\n      rd 10.250.2.4:20\n      route-target import
+    vpn-ipv4 20:20\n      route-target export vpn-ipv4 20:20\n      router-id 10.250.2.4\n
+    \     redistribute connected\n!\nrouter isis CORE\n   net 49.0001.1921.6820.0004.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.2.4\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.2.4\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
     \                                                                       !!\n!!
     IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
     WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
@@ -823,8 +949,10 @@ cvp_configlets:
     mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
     aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
     cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
-    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
-    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet3\n
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvlan
+    10\n   name DMZ_10\n!\nvlan 20\n   name DMZ_20\n!\nvlan 30\n   name DMZ_30\n!\nvlan
+    40\n   name DMZ_40\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\nvrf instance
+    VRF_B\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet3\n
     \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.10/31\n
     \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
     \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
@@ -843,26 +971,43 @@ cvp_configlets:
     \  no shutdown\n   ip address 10.250.2.5/32\n   isis enable CORE\n   isis passive\n
     \  mpls ldp interface\n   node-segment ipv4 index 15\n!\ninterface Management1\n
     \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
-    10.88.169.145/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
-    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
-    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id
-    10.250.2.5\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n
-    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
-    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
-    maximum-routes 0\n   neighbor 10.250.2.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
-    10.250.2.7 description DC2-BL1\n   neighbor 10.250.2.8 peer group MPLS-OVERLAY-PEERS\n
-    \  neighbor 10.250.2.8 description DC2-BL2\n   !\n   address-family evpn\n   !\n
-    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
-    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
-    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
-    isis CORE\n   net 49.0001.1921.6820.0005.00\n   is-type level-2\n   router-id
-    ipv4 10.250.2.5\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
-    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
-    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
-    disabled default\n   router-id 10.250.2.5\n   no shutdown\n   transport-address
-    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
-    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    10.88.169.145/24\n!\ninterface Vlan10\n   description DMZ_10\n   no shutdown\n
+    \  vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ_20\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vlan30\n   description DMZ_30\n   no shutdown\n   vrf VRF_B\n   ip address virtual
+    10.1.30.1/24\n!\ninterface Vlan40\n   description DMZ_40\n   no shutdown\n   vrf
+    VRF_B\n   ip address virtual 10.1.40.1/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    routing\nno ip routing vrf MGMT\nip routing vrf VRF_A\nip routing vrf VRF_B\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300
+    min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id 10.250.2.5\n   maximum-paths
+    4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor MPLS-OVERLAY-PEERS peer
+    group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    send-community\n   neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.2.7
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.7 description DC2-BL1\n   neighbor
+    10.250.2.8 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.8 description DC2-BL2\n
+    \  !\n   vlan 10\n      rd 10.250.2.5:10010\n      route-target both 10010:10010\n
+    \     redistribute learned\n   !\n   vlan 20\n      rd 10.250.2.5:10020\n      route-target
+    both 10020:10020\n      redistribute learned\n   !\n   vlan 30\n      rd 10.250.2.5:10030\n
+    \     route-target both 10030:10030\n      redistribute learned\n   !\n   vlan
+    40\n      rd 10.250.2.5:10040\n      route-target both 10040:10040\n      redistribute
+    learned\n   !\n   address-family evpn\n      neighbor default encapsulation mpls
+    next-hop-self source-interface Loopback0\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n
+    \  !\n   vrf VRF_A\n      rd 10.250.2.5:10\n      route-target import evpn 10:10\n
+    \     route-target export evpn 10:10\n      router-id 10.250.2.5\n      redistribute
+    connected\n   !\n   vrf VRF_B\n      rd 10.250.2.5:20\n      route-target import
+    vpn-ipv4 20:20\n      route-target export vpn-ipv4 20:20\n      router-id 10.250.2.5\n
+    \     redistribute connected\n!\nrouter isis CORE\n   net 49.0001.1921.6820.0005.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.2.5\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.2.5\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
     \                                                                       !!\n!!
     IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
     WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
@@ -884,8 +1029,10 @@ cvp_configlets:
     mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
     aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
     cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
-    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
-    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet4\n
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvlan
+    10\n   name DMZ_10\n!\nvlan 20\n   name DMZ_20\n!\nvlan 30\n   name DMZ_30\n!\nvlan
+    40\n   name DMZ_40\n!\nvrf instance MGMT\n!\nvrf instance VRF_A\n!\nvrf instance
+    VRF_B\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet4\n
     \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.14/31\n
     \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
     \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
@@ -904,26 +1051,43 @@ cvp_configlets:
     \  no shutdown\n   ip address 10.250.2.6/32\n   isis enable CORE\n   isis passive\n
     \  mpls ldp interface\n   node-segment ipv4 index 16\n!\ninterface Management1\n
     \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
-    10.88.169.146/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
-    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
-    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id
-    10.250.2.6\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
-    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n
-    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
-    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
-    maximum-routes 0\n   neighbor 10.250.2.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
-    10.250.2.7 description DC2-BL1\n   neighbor 10.250.2.8 peer group MPLS-OVERLAY-PEERS\n
-    \  neighbor 10.250.2.8 description DC2-BL2\n   !\n   address-family evpn\n   !\n
-    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
-    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
-    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
-    isis CORE\n   net 49.0001.1921.6820.0006.00\n   is-type level-2\n   router-id
-    ipv4 10.250.2.6\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
-    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
-    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
-    disabled default\n   router-id 10.250.2.6\n   no shutdown\n   transport-address
-    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
-    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    10.88.169.146/24\n!\ninterface Vlan10\n   description DMZ_10\n   no shutdown\n
+    \  vrf VRF_A\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan20\n   description
+    DMZ_20\n   no shutdown\n   vrf VRF_A\n   ip address virtual 10.1.20.1/24\n!\ninterface
+    Vlan30\n   description DMZ_30\n   no shutdown\n   vrf VRF_B\n   ip address virtual
+    10.1.30.1/24\n!\ninterface Vlan40\n   description DMZ_40\n   no shutdown\n   vrf
+    VRF_B\n   ip address virtual 10.1.40.1/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip
+    routing\nno ip routing vrf MGMT\nip routing vrf VRF_A\nip routing vrf VRF_B\n!\nip
+    route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300
+    min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id 10.250.2.6\n   maximum-paths
+    4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor MPLS-OVERLAY-PEERS peer
+    group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    send-community\n   neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.2.7
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.7 description DC2-BL1\n   neighbor
+    10.250.2.8 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.8 description DC2-BL2\n
+    \  !\n   vlan 10\n      rd 10.250.2.6:10010\n      route-target both 10010:10010\n
+    \     redistribute learned\n   !\n   vlan 20\n      rd 10.250.2.6:10020\n      route-target
+    both 10020:10020\n      redistribute learned\n   !\n   vlan 30\n      rd 10.250.2.6:10030\n
+    \     route-target both 10030:10030\n      redistribute learned\n   !\n   vlan
+    40\n      rd 10.250.2.6:10040\n      route-target both 10040:10040\n      redistribute
+    learned\n   !\n   address-family evpn\n      neighbor default encapsulation mpls
+    next-hop-self source-interface Loopback0\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family rt-membership\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n
+    \  !\n   vrf VRF_A\n      rd 10.250.2.6:10\n      route-target import evpn 10:10\n
+    \     route-target export evpn 10:10\n      router-id 10.250.2.6\n      redistribute
+    connected\n   !\n   vrf VRF_B\n      rd 10.250.2.6:20\n      route-target import
+    vpn-ipv4 20:20\n      route-target export vpn-ipv4 20:20\n      router-id 10.250.2.6\n
+    \     redistribute connected\n!\nrouter isis CORE\n   net 49.0001.1921.6820.0006.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.2.6\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.2.6\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
     \                                                                       !!\n!!
     IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
     WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
@@ -1072,12 +1236,9 @@ cvp_configlets:
     shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
     \     no shutdown\n!\nend\n"
 cvp_topology:
-  DC2_FABRIC:
-    devices: []
-    parent_container: Tenant
   WAN2:
     devices: []
-    parent_container: DC2_FABRIC
+    parent_container: Tenant
   WAN2_PE_ROUTERS:
     devices:
     - DC2-CL1

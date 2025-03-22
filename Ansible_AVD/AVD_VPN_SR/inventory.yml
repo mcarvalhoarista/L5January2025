@@ -48,9 +48,9 @@ all:
               hosts:
                 DC1-BL1:
                 DC1-BL2:
-          WAN1_NETWORK_SERVICES:
-            children:
-              WAN1_PE_ROUTERS:
+        WAN1_NETWORK_SERVICES:
+          children:
+            WAN1_PE_ROUTERS:
     DC2_FABRIC:
       vars:
         ansible_user: cvpadmin
@@ -85,6 +85,6 @@ all:
               hosts:
                 DC2-BL1:
                 DC2-BL2:
-          WAN2_NETWORK_SERVICES:
-            children:
-              WAN2_PE_ROUTERS:
+        WAN2_NETWORK_SERVICES:
+          children:
+            WAN2_PE_ROUTERS:

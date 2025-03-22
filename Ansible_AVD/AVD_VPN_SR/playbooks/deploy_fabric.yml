@@ -2,11 +2,21 @@
 - name: Deploy fabric to CVP
   hosts: cvp1
   tasks:
-    - name: Provision CVP with AVD configuration
+    - name: Provision CVP with AVD configuration - DC1_FABRIC - WAN1
       ansible.builtin.import_role:
         name: arista.avd.eos_config_deploy_cvp
       vars:
-        container_root: 'DC2_FABRIC'
+        container_root: 'WAN1'
+        configlets_prefix: 'VPN_SR_AVD'
+        # apply_mode: strict # Don't use this unless AVD is the only source of configlets
+        state: present
+        execute_tasks: true # Set to true if you want the change to be made without a change control approval
+        cv_collection: v3
+    - name: Provision CVP with AVD configuration - DC2_FABRIC - WAN2
+      ansible.builtin.import_role:
+        name: arista.avd.eos_config_deploy_cvp
+      vars:
+        container_root: 'WAN2'
         configlets_prefix: 'VPN_SR_AVD'
         # apply_mode: strict # Don't use this unless AVD is the only source of configlets
         state: present

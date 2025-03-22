@@ -21,11 +21,15 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
   - [Internal VLAN Allocation Policy Summary](#internal-vlan-allocation-policy-summary)
   - [Internal VLAN Allocation Policy Device Configuration](#internal-vlan-allocation-policy-device-configuration)
+- [VLANs](#vlans)
+  - [VLANs Summary](#vlans-summary)
+  - [VLANs Device Configuration](#vlans-device-configuration)
 - [Interfaces](#interfaces)
   - [Switchport Default](#switchport-default)
   - [Interface Defaults](#interface-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
+  - [VLAN Interfaces](#vlan-interfaces)
 - [Routing](#routing)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
   - [Virtual Router MAC Address](#virtual-router-mac-address)
@@ -291,6 +295,34 @@ spanning-tree mode none
 vlan internal order ascending range 1006 1199
 ```
 
+## VLANs
+
+### VLANs Summary
+
+| VLAN ID | Name | Trunk Groups |
+| ------- | ---- | ------------ |
+| 10 | DMZ_10 | - |
+| 20 | DMZ_20 | - |
+| 30 | DMZ_30 | - |
+| 40 | DMZ_40 | - |
+
+### VLANs Device Configuration
+
+```eos
+!
+vlan 10
+   name DMZ_10
+!
+vlan 20
+   name DMZ_20
+!
+vlan 30
+   name DMZ_30
+!
+vlan 40
+   name DMZ_40
+```
+
 ## Interfaces
 
 ### Switchport Default
@@ -443,6 +475,55 @@ interface Loopback0
    node-segment ipv4 index 3
 ```
 
+### VLAN Interfaces
+
+#### VLAN Interfaces Summary
+
+| Interface | Description | VRF |  MTU | Shutdown |
+| --------- | ----------- | --- | ---- | -------- |
+| Vlan10 | DMZ_10 | VRF_A | - | False |
+| Vlan20 | DMZ_20 | VRF_A | - | False |
+| Vlan30 | DMZ_30 | VRF_B | - | False |
+| Vlan40 | DMZ_40 | VRF_B | - | False |
+
+##### IPv4
+
+| Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
+| --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
+| Vlan10 |  VRF_A  |  -  |  10.1.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan20 |  VRF_A  |  -  |  10.1.20.1/24  |  -  |  -  |  -  |  -  |
+| Vlan30 |  VRF_B  |  -  |  10.1.30.1/24  |  -  |  -  |  -  |  -  |
+| Vlan40 |  VRF_B  |  -  |  10.1.40.1/24  |  -  |  -  |  -  |  -  |
+
+#### VLAN Interfaces Device Configuration
+
+```eos
+!
+interface Vlan10
+   description DMZ_10
+   no shutdown
+   vrf VRF_A
+   ip address virtual 10.1.10.1/24
+!
+interface Vlan20
+   description DMZ_20
+   no shutdown
+   vrf VRF_A
+   ip address virtual 10.1.20.1/24
+!
+interface Vlan30
+   description DMZ_30
+   no shutdown
+   vrf VRF_B
+   ip address virtual 10.1.30.1/24
+!
+interface Vlan40
+   description DMZ_40
+   no shutdown
+   vrf VRF_B
+   ip address virtual 10.1.40.1/24
+```
+
 ## Routing
 
 ### Service Routing Protocols Model
@@ -475,6 +556,8 @@ ip virtual-router mac-address 00:1c:73:00:00:99
 | --- | --------------- |
 | default | True |
 | MGMT | False |
+| VRF_A | True |
+| VRF_B | True |
 
 #### IP Routing Device Configuration
 
@@ -482,6 +565,8 @@ ip virtual-router mac-address 00:1c:73:00:00:99
 !
 ip routing
 no ip routing vrf MGMT
+ip routing vrf VRF_A
+ip routing vrf VRF_B
 ```
 
 ### IPv6 Routing
@@ -492,6 +577,8 @@ no ip routing vrf MGMT
 | --- | --------------- |
 | default | False |
 | MGMT | false |
+| VRF_A | false |
+| VRF_B | false |
 
 ### Static Routes
 
@@ -605,6 +692,13 @@ ASN Notation: asplain
 
 | Peer Group | Activate | Encapsulation |
 | ---------- | -------- | ------------- |
+| MPLS-OVERLAY-PEERS | True | default |
+
+##### EVPN Neighbor Default Encapsulation
+
+| Neighbor Default Encapsulation | Next-hop-self Source Interface |
+| ------------------------------ | ------------------------------ |
+| mpls | Loopback0 |
 
 #### Router BGP VPN-IPv4 Address Family
 
@@ -613,6 +707,22 @@ ASN Notation: asplain
 | Peer Group | Activate | Route-map In | Route-map Out | RCF In | RCF Out |
 | ---------- | -------- | ------------ | ------------- | ------ | ------- |
 | MPLS-OVERLAY-PEERS | True | - | - | - | - |
+
+#### Router BGP VLANs
+
+| VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
+| ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
+| 10 | 10.250.1.3:10010 | 10010:10010 | - | - | learned |
+| 20 | 10.250.1.3:10020 | 10020:10020 | - | - | learned |
+| 30 | 10.250.1.3:10030 | 10030:10030 | - | - | learned |
+| 40 | 10.250.1.3:10040 | 10040:10040 | - | - | learned |
+
+#### Router BGP VRFs
+
+| VRF | Route-Distinguisher | Redistribute |
+| --- | ------------------- | ------------ |
+| VRF_A | 10.250.1.3:10 | connected |
+| VRF_B | 10.250.1.3:20 | connected |
 
 #### Router BGP Device Configuration
 
@@ -633,7 +743,32 @@ router bgp 65100
    neighbor 10.250.1.8 peer group MPLS-OVERLAY-PEERS
    neighbor 10.250.1.8 description DC1-BL2
    !
+   vlan 10
+      rd 10.250.1.3:10010
+      route-target both 10010:10010
+      redistribute learned
+   !
+   vlan 20
+      rd 10.250.1.3:10020
+      route-target both 10020:10020
+      redistribute learned
+   !
+   vlan 30
+      rd 10.250.1.3:10030
+      route-target both 10030:10030
+      redistribute learned
+   !
+   vlan 40
+      rd 10.250.1.3:10040
+      route-target both 10040:10040
+      redistribute learned
+   !
    address-family evpn
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      neighbor MPLS-OVERLAY-PEERS activate
+   !
+   address-family rt-membership
+      neighbor MPLS-OVERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor MPLS-OVERLAY-PEERS activate
@@ -641,6 +776,20 @@ router bgp 65100
    address-family vpn-ipv4
       neighbor MPLS-OVERLAY-PEERS activate
       neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+   !
+   vrf VRF_A
+      rd 10.250.1.3:10
+      route-target import evpn 10:10
+      route-target export evpn 10:10
+      router-id 10.250.1.3
+      redistribute connected
+   !
+   vrf VRF_B
+      rd 10.250.1.3:20
+      route-target import vpn-ipv4 20:20
+      route-target export vpn-ipv4 20:20
+      router-id 10.250.1.3
+      redistribute connected
 ```
 
 ## BFD
@@ -719,10 +868,16 @@ mpls ldp
 | VRF Name | IP Routing |
 | -------- | ---------- |
 | MGMT | disabled |
+| VRF_A | enabled |
+| VRF_B | enabled |
 
 ### VRF Instances Device Configuration
 
 ```eos
 !
 vrf instance MGMT
+!
+vrf instance VRF_A
+!
+vrf instance VRF_B
 ```

@@ -1,0 +1,224 @@
+---
+fabric_name: DC1_FABRIC
+
+# Set Design Type to mpls
+design:
+  type: mpls
+
+
+# isis underlay defaults
+underlay_routing_protocol: isis-sr-ldp
+isis_advertise_passive_only: true
+isis_area_id: "49.0001"
+isis_default_circuit_type: "level-2"
+isis_default_is_type: "level-2"
+isis_maximum_paths: 128
+
+overlay_routing_protocol: ibgp
+
+custom_structured_configuration_switchport_default:
+  mode: routed
+
+# P routers
+p:
+  defaults:
+    platform: vEOS-lab
+    loopback_ipv4_pool: 10.250.1.0/24
+    isis_system_id_prefix: "1921.6810"
+    bgp_as: 65100
+  nodes:
+    - name: DC1-SP1
+      id: 1
+      mgmt_interface: Management1
+      mgmt_ip: 10.88.169.131/24
+    - name: DC1-SP2
+      id: 2
+      mgmt_interface: Management1
+      mgmt_ip: 10.88.169.132/24
+
+# PE routers
+pe:
+  defaults:
+    platform: vEOS-lab
+    spanning_tree_priority: 4096
+    spanning_tree_mode: none
+    loopback_ipv4_pool: 10.250.1.0/24
+    isis_system_id_prefix: "1921.6810"
+    virtual_router_mac_address: 00:1c:73:00:00:99
+    mpls_route_reflectors: [ DC1-BL1, DC1-BL2 ]
+  node_groups:
+    - group: DC1_RACK1
+      bgp_as: 65100
+      nodes:
+        - name: DC1-CL1
+          id: 3
+          mgmt_interface: Management1
+          mgmt_ip: 10.88.169.135/24
+        - name: DC1-CL2
+          id: 4
+          mgmt_interface: Management1
+          mgmt_ip: 10.88.169.136/24
+    - group: DC1_RACK2
+      bgp_as: 65100
+      nodes:
+        - name: DC1-CL3
+          id: 5
+          mgmt_interface: Management1
+          mgmt_ip: 10.88.169.137/24
+        - name: DC1-CL4
+          id: 6
+          mgmt_interface: Management1
+          mgmt_ip: 10.88.169.138/24
+
+
+# RR routers
+rr:
+  defaults:
+    platform: vEOS-lab
+    spanning_tree_priority: 4096
+    spanning_tree_mode: none
+    loopback_ipv4_pool: 10.250.1.0/24
+    isis_system_id_prefix: "1921.6810"
+  node_groups:
+    - group: DC1_BL
+      bgp_as: 65100
+      nodes:
+        - name: DC1-BL1
+          id: 7
+          mgmt_interface: Management1
+          mgmt_ip: 10.88.169.133/24
+        - name: DC1-BL2
+          id: 8
+          mgmt_interface: Management1
+          mgmt_ip: 10.88.169.134/24
+
+
+core_interfaces:
+  p2p_links_ip_pools:
+    - name: core_pool 
+      ipv4_pool: 100.64.1.0/24
+
+    - name: external_pool 
+      ipv4_pool: 100.64.33.0/24
+
+  p2p_links_profiles:
+    - name: core_profile 
+      mtu: 1500
+      isis_metric: 50
+      ip_pool: core_pool
+      isis_circuit_type: level-2
+      isis_authentication_mode: md5
+      isis_authentication_key: $1c$sTNAlR6rKSw=
+      isis_hello_padding: false
+
+    - name: external_profile 
+      mtu: 1500
+      isis_metric: 50
+      ip_pool: external_pool
+      isis_circuit_type: level-2
+      isis_authentication_mode: md5
+      isis_authentication_key: $1c$sTNAlR6rKSw=
+      isis_hello_padding: false
+
+  p2p_links: 
+    - nodes: [ DC1-CL1, DC1-SP1 ] 
+      interfaces: [ Ethernet1, Ethernet1 ]
+      profile: core_profile 
+      id: 1
+
+    - nodes: [ DC1-CL1, DC1-SP2 ]
+      interfaces: [ Ethernet2, Ethernet1 ]
+      profile: core_profile
+      id: 2
+
+    - nodes: [ DC1-CL2, DC1-SP1 ] 
+      interfaces: [ Ethernet1, Ethernet2 ]
+      profile: core_profile 
+      id: 3
+
+    - nodes: [ DC1-CL2, DC1-SP2 ]
+      interfaces: [ Ethernet2, Ethernet2 ]
+      profile: core_profile
+      id: 4
+
+    - nodes: [ DC1-CL1, DC1-CL2 ]
+      interfaces: [ Ethernet8, Ethernet8 ]
+      profile: core_profile
+      id: 5
+
+    - nodes: [ DC1-CL3, DC1-SP1 ] 
+      interfaces: [ Ethernet1, Ethernet3 ]
+      profile: core_profile 
+      id: 6
+
+    - nodes: [ DC1-CL3, DC1-SP2 ]
+      interfaces: [ Ethernet2, Ethernet3 ]
+      profile: core_profile
+      id: 7
+
+    - nodes: [ DC1-CL4, DC1-SP1 ] 
+      interfaces: [ Ethernet1, Ethernet4 ]
+      profile: core_profile 
+      id: 8
+
+    - nodes: [ DC1-CL4, DC1-SP2 ]
+      interfaces: [ Ethernet2, Ethernet4 ]
+      profile: core_profile
+      id: 9
+
+    - nodes: [ DC1-CL3, DC1-CL4 ]
+      interfaces: [ Ethernet8, Ethernet8 ]
+      profile: core_profile
+      id: 10
+
+    - nodes: [ DC1-BL1, DC1-SP1 ] 
+      interfaces: [ Ethernet1, Ethernet5 ]
+      profile: core_profile 
+      id: 11
+
+    - nodes: [ DC1-BL1, DC1-SP2 ]
+      interfaces: [ Ethernet2, Ethernet5 ]
+      profile: core_profile
+      id: 12
+
+    - nodes: [ DC1-BL2, DC1-SP1 ] 
+      interfaces: [ Ethernet1, Ethernet6 ]
+      profile: core_profile 
+      id: 13
+
+    - nodes: [ DC1-BL2, DC1-SP2 ]
+      interfaces: [ Ethernet2, Ethernet6 ]
+      profile: core_profile
+      id: 14
+
+    - nodes: [ DC1-BL1, DC1-BL2 ]
+      interfaces: [ Ethernet8, Ethernet8 ]
+      profile: core_profile
+      id: 15
+
+    - nodes: [ DC1-SP1, DC1-SP2 ]
+      interfaces: [ Ethernet7, Ethernet7 ]
+      profile: core_profile
+      id: 16
+
+
+
+    - nodes: [ DC1-BL1, DC2-BL1 ]
+      interfaces: [ Ethernet3, Ethernet3 ]
+      profile: external_profile
+      id: 1
+
+    - nodes: [ DC1-BL1, DC2-BL2 ]
+      interfaces: [ Ethernet4, Ethernet4 ]
+      profile: external_profile
+      id: 2
+
+    - nodes: [ DC1-BL2, DC2-BL2 ]
+      interfaces: [ Ethernet3, Ethernet3 ]
+      profile: external_profile
+      id: 3
+
+    - nodes: [ DC1-BL2, DC2-BL1 ]
+      interfaces: [ Ethernet4, Ethernet4 ]
+      profile: external_profile
+      id: 4

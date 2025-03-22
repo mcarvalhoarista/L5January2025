@@ -1,0 +1,175 @@
+---
+path: "{{lookup('env','PWD')}}"
+
+CVP_CONFIGLETS:
+  # Alias_test: “alias ship show ip interface brief”
+  # MLAG_Left: "{{ lookup('file','{{path}}/configlets/MLAG_Left.cfg') }}"
+  # MLAG_Right: "{{ lookup('file','{{path}}/configlets/MLAG_Right.cfg') }}"
+  LAB-INFRA: "{{ lookup('file','{{path}}/configlets/LAB-INFRA.cfg') }}"
+  DC1-SP1_base: "{{ lookup('file','{{path}}/configlets/DC1-SP1_base.cfg') }}"
+  DC1-SP2_base: "{{ lookup('file','{{path}}/configlets/DC1-SP2_base.cfg') }}"
+  DC1-BL1_base: "{{ lookup('file','{{path}}/configlets/DC1-BL1_base.cfg') }}"
+  DC1-BL2_base: "{{ lookup('file','{{path}}/configlets/DC1-BL2_base.cfg') }}"
+  DC1-CL1_base: "{{ lookup('file','{{path}}/configlets/DC1-CL1_base.cfg') }}"
+  DC1-CL2_base: "{{ lookup('file','{{path}}/configlets/DC1-CL2_base.cfg') }}"
+  DC1-CL3_base: "{{ lookup('file','{{path}}/configlets/DC1-CL3_base.cfg') }}"
+  DC1-CL4_base: "{{ lookup('file','{{path}}/configlets/DC1-CL4_base.cfg') }}"
+  DC1-SW1_base: "{{ lookup('file','{{path}}/configlets/DC1-SW1_base.cfg') }}"
+  DC1-SW2_base: "{{ lookup('file','{{path}}/configlets/DC1-SW2_base.cfg') }}"
+  DC2-SP1_base: "{{ lookup('file','{{path}}/configlets/DC2-SP1_base.cfg') }}"
+  DC2-SP2_base: "{{ lookup('file','{{path}}/configlets/DC2-SP2_base.cfg') }}"
+  DC2-BL1_base: "{{ lookup('file','{{path}}/configlets/DC2-BL1_base.cfg') }}"
+  DC2-BL2_base: "{{ lookup('file','{{path}}/configlets/DC2-BL2_base.cfg') }}"
+  DC2-CL1_base: "{{ lookup('file','{{path}}/configlets/DC2-CL1_base.cfg') }}"
+  DC2-CL2_base: "{{ lookup('file','{{path}}/configlets/DC2-CL2_base.cfg') }}"
+  DC2-CL3_base: "{{ lookup('file','{{path}}/configlets/DC2-CL3_base.cfg') }}"
+  DC2-CL4_base: "{{ lookup('file','{{path}}/configlets/DC2-CL4_base.cfg') }}"
+  DC2-SW1_base: "{{ lookup('file','{{path}}/configlets/DC2-SW1_base.cfg') }}"
+  DC2-SW2_base: "{{ lookup('file','{{path}}/configlets/DC2-SW2_base.cfg') }}"
+
+
+CVP_CONTAINERS:
+  DC1_FABRIC:
+    parentContainerName: Tenant
+  DC2_FABRIC:
+    parentContainerName: Tenant
+  DC1_SPINES:
+      parentContainerName: DC1_FABRIC
+  DC1_LEAFS:
+      parentContainerName: DC1_FABRIC
+  DC1_HOSTS:
+      parentContainerName: DC1_FABRIC
+  DC2_HOSTS:
+      parentContainerName: DC2_FABRIC
+  DC2_SPINES:
+      parentContainerName: DC2_FABRIC
+  DC2_LEAFS:
+      parentContainerName: DC2_FABRIC
+
+# CVP_DEVICES_MLAG:
+#   - fqdn: 'leaf1'
+#     parentContainerName: 'Leaf'
+#     configlets:
+#       - 'ATD-INFRA'
+#       - 'leaf1-base'
+#       - 'MLAG_Left'
+#   - fqdn: 'leaf2'
+#     parentContainerName: 'Leaf'
+#     configlets:
+#       - 'ATD-INFRA'
+#       - 'leaf2-base'
+#       - 'MLAG_Right'
+#   - fqdn: 'leaf3'
+#     parentContainerName: 'Leaf'
+#     configlets:
+#       - 'ATD-INFRA'
+#       - 'leaf3-base'
+#       - 'MLAG_Left'
+#   - fqdn: 'leaf4'
+#     parentContainerName: 'Leaf'
+#     configlets:
+#       - 'ATD-INFRA'
+#       - 'leaf4-base'
+#       - 'MLAG_Right'
+
+CVP_DEVICES_DEFAULT:
+  - fqdn: 'DC1-SP1'
+    parentContainerName: 'DC1_SPINES'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC1-SP1_base'
+  - fqdn: 'DC1-SP2'
+    parentContainerName: 'DC1_SPINES'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC1-SP2_base'
+  - fqdn: 'DC1-BL1'
+    parentContainerName: 'DC1_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC1-BL1_base'
+  - fqdn: 'DC1-BL2'
+    parentContainerName: 'DC1_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC1-BL2_base'
+  - fqdn: 'DC1-CL1'
+    parentContainerName: 'DC1_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC1-CL1_base'
+  - fqdn: 'DC1-CL2'
+    parentContainerName: 'DC1_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC1-CL2_base'
+  - fqdn: 'DC1-CL3'
+    parentContainerName: 'DC1_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC1-CL3_base'
+  - fqdn: 'DC1-CL4'
+    parentContainerName: 'DC1_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC1-CL4_base'
+  - fqdn: 'DC1-SW1'
+    parentContainerName: 'DC1_HOSTS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC1-SW1_base'
+  - fqdn: 'DC1-SW2'
+    parentContainerName: 'DC1_HOSTS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC1-SW2_base'
+  - fqdn: 'DC2-SP1'
+    parentContainerName: 'DC2_SPINES'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC2-SP1_base'
+  - fqdn: 'DC2-SP2'
+    parentContainerName: 'DC2_SPINES'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC2-SP2_base'
+  - fqdn: 'DC2-BL1'
+    parentContainerName: 'DC2_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC2-BL1_base'
+  - fqdn: 'DC2-BL2'
+    parentContainerName: 'DC2_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC2-BL2_base'
+  - fqdn: 'DC2-CL1'
+    parentContainerName: 'DC2_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC2-CL1_base'
+  - fqdn: 'DC2-CL2'
+    parentContainerName: 'DC2_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC2-CL2_base'
+  - fqdn: 'DC2-CL3'
+    parentContainerName: 'DC2_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC2-CL3_base'
+  - fqdn: 'DC2-CL4'
+    parentContainerName: 'DC2_LEAFS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC2-CL4_base'
+  - fqdn: 'DC2-SW1'
+    parentContainerName: 'DC2_HOSTS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC2-SW1_base'
+  - fqdn: 'DC2-SW2'
+    parentContainerName: 'DC2_HOSTS'
+    configlets:
+      - 'LAB-INFRA'
+      - 'DC2-SW2_base'

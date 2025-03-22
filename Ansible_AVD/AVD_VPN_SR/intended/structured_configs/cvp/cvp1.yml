@@ -1,0 +1,45 @@
+---
+cvp_devices:
+  - fqdn: DC2-BL1
+    parentContainerName: WAN2_RR_ROUTERS
+    configlets:
+      - VPN_SR_AVD_DC2-BL1
+  - fqdn: DC2-BL2
+    parentContainerName: WAN2_RR_ROUTERS
+    configlets:
+      - VPN_SR_AVD_DC2-BL2
+  - fqdn: DC2-CL1
+    parentContainerName: WAN2_PE_ROUTERS
+    configlets:
+      - VPN_SR_AVD_DC2-CL1
+  - fqdn: DC2-CL2
+    parentContainerName: WAN2_PE_ROUTERS
+    configlets:
+      - VPN_SR_AVD_DC2-CL2
+  - fqdn: DC2-CL3
+    parentContainerName: WAN2_PE_ROUTERS
+    configlets:
+      - VPN_SR_AVD_DC2-CL3
+  - fqdn: DC2-CL4
+    parentContainerName: WAN2_PE_ROUTERS
+    configlets:
+      - VPN_SR_AVD_DC2-CL4
+  - fqdn: DC2-SP1
+    parentContainerName: WAN2_P_ROUTERS
+    configlets:
+      - VPN_SR_AVD_DC2-SP1
+  - fqdn: DC2-SP2
+    parentContainerName: WAN2_P_ROUTERS
+    configlets:
+      - VPN_SR_AVD_DC2-SP2
+cvp_containers:
+  DC2_FABRIC:
+    parentContainerName: Tenant
+  WAN2:
+    parentContainerName: DC2_FABRIC
+  WAN2_P_ROUTERS:
+    parentContainerName: WAN2
+  WAN2_PE_ROUTERS:
+    parentContainerName: WAN2
+  WAN2_RR_ROUTERS:
+    parentContainerName: WAN2

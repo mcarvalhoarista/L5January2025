@@ -8,6 +8,7 @@
       arista.cvp.cv_configlet_v3:
         configlets: "{{ CVP_CONFIGLETS }}"
         state: present
+        apply_mode: loose
       register: CVP_CHANGE
     - name: Run tasks from previous task
       arista.cvp.cv_task_v3:

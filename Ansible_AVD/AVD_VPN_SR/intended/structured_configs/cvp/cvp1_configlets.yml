@@ -1,0 +1,1097 @@
+cvp_configlets:
+  VPN_SR_AVD_DC1-BL1: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC1-BL1\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet5\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.20/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC1-SP2_Ethernet5\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.22/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet3\n   description P2P_LINK_TO_DC2-BL1_Ethernet3\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.33.0/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet4\n   description P2P_LINK_TO_DC2-BL2_Ethernet4\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.33.2/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC1-BL2_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.28/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.1.7/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 7\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.133/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip route vrf MGMT
+    0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300 min-rx 300 multiplier
+    3\n!\nrouter bgp 65100\n   router-id 10.250.1.7\n   maximum-paths 4 ecmp 4\n   no
+    bgp default ipv4-unicast\n   bgp cluster-id 10.250.1.7\n   neighbor MPLS-OVERLAY-PEERS
+    peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS route-reflector-client\n
+    \  neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n
+    \  neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor RR-OVERLAY-PEERS
+    peer group\n   neighbor RR-OVERLAY-PEERS remote-as 65100\n   neighbor RR-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor RR-OVERLAY-PEERS bfd\n   neighbor RR-OVERLAY-PEERS
+    send-community\n   neighbor RR-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.1.3
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.3 description DC1-CL1\n   neighbor
+    10.250.1.4 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.4 description DC1-CL2\n
+    \  neighbor 10.250.1.5 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.5 description
+    DC1-CL3\n   neighbor 10.250.1.6 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.6
+    description DC1-CL4\n   !\n   address-family evpn\n      neighbor RR-OVERLAY-PEERS
+    activate\n   !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \     no neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n
+    \     neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6810.0007.00\n   is-type level-2\n   router-id
+    ipv4 10.250.1.7\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.1.7\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC1-BL2: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC1-BL2\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet6\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.24/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC1-SP2_Ethernet6\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.26/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet3\n   description P2P_LINK_TO_DC2-BL2_Ethernet3\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.33.4/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet4\n   description P2P_LINK_TO_DC2-BL1_Ethernet4\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.33.6/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC1-BL1_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.29/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.1.8/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 8\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.134/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip route vrf MGMT
+    0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300 min-rx 300 multiplier
+    3\n!\nrouter bgp 65100\n   router-id 10.250.1.8\n   maximum-paths 4 ecmp 4\n   no
+    bgp default ipv4-unicast\n   bgp cluster-id 10.250.1.8\n   neighbor MPLS-OVERLAY-PEERS
+    peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS route-reflector-client\n
+    \  neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n
+    \  neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor RR-OVERLAY-PEERS
+    peer group\n   neighbor RR-OVERLAY-PEERS remote-as 65100\n   neighbor RR-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor RR-OVERLAY-PEERS bfd\n   neighbor RR-OVERLAY-PEERS
+    send-community\n   neighbor RR-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.1.3
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.3 description DC1-CL1\n   neighbor
+    10.250.1.4 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.4 description DC1-CL2\n
+    \  neighbor 10.250.1.5 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.5 description
+    DC1-CL3\n   neighbor 10.250.1.6 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.1.6
+    description DC1-CL4\n   !\n   address-family evpn\n      neighbor RR-OVERLAY-PEERS
+    activate\n   !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \     no neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n
+    \     neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6810.0008.00\n   is-type level-2\n   router-id
+    ipv4 10.250.1.8\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.1.8\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC1-CL1: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC1-CL1\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.0/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC1-SP2_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.2/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC1-CL2_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.8/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.1.3/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 3\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.135/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
+    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
+    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id
+    10.250.1.3\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
+    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n
+    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
+    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
+    maximum-routes 0\n   neighbor 10.250.1.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
+    10.250.1.7 description DC1-BL1\n   neighbor 10.250.1.8 peer group MPLS-OVERLAY-PEERS\n
+    \  neighbor 10.250.1.8 description DC1-BL2\n   !\n   address-family evpn\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
+    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
+    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6810.0003.00\n   is-type level-2\n   router-id
+    ipv4 10.250.1.3\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.1.3\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC1-CL2: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC1-CL2\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.4/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC1-SP2_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.6/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC1-CL1_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.9/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.1.4/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 4\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.136/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
+    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
+    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id
+    10.250.1.4\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
+    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n
+    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
+    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
+    maximum-routes 0\n   neighbor 10.250.1.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
+    10.250.1.7 description DC1-BL1\n   neighbor 10.250.1.8 peer group MPLS-OVERLAY-PEERS\n
+    \  neighbor 10.250.1.8 description DC1-BL2\n   !\n   address-family evpn\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
+    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
+    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6810.0004.00\n   is-type level-2\n   router-id
+    ipv4 10.250.1.4\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.1.4\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC1-CL3: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC1-CL3\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet3\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.10/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC1-SP2_Ethernet3\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.12/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC1-CL4_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.18/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.1.5/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 5\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.137/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
+    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
+    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id
+    10.250.1.5\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
+    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n
+    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
+    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
+    maximum-routes 0\n   neighbor 10.250.1.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
+    10.250.1.7 description DC1-BL1\n   neighbor 10.250.1.8 peer group MPLS-OVERLAY-PEERS\n
+    \  neighbor 10.250.1.8 description DC1-BL2\n   !\n   address-family evpn\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
+    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
+    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6810.0005.00\n   is-type level-2\n   router-id
+    ipv4 10.250.1.5\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.1.5\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC1-CL4: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC1-CL4\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-SP1_Ethernet4\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.14/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC1-SP2_Ethernet4\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.16/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC1-CL3_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.19/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.1.6/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 6\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.138/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
+    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
+    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65100\n   router-id
+    10.250.1.6\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
+    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65100\n
+    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
+    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
+    maximum-routes 0\n   neighbor 10.250.1.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
+    10.250.1.7 description DC1-BL1\n   neighbor 10.250.1.8 peer group MPLS-OVERLAY-PEERS\n
+    \  neighbor 10.250.1.8 description DC1-BL2\n   !\n   address-family evpn\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
+    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
+    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6810.0006.00\n   is-type level-2\n   router-id
+    ipv4 10.250.1.6\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.1.6\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC1-SP1: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC1-SP1\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-CL1_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.1/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC1-CL2_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.5/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet3\n   description P2P_LINK_TO_DC1-CL3_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.11/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet4\n   description P2P_LINK_TO_DC1-CL4_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.15/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet5\n   description P2P_LINK_TO_DC1-BL1_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.21/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet6\n   description P2P_LINK_TO_DC1-BL2_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.25/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet7\n   description P2P_LINK_TO_DC1-SP2_Ethernet7\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.30/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description LSR_Router_ID\n
+    \  no shutdown\n   ip address 10.250.1.1/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 1\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.131/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip route vrf MGMT
+    0.0.0.0/0 10.88.169.129\n!\nrouter isis CORE\n   net 49.0001.1921.6810.0001.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.1.1\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.1.1\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC1-SP2: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC1-SP2\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC1-CL1_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.3/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC1-CL2_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.7/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet3\n   description P2P_LINK_TO_DC1-CL3_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.13/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet4\n   description P2P_LINK_TO_DC1-CL4_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.17/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet5\n   description P2P_LINK_TO_DC1-BL1_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.23/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet6\n   description P2P_LINK_TO_DC1-BL2_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.27/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet7\n   description P2P_LINK_TO_DC1-SP1_Ethernet7\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.1.31/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description LSR_Router_ID\n
+    \  no shutdown\n   ip address 10.250.1.2/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 2\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.132/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip route vrf MGMT
+    0.0.0.0/0 10.88.169.129\n!\nrouter isis CORE\n   net 49.0001.1921.6810.0002.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.1.2\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.1.2\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC2-BL1: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC2-BL1\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet5\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.20/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC2-SP2_Ethernet5\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.22/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet3\n   description P2P_LINK_TO_DC1-BL1_Ethernet3\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.33.1/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet4\n   description P2P_LINK_TO_DC1-BL2_Ethernet4\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.33.7/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC2-BL2_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.28/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.2.7/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 17\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.141/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip route vrf MGMT
+    0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300 min-rx 300 multiplier
+    3\n!\nrouter bgp 65200\n   router-id 10.250.2.7\n   maximum-paths 4 ecmp 4\n   no
+    bgp default ipv4-unicast\n   bgp cluster-id 10.250.2.7\n   neighbor MPLS-OVERLAY-PEERS
+    peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS route-reflector-client\n
+    \  neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n
+    \  neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor RR-OVERLAY-PEERS
+    peer group\n   neighbor RR-OVERLAY-PEERS remote-as 65200\n   neighbor RR-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor RR-OVERLAY-PEERS bfd\n   neighbor RR-OVERLAY-PEERS
+    send-community\n   neighbor RR-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.2.3
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.3 description DC2-CL1\n   neighbor
+    10.250.2.4 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.4 description DC2-CL2\n
+    \  neighbor 10.250.2.5 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.5 description
+    DC2-CL3\n   neighbor 10.250.2.6 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.6
+    description DC2-CL4\n   !\n   address-family evpn\n      neighbor RR-OVERLAY-PEERS
+    activate\n   !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \     no neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n
+    \     neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6820.0007.00\n   is-type level-2\n   router-id
+    ipv4 10.250.2.7\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.2.7\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC2-BL2: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC2-BL2\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet6\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.24/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC2-SP2_Ethernet6\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.26/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet3\n   description P2P_LINK_TO_DC1-BL2_Ethernet3\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.33.5/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet4\n   description P2P_LINK_TO_DC1-BL1_Ethernet4\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.33.3/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC2-BL1_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.29/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.2.8/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 18\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.142/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip route vrf MGMT
+    0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n   multihop interval 300 min-rx 300 multiplier
+    3\n!\nrouter bgp 65200\n   router-id 10.250.2.8\n   maximum-paths 4 ecmp 4\n   no
+    bgp default ipv4-unicast\n   bgp cluster-id 10.250.2.8\n   neighbor MPLS-OVERLAY-PEERS
+    peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n   neighbor MPLS-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS route-reflector-client\n
+    \  neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n
+    \  neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   neighbor RR-OVERLAY-PEERS
+    peer group\n   neighbor RR-OVERLAY-PEERS remote-as 65200\n   neighbor RR-OVERLAY-PEERS
+    update-source Loopback0\n   neighbor RR-OVERLAY-PEERS bfd\n   neighbor RR-OVERLAY-PEERS
+    send-community\n   neighbor RR-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.250.2.3
+    peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.3 description DC2-CL1\n   neighbor
+    10.250.2.4 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.4 description DC2-CL2\n
+    \  neighbor 10.250.2.5 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.5 description
+    DC2-CL3\n   neighbor 10.250.2.6 peer group MPLS-OVERLAY-PEERS\n   neighbor 10.250.2.6
+    description DC2-CL4\n   !\n   address-family evpn\n      neighbor RR-OVERLAY-PEERS
+    activate\n   !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \     no neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family vpn-ipv4\n
+    \     neighbor MPLS-OVERLAY-PEERS activate\n      neighbor RR-OVERLAY-PEERS activate\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6820.0008.00\n   is-type level-2\n   router-id
+    ipv4 10.250.2.8\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.2.8\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC2-CL1: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC2-CL1\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.0/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC2-SP2_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.2/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC2-CL2_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.8/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.2.3/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 13\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.143/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
+    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
+    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id
+    10.250.2.3\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
+    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n
+    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
+    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
+    maximum-routes 0\n   neighbor 10.250.2.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
+    10.250.2.7 description DC2-BL1\n   neighbor 10.250.2.8 peer group MPLS-OVERLAY-PEERS\n
+    \  neighbor 10.250.2.8 description DC2-BL2\n   !\n   address-family evpn\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
+    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
+    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6820.0003.00\n   is-type level-2\n   router-id
+    ipv4 10.250.2.3\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.2.3\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC2-CL2: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC2-CL2\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.4/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC2-SP2_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.6/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC2-CL1_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.9/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.2.4/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 14\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.144/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
+    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
+    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id
+    10.250.2.4\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
+    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n
+    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
+    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
+    maximum-routes 0\n   neighbor 10.250.2.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
+    10.250.2.7 description DC2-BL1\n   neighbor 10.250.2.8 peer group MPLS-OVERLAY-PEERS\n
+    \  neighbor 10.250.2.8 description DC2-BL2\n   !\n   address-family evpn\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
+    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
+    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6820.0004.00\n   is-type level-2\n   router-id
+    ipv4 10.250.2.4\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.2.4\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC2-CL3: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC2-CL3\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet3\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.10/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC2-SP2_Ethernet3\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.12/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC2-CL4_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.18/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.2.5/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 15\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.145/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
+    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
+    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id
+    10.250.2.5\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
+    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n
+    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
+    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
+    maximum-routes 0\n   neighbor 10.250.2.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
+    10.250.2.7 description DC2-BL1\n   neighbor 10.250.2.8 peer group MPLS-OVERLAY-PEERS\n
+    \  neighbor 10.250.2.8 description DC2-BL2\n   !\n   address-family evpn\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
+    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
+    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6820.0005.00\n   is-type level-2\n   router-id
+    ipv4 10.250.2.5\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.2.5\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC2-CL4: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC2-CL4\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-SP1_Ethernet4\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.14/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC2-SP2_Ethernet4\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.16/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC2-CL3_Ethernet8\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.19/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.250.2.6/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 16\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.146/24\n!\nip virtual-router mac-address 00:1c:73:00:00:99\n!\nip routing\nno
+    ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.88.169.129\n!\nrouter bfd\n
+    \  multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65200\n   router-id
+    10.250.2.6\n   maximum-paths 4 ecmp 4\n   no bgp default ipv4-unicast\n   neighbor
+    MPLS-OVERLAY-PEERS peer group\n   neighbor MPLS-OVERLAY-PEERS remote-as 65200\n
+    \  neighbor MPLS-OVERLAY-PEERS update-source Loopback0\n   neighbor MPLS-OVERLAY-PEERS
+    bfd\n   neighbor MPLS-OVERLAY-PEERS send-community\n   neighbor MPLS-OVERLAY-PEERS
+    maximum-routes 0\n   neighbor 10.250.2.7 peer group MPLS-OVERLAY-PEERS\n   neighbor
+    10.250.2.7 description DC2-BL1\n   neighbor 10.250.2.8 peer group MPLS-OVERLAY-PEERS\n
+    \  neighbor 10.250.2.8 description DC2-BL2\n   !\n   address-family evpn\n   !\n
+    \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n   !\n
+    \  address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n      neighbor
+    default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.1921.6820.0006.00\n   is-type level-2\n   router-id
+    ipv4 10.250.2.6\n   log-adjacency-changes\n   mpls ldp sync default\n   advertise
+    passive-only\n   !\n   address-family ipv4 unicast\n      maximum-paths 128\n
+    \  !\n   segment-routing mpls\n      no shutdown\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.250.2.6\n   no shutdown\n   transport-address
+    interface Loopback0\n!\nip tacacs vrf MGMT source-interface Management1\n!\nbanner
+    login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC2-SP1: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC2-SP1\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-CL1_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.1/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC2-CL2_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.5/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet3\n   description P2P_LINK_TO_DC2-CL3_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.11/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet4\n   description P2P_LINK_TO_DC2-CL4_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.15/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet5\n   description P2P_LINK_TO_DC2-BL1_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.21/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet6\n   description P2P_LINK_TO_DC2-BL2_Ethernet1\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.25/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet7\n   description P2P_LINK_TO_DC2-SP2_Ethernet7\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.30/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description LSR_Router_ID\n
+    \  no shutdown\n   ip address 10.250.2.1/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 11\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.139/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip route vrf MGMT
+    0.0.0.0/0 10.88.169.129\n!\nrouter isis CORE\n   net 49.0001.1921.6820.0001.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.2.1\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.2.1\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+  VPN_SR_AVD_DC2-SP2: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec
+    /usr/bin/TerminAttr -cvaddr=10.88.160.63:9910 -cvauth=token,/tmp/token -cvvrf=MGMT
+    -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    -taillogs\n   no shutdown\n!\nswitchport default mode routed\n!\nvlan internal
+    order ascending range 1006 1199\n!\ninterface defaults\n   ethernet\n      shutdown\n
+    \  mtu 1500\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
+    model multi-agent\n!\nlogging vrf MGMT host 10.200.0.108\nlogging vrf MGMT host
+    10.200.1.108\nlogging vrf MGMT source-interface Management1\n!\nhostname DC2-SP2\ndns
+    domain atd.lab\n!\nntp server vrf MGMT 0.pool.ntp.org iburst local-interface Management1\n!\nspanning-tree
+    mode none\n!\naaa authorization exec default local\n!\nno enable password\nno
+    aaa root\n!\nusername arista privilege 15 role network-admin secret sha512 $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.\nusername
+    cvpadmin privilege 15 role network-admin secret sha512 $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1\nusername
+    marcelo privilege 15 role network-admin secret sha512 $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.\n!\nvrf
+    instance MGMT\n!\ninterface Ethernet1\n   description P2P_LINK_TO_DC2-CL1_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.3/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   description P2P_LINK_TO_DC2-CL2_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.7/31\n   mpls
+    ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n   isis
+    circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis network
+    point-to-point\n   isis authentication mode md5\n   isis authentication key 7
+    $1c$sTNAlR6rKSw=\n!\ninterface Ethernet3\n   description P2P_LINK_TO_DC2-CL3_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.13/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet4\n   description P2P_LINK_TO_DC2-CL4_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.17/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet5\n   description P2P_LINK_TO_DC2-BL1_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.23/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet6\n   description P2P_LINK_TO_DC2-BL2_Ethernet2\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.27/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet7\n   description P2P_LINK_TO_DC2-SP1_Ethernet7\n
+    \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 100.64.2.31/31\n
+    \  mpls ldp igp sync\n   mpls ldp interface\n   mpls ip\n   isis enable CORE\n
+    \  isis circuit-type level-2\n   isis metric 50\n   no isis hello padding\n   isis
+    network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description LSR_Router_ID\n
+    \  no shutdown\n   ip address 10.250.2.2/32\n   isis enable CORE\n   isis passive\n
+    \  mpls ldp interface\n   node-segment ipv4 index 12\n!\ninterface Management1\n
+    \  description Management_Interface\n   no shutdown\n   vrf MGMT\n   ip address
+    10.88.169.140/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip route vrf MGMT
+    0.0.0.0/0 10.88.169.129\n!\nrouter isis CORE\n   net 49.0001.1921.6820.0002.00\n
+    \  is-type level-2\n   router-id ipv4 10.250.2.2\n   log-adjacency-changes\n   mpls
+    ldp sync default\n   advertise passive-only\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 128\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\nmpls ldp\n   interface disabled default\n   router-id 10.250.2.2\n   no
+    shutdown\n   transport-address interface Loopback0\n!\nip tacacs vrf MGMT source-interface
+    Management1\n!\nbanner login\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!
+    \                                                                       !!\n!!
+    IF THE COMPANY HAS NOT AUTHORISED YOUR ACCESS TO THIS SYSTEM YOU       !!\n!!
+    WILL COMMIT A CRIMINAL OFFENCE IF YOU DO NOT IMMEDIATELY DISCONNECT.   !!\n!!
+    \                                                                       !!\n!!
+    UNAUTHORISED ACCESS IS STRICTLY FORBIDDEN AND A DISCIPLINARY OFFENCE.  !!\n!!
+    \                                                                       !!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nEOF\n\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
+    shutdown\n!\nmanagement ssh\n   idle-timeout 5\n   no shutdown\n   !\n   vrf MGMT\n
+    \     no shutdown\n!\nend\n"
+cvp_topology:
+  DC2_FABRIC:
+    devices: []
+    parent_container: Tenant
+  WAN2:
+    devices: []
+    parent_container: DC2_FABRIC
+  WAN2_PE_ROUTERS:
+    devices:
+    - DC2-CL1
+    - DC2-CL2
+    - DC2-CL3
+    - DC2-CL4
+    parent_container: WAN2
+  WAN2_P_ROUTERS:
+    devices:
+    - DC2-SP1
+    - DC2-SP2
+    parent_container: WAN2
+  WAN2_RR_ROUTERS:
+    devices:
+    - DC2-BL1
+    - DC2-BL2
+    parent_container: WAN2

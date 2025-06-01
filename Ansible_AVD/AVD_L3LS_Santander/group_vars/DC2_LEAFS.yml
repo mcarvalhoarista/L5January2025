@@ -1,0 +1,7 @@
+---
+type: l3leaf
+
+custom_structured_configuration_vlans:
+  - id: 1
+    name: unused
+    state: "suspend"

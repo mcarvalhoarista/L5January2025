@@ -1,0 +1,14 @@
+---
+- name: Run DC1 Fabric states validation
+  hosts: DC1_FABRIC
+  tasks:
+    - name: Deploy configuration to device
+      ansible.builtin.import_role:
+        name: arista.avd.eos_validate_state
+
+- name: Run DC2 Fabric states validation
+  hosts: DC2_FABRIC
+  tasks:
+    - name: Deploy configuration to device
+      ansible.builtin.import_role:
+        name: arista.avd.eos_validate_state

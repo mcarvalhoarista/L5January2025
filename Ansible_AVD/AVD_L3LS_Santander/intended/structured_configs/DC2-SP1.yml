@@ -1,0 +1,338 @@
+hostname: DC2-SP1
+is_deployed: true
+router_bgp:
+  as: '65200.0'
+  router_id: 10.250.2.1
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    password: 7x4B4rnJhZB438m9+BrBfQ==
+    maximum_routes: 12000
+    send_community: all
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    password: Q4fqtbqcZ7oQuKfuWtNGRQ==
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 3
+    next_hop_unchanged: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+      next_hop:
+        address_family_ipv6:
+          enabled: true
+          originate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  redistribute_routes:
+  - source_protocol: connected
+    route_map: RM-CONN-2-BGP
+  neighbor_interfaces:
+  - name: Ethernet1
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65201.0'
+    peer: DC2-CL1
+    description: DC2-CL1_Ethernet1
+  - name: Ethernet2
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65201.1'
+    peer: DC2-CL2
+    description: DC2-CL2_Ethernet1
+  - name: Ethernet3
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65202.0'
+    peer: DC2-CL3
+    description: DC2-CL3_Ethernet1
+  - name: Ethernet4
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65202.1'
+    peer: DC2-CL4
+    description: DC2-CL4_Ethernet1
+  - name: Ethernet5
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65203.0'
+    peer: DC2-BL1
+    description: DC2-BL1_Ethernet1
+  - name: Ethernet6
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65203.1'
+    peer: DC2-BL2
+    description: DC2-BL2_Ethernet1
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_rtc:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+      default_route_target:
+        only: true
+  neighbors:
+  - ip_address: 10.250.2.7
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: DC2-BL1
+    description: DC2-BL1
+    remote_as: '65203.0'
+  - ip_address: 10.250.2.8
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: DC2-BL2
+    description: DC2-BL2
+    remote_as: '65203.1'
+  - ip_address: 10.250.2.3
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: DC2-CL1
+    description: DC2-CL1
+    remote_as: '65201.0'
+  - ip_address: 10.250.2.4
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: DC2-CL2
+    description: DC2-CL2
+    remote_as: '65201.1'
+  - ip_address: 10.250.2.5
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: DC2-CL3
+    description: DC2-CL3
+    remote_as: '65202.0'
+  - ip_address: 10.250.2.6
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: DC2-CL4
+    description: DC2-CL4
+    remote_as: '65202.1'
+  as_notation: asdot
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 10.88.169.129
+service_routing_protocols_model: multi-agent
+ipv6_unicast_routing: true
+ip_routing_ipv6_interfaces: true
+daemon_terminattr:
+  cvaddrs:
+  - 10.88.160.63:9910
+  cvauth:
+    method: token
+    token_file: /tmp/token
+  cvvrf: MGMT
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 3500
+    ending: 4000
+spanning_tree:
+  mode: none
+local_users:
+- name: arista
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$q8jlkf.096QMWJgE$TdjJmjxqo2jnta2QzkjbrWpZ2PC7e20acNGjT6xQaCDF3lh1X7As680cq6PXj8RXDcD6BehZHueqJK/W9.2zG.
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$PyJWbjPrhxpt9MvC$kLSV2naOFChW09CqBcZfVSOBpv.3v0NM7NAbGoQINfoTJlLb/LfoToRkCcGMeSDENrUa193Ba/NeB2pS3J9XP1
+- name: marcelo
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$JOlaFRui.uKQAgcY$F.A6VZCIcIlbRMrk//U2.q9ucyl95ymC1dGz9BLpwl3NkIhLbOkCh.N.nYaiLBIUdz3mXzAAutF/APAAtamUB.
+clock:
+  timezone: US/Central
+vrfs:
+- name: MGMT
+  ip_routing: false
+management_interfaces:
+- name: Management1
+  description: Management_Interface
+  shutdown: false
+  vrf: MGMT
+  ip_address: 10.88.169.139/24
+  gateway: 10.88.169.129
+  type: oob
+mac_address_table:
+  aging_time: 1800
+management_api_http:
+  enable_vrfs:
+  - name: MGMT
+    access_group: CVP-ACL
+  enable_https: true
+  enable_http: false
+ethernet_interfaces:
+- name: Ethernet1
+  peer: DC2-CL1
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  description: P2P_LINK_TO_DC2-CL1_Ethernet1
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ipv6_enable: true
+- name: Ethernet2
+  peer: DC2-CL2
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  description: P2P_LINK_TO_DC2-CL2_Ethernet1
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ipv6_enable: true
+- name: Ethernet3
+  peer: DC2-CL3
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  description: P2P_LINK_TO_DC2-CL3_Ethernet1
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ipv6_enable: true
+- name: Ethernet4
+  peer: DC2-CL4
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  description: P2P_LINK_TO_DC2-CL4_Ethernet1
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ipv6_enable: true
+- name: Ethernet5
+  peer: DC2-BL1
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  description: P2P_LINK_TO_DC2-BL1_Ethernet1
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ipv6_enable: true
+- name: Ethernet6
+  peer: DC2-BL2
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  description: P2P_LINK_TO_DC2-BL2_Ethernet1
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ipv6_enable: true
+loopback_interfaces:
+- name: Loopback0
+  description: EVPN_Overlay_Peering
+  shutdown: false
+  ip_address: 10.250.2.1/32
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.250.2.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+metadata:
+  platform: cEOS
+interface_defaults:
+  mtu: 1500
+  ethernet:
+    shutdown: true
+switchport_default:
+  mode: routed
+banners:
+  login: '#                                 @
+
+    #                                 @@
+
+    #                                 @@@
+
+    #                                 @@@@
+
+    #                             @   @@@@@                      BANCO SANTANDER
+
+    #                            @@@   @@@@@@            Grupo SANTANDER CENTRAL HISPANO
+
+    #                            @@@@    @@@@@
+
+    #                            @@@@@    @@@@@
+
+    #                             @@@@@@   @@@@
+
+    #                     @@@@@@    @@@@@@  @@@@@@@
+
+    #                  @@@@@@@@@@    @@@@@@ @@@@@@@@@@@
+
+    #               @@@@@@@@@@@@@@@    @@@@@@@@@@@@@@@@@@@
+
+    #              @@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@@@@@
+
+    #             @@@@@@@@@@@@@@@@@@@@ @@@@@@@@@@@@@@@@@@@@@
+
+    #               @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    #                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    #                     @@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+    ############################################################
+
+    #       WARNING: only authorized access is allowed.        #
+
+    #       AVISO: solo se permite acceso a autorizados.       #
+
+    #       Actions are monitored and recorded.                #
+
+    #       Sus acciones son monitoreadas y registradas.       #
+
+    ############################################################
+
+    EOF
+
+    '
+management_ssh:
+  idle_timeout: 5
+  enable: true
+  vrfs:
+  - name: MGMT
+    enable: true
+aaa_authentication:
+  login:
+    default: local
+    console: local
+  policies:
+    on_failure_log: true
+    on_success_log: true
+aaa_authorization:
+  exec:
+    default: local
+  config_commands: true
+  serial_console: true
+  commands:
+    all_default: local
+ip_tacacs_source_interfaces:
+- name: Management1
+  vrf: MGMT
+standard_access_lists:
+- name: SNMP-ACL
+  sequence_numbers:
+  - sequence: 10
+    action: permit 0.0.0.0/0
+- name: CVP-ACL
+  sequence_numbers:
+  - sequence: 10
+    action: permit 0.0.0.0/0
